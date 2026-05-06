@@ -1,0 +1,140 @@
+executors:
+  hermes_direct:
+    description: Small/control-plane/docs/config/analysis/verification tasks handled directly by Hermes.
+    use_when:
+      - docs
+      - config
+      - analysis
+      - simple_file_edit
+      - wiki_update
+      - environment_check
+      - test_or_validation
+    default_for:
+      - jarvis_control_plane
+      - project_registry
+      - markdown
+      - yaml
+
+  hermes_goal_loop:
+    description: Multi-step Hermes-led objective that should continue across turns until complete.
+    use_when:
+      - multi_step_control_plane
+      - workspace_bootstrap
+      - environment_setup
+      - documentation_workflow
+    max_default_turns: 20
+
+  codex_exec:
+    description: One-shot repo-local Codex execution for clear small/medium implementation.
+    use_when:
+      - small_code_change
+      - single_repo
+      - clear_scope
+      - limited_files
+
+  codex_goal:
+    description: Codex interactive /goal loop for repo-local iterative cleanup.
+    use_when:
+      - repo_local_iterative_fix
+      - failing_tests
+      - lint_cleanup
+      - type_error_cleanup
+
+  omx_exec:
+    description: One-shot OMX execution with Codex overlays and JARVIS-generated prompt.
+    use_when:
+      - medium_code_change
+      - approved_prompt
+      - single_repo
+
+  omx_ralph:
+    description: Default medium/large implementation executor. Use ralph-style complete-and-verify prompts.
+    use_when:
+      - medium_large_feature
+      - approved_plan
+      - multi_file_change
+      - test_iteration
+      - implement_feature
+      - refactor_module
+      - build_mvp
+    default_for:
+      - end_to_end_implementation
+      - finish_automatically
+      - complete_the_feature
+      - large_refactor
+
+  omx_team:
+    description: Parallel OMX execution for independent subcomponents.
+    use_when:
+      - parallelizable
+      - multi_component
+      - independent_subtasks
+      - large_project
+    requires:
+      - clear_subtask_boundaries
+      - git_worktree_or_conflict_plan
+
+  cron:
+    description: Scheduled recurring jobs.
+    use_when:
+      - recurring
+      - monitoring
+      - daily_summary
+      - weekly_check
+
+  kanban:
+    description: Durable multi-agent backlog and worker orchestration.
+    use_when:
+      - backlog
+      - long_running_project
+      - multi_worker
+      - dependencies_between_tasks
+
+  ask_user:
+    description: Ask user before proceeding when ambiguity or risk is material.
+    use_when:
+      - unclear_project
+      - unclear_scope
+      - destructive_action
+      - deployment
+      - credential_change
+      - paid_external_action
+      - broad_rewrite
+
+routing_defaults:
+  small_control_plane: hermes_direct
+  jarvis_bootstrap: hermes_direct
+  multi_step_control_plane: hermes_goal_loop
+  small_code_change: codex_exec
+  medium_large_code_change: omx_ralph
+  finish_automatically: omx_ralph
+  fix_all_tests: omx_ralph
+  fix_all_lint: codex_goal
+  parallel_large_work: omx_team
+  recurring_work: cron
+  backlog_work: kanban
+
+require_user_approval:
+  - sudo
+  - destructive_delete
+  - rm_rf
+  - git_reset_hard
+  - git_clean_force
+  - git_push
+  - git_force_push
+  - deploy
+  - auth_or_secret_change
+  - system_path_change
+  - shell_startup_change
+  - database_destructive_query
+  - external_payment
+  - broad_repo_rewrite
+  - bulk_windows_path_change
+
+never_allow:
+  - root_or_home_recursive_delete
+  - disk_format
+  - raw_block_device_write
+  - fork_bomb
+  - shutdown_or_reboot
+  - credential_exfiltration

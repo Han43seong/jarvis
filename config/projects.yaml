@@ -1,0 +1,18 @@
+# JARVIS project registry
+#
+# Active WSL-native repositories should normally live under:
+#   /home/hskim/projects/<project>
+#
+# Existing Windows-side projects can be registered with /mnt/c paths when needed,
+# but active Codex/OMX development is preferred inside WSL for performance and compatibility.
+
+projects:
+  jarvis:
+    name: jarvis
+    type: control-plane
+    path: /home/hskim/jarvis
+    repo: /home/hskim/jarvis
+    wiki: /home/hskim/jarvis/wiki/projects/jarvis
+    default_executor: hermes-direct
+    status: active
+    notes: Hermes/JARVIS central control-plane workspace.

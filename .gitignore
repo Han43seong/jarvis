@@ -1,0 +1,24 @@
+# Runtime/generated files
+logs/*
+runs/*
+tmp/*
+
+# Keep directory placeholders
+!logs/.gitkeep
+!runs/.gitkeep
+!tmp/.gitkeep
+
+# Secrets and local overrides
+.env
+*.env
+*.env.*
+secrets/
+*.key
+*.pem
+auth.json
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
