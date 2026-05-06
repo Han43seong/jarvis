@@ -18,13 +18,16 @@
 - Codex `/goal` is available for repo-local iterative cleanup when useful.
 - Harness documents define automatic routing and completion rules.
 
+## Recent changes
+
+- 2026-05-06: Created user-local JARVIS Hermes skills:
+  - `jarvis-core`
+  - `jarvis-executor-router`
+  - `jarvis-codex-omx-executor`
+  - `jarvis-wiki-manager`
+
 ## Next steps
 
-1. Restart Hermes from `/home/hskim/jarvis` so config/context changes are loaded cleanly.
-2. Create JARVIS-specific Hermes skills if needed:
-   - `jarvis-core`
-   - `jarvis-executor-router`
-   - `jarvis-codex-omx-executor`
-   - `jarvis-wiki-manager`
-3. Register the first real project in `config/projects.yaml`.
-4. Test executor routing on a small repo-local task.
+1. Register the first real project in `config/projects.yaml`.
+2. Test executor routing on a small repo-local task.
+3. Promote or refine JARVIS skills after a few real routing/executor runs.
