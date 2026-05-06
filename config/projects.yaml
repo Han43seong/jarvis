@@ -3,6 +3,10 @@
 # Active WSL-native repositories should normally live under:
 #   /home/hskim/projects/<project>
 #
+# The JARVIS repo should not contain project source trees. If a local root-level
+# /home/hskim/jarvis/projects folder or symlink exists, it is ignored.
+# Register project paths here instead, and create one git/GitHub repo per project.
+#
 # Existing Windows-side projects can be registered with /mnt/c paths when needed,
 # but active Codex/OMX development is preferred inside WSL for performance and compatibility.
 

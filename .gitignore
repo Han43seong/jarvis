@@ -3,6 +3,11 @@ logs/*
 runs/*
 tmp/*
 
+# Project repositories are managed outside this control-plane repo.
+# Canonical location: /home/hskim/projects/<project>
+# Keep this ignored in case a local root-level projects/ folder or symlink is created here.
+/projects/
+
 # Keep directory placeholders
 !logs/.gitkeep
 !runs/.gitkeep

@@ -17,11 +17,15 @@ Rationale:
 Decision:
 - JARVIS root: `/home/hskim/jarvis`
 - Active WSL project root: `/home/hskim/projects`
+- Application project source stays outside the JARVIS control-plane repo.
+- Each project is managed as an independent git repository and can map to its own GitHub repository.
+- If `/home/hskim/jarvis/projects/` is created locally as a root-level folder or symlink, it is ignored by `.gitignore`.
 
 Rationale:
 - Keeps the control plane separate from application repositories.
 - Allows Hermes to manage many projects from one place.
 - Allows Codex/OMX to run inside specific target repos with `-C <repo>`.
+- Keeps project history, remotes, CI, and executor work isolated per project.
 
 ## 2026-05-06 — Permission policy
 
