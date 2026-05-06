@@ -63,6 +63,7 @@ User approval is required for:
 
 - `sudo`.
 - `rm -rf` or broad deletes.
+- Any permanent delete of directories or user-created files, even under `/home/hskim/jarvis` or `/home/hskim/projects`.
 - `git reset --hard`, `git clean -f`, force push, branch force delete.
 - `git push` or deployment.
 - Editing `.env`, auth files, OAuth tokens, SSH keys, private keys, credential files, or `auth.json`.
@@ -71,6 +72,13 @@ User approval is required for:
 - Database destructive queries.
 - Paid API/cloud actions.
 - Bulk writes/deletes under `/mnt/c`.
+
+Deletion policy:
+
+- Even when `approvals.mode: smart` allows a command, do not run `rm -rf`, `git clean -f`, or permanent deletion commands without explicit user confirmation naming the exact target path.
+- Ambiguous phrases like "필요없겠네", "정리하자", or "없애도 되나" are not enough for permanent deletion.
+- Prefer moving files to a local trash/archive directory first when practical.
+- Safe cache cleanup commands can be grouped, but the target paths must be listed before execution.
 
 Never execute or expose:
 

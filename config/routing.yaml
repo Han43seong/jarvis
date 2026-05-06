@@ -117,6 +117,8 @@ routing_defaults:
 require_user_approval:
   - sudo
   - destructive_delete
+  - permanent_delete
+  - directory_delete
   - rm_rf
   - git_reset_hard
   - git_clean_force
@@ -130,6 +132,18 @@ require_user_approval:
   - external_payment
   - broad_repo_rewrite
   - bulk_windows_path_change
+
+deletion_policy:
+  explicit_confirmation_required: true
+  confirmation_must_name_exact_target_path: true
+  ambiguous_cleanup_phrases_are_not_confirmation: true
+  prefer_trash_or_archive_when_practical: true
+  applies_even_when_approvals_mode_is_smart: true
+  commands_requiring_explicit_confirmation:
+    - rm -rf
+    - git clean -f
+    - permanent file deletion
+    - permanent directory deletion
 
 never_allow:
   - root_or_home_recursive_delete
