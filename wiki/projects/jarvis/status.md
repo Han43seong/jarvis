@@ -25,9 +25,11 @@
   - `jarvis-executor-router`
   - `jarvis-codex-omx-executor`
   - `jarvis-wiki-manager`
+- 2026-05-07: Initialized ontology-informed LLM Wiki structure under `wiki/` with `SCHEMA.md`, `index.md`, `log.md`, entity/concept/comparison pages, and skill catalog/lifecycle pages.
 
 ## Next steps
 
 1. Register the first real project in `config/projects.yaml`.
 2. Test executor routing on a small repo-local task.
-3. Promote or refine JARVIS skills after a few real routing/executor runs.
+3. Run the first JARVIS LLM Wiki lint after additional pages or sources are added.
+4. Promote or refine JARVIS skills after a few real routing/executor runs.

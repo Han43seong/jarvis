@@ -8,6 +8,11 @@ tmp/*
 # Keep this ignored in case a local root-level projects/ folder or symlink is created here.
 /projects/
 
+# LLM Wiki raw material that may contain private transcripts, executor logs, or unsanitized sources
+/wiki/raw/private/
+/wiki/raw/sessions/
+/wiki/raw/executor-runs/
+
 # Keep directory placeholders
 !logs/.gitkeep
 !runs/.gitkeep
