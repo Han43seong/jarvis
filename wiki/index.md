@@ -2,7 +2,7 @@
 
 > Ontology-informed content catalog for the Hermes-centered JARVIS control plane.
 > Read this after `SCHEMA.md` and before creating or updating pages.
-> Last updated: 2026-05-07 | Total indexed pages: 13
+> Last updated: 2026-05-11 | Total indexed pages: 14
 
 ## Core Orientation
 
@@ -45,4 +45,4 @@
 
 ## Queries
 
-- No saved query pages yet. Save only answers that would be costly to re-derive.
+- [[queries/ontology-informed-wiki-rationale-2026-05-11|Ontology-Informed Wiki Rationale]] — saved explanation of metadata, typed relations, and why JARVIS uses markdown-native lightweight ontology before RDF/OWL.
