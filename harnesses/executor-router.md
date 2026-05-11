@@ -35,8 +35,9 @@ Use this harness whenever the user asks JARVIS to perform work without explicitl
    - high: destructive commands, secrets, system config, deployment, git push.
 
 4. Select executor:
-   - Hermes direct for low-risk control-plane/docs/config/verification work.
-   - Hermes goal loop for multi-step JARVIS/control-plane work.
+   - Hermes direct only for quick low-risk control-plane/docs/config/verification work that should finish in roughly 1-2 minutes.
+   - Hermes background for research, market analysis, comparison, report drafting, long inspection, or multi-source review likely to exceed about 1 minute while the user may continue talking.
+   - Hermes goal loop for multi-step JARVIS/control-plane work when foreground execution is acceptable.
    - Codex exec for clear small repo-local implementation.
    - Codex goal for repo-local iterative cleanup when OMX orchestration is unnecessary.
    - OMX ralph for medium/large implementation and "finish automatically" requests.
@@ -47,6 +48,8 @@ Use this harness whenever the user asks JARVIS to perform work without explicitl
 
 ## Default decision rules
 
+- If the task is research, market analysis, comparison, candidate scouting, report drafting, long inspection, or multi-source review and is likely to exceed about 1 minute, use `hermes-background` by default so the main Hermes session remains responsive.
+- Do not treat `delegate_task` as durable background execution. It is synchronous and is cancelled when the parent is interrupted. Use `terminal(background=true, notify_on_complete=true)`, `/background`, one-shot `cron`, or `kanban` for work that should survive user follow-up messages.
 - If the user says "끝까지", "자동으로", "구현해", "완성해", and the task is coding-related, prefer `omx-ralph`.
 - If the task is only under `/home/hskim/jarvis`, prefer `hermes-direct` unless it is long and multi-step.
 - If the task modifies an existing project repo and touches many files, prefer `omx-ralph`.

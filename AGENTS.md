@@ -26,6 +26,7 @@ For every user request, classify the task into one executor mode:
 
 - `hermes-direct`
 - `hermes-goal-loop`
+- `hermes-background`
 - `codex-exec`
 - `codex-goal`
 - `omx-exec`
@@ -37,14 +38,15 @@ For every user request, classify the task into one executor mode:
 
 Default routing:
 
-1. Use `hermes-direct` for small control-plane work, docs, config, file edits, search, analysis, validation, wiki updates, and simple scripts.
-2. Use `hermes-goal-loop` for multi-step JARVIS/control-plane work that can be completed mainly with Hermes tools.
-3. Use `omx-ralph` for medium/large implementation, multi-file changes, test/fix loops, and requests like "끝까지", "자동으로", "구현해", "완성해".
-4. Use `codex-goal` for repo-local iterative cleanup such as fixing all tests/lint/type errors when OMX orchestration is unnecessary.
-5. Use `omx-team` only for large parallelizable work with clear independent subtasks.
-6. Use `cron` for recurring monitoring/reporting.
-7. Use `kanban` for durable backlog and multi-worker collaboration.
-8. Use `ask-user` when target project, scope, risk, or completion criteria are unclear.
+1. Use `hermes-direct` only for small control-plane work, docs/config edits, quick file reads, status/diff checks, validation, wiki updates, and simple scripts that should finish in roughly 1-2 minutes.
+2. Use `hermes-background` for research, market analysis, comparison, report drafting, long inspections, or any non-trivial task likely to exceed about 1 minute while the user may continue talking to Hermes. Prefer durable background execution (`terminal(background=true, notify_on_complete=true)`, `/background`, one-shot cron, or kanban) over synchronous `delegate_task` when interruption would lose work.
+3. Use `hermes-goal-loop` for multi-step JARVIS/control-plane work that Hermes can complete mainly with tools and where staying in the foreground is acceptable.
+4. Use `omx-ralph` for medium/large implementation, multi-file changes, test/fix loops, and requests like "끝까지", "자동으로", "구현해", "완성해".
+5. Use `codex-goal` for repo-local iterative cleanup such as fixing all tests/lint/type errors when OMX orchestration is unnecessary.
+6. Use `omx-team` only for large parallelizable work with clear independent subtasks.
+7. Use `cron` for recurring monitoring/reporting.
+8. Use `kanban` for durable backlog and multi-worker collaboration.
+9. Use `ask-user` when target project, scope, risk, or completion criteria are unclear.
 
 When the user explicitly names an executor, obey that unless it conflicts with safety.
 

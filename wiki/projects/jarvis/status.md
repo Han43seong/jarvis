@@ -29,11 +29,10 @@
 - 2026-05-11: Reviewed current JARVIS progress with the user and confirmed the control-plane repo had been pushed to GitHub with local `main` synchronized to `origin/main`.
 - 2026-05-11: Clarified the ontology-informed wiki model: pages act as graph nodes, YAML frontmatter acts as node metadata/properties, typed `relations` act as graph edges, and `SCHEMA.md` defines the allowed vocabulary.
 - 2026-05-11: Recorded the rationale for using markdown-native lightweight ontology now instead of full RDF/OWL: lower operational overhead, better human/agent editability, git-friendly diffs, flexible schema evolution, and possible future RDF/JSON-LD export.
+- 2026-05-11: Added `hermes-background` to the routing pipeline for long research/analysis/review work, documented that synchronous `delegate_task` must not be treated as durable background execution, and added an acceptance test matrix plus `scripts/check_executor_routing_policy.py`.
 
 ## Next steps
 
 1. Register the first real project in `config/projects.yaml`.
-2. Test executor routing on a small repo-local task.
-3. Run the first JARVIS LLM Wiki lint after the 2026-05-11 query page update.
-4. Promote or refine JARVIS skills after a few real routing/executor runs.
-5. Consider a future RDF/JSON-LD export path only after the markdown ontology schema stabilizes and graph queries become necessary.
+2. Promote or refine JARVIS skills after a few real routing/executor runs.
+3. Consider a future RDF/JSON-LD export path only after the markdown ontology schema stabilizes and graph queries become necessary.

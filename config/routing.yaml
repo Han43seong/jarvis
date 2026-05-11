@@ -24,6 +24,29 @@ executors:
       - documentation_workflow
     max_default_turns: 20
 
+  hermes_background:
+    description: Durable background Hermes/subagent workstream that keeps the main Hermes conversation responsive.
+    use_when:
+      - research_over_one_minute
+      - market_analysis
+      - comparison
+      - report_drafting
+      - long_inspection
+      - multi_source_review
+      - user_may_continue_talking
+    preferred_mechanisms:
+      - terminal_background_notify_on_complete
+      - slash_background
+      - one_shot_cron
+      - kanban_for_durable_backlog
+    avoid_when:
+      - quick_direct_check
+      - destructive_or_high_risk_action
+      - needs_interactive_user_clarification
+    notes:
+      - delegate_task is synchronous and is cancelled if the parent is interrupted; do not use it as durable background work.
+      - Give the user a short first-pass response before launching long research when practical.
+
   codex_exec:
     description: One-shot repo-local Codex execution for clear small/medium implementation.
     use_when:
@@ -105,6 +128,11 @@ routing_defaults:
   small_control_plane: hermes_direct
   jarvis_bootstrap: hermes_direct
   multi_step_control_plane: hermes_goal_loop
+  research_over_one_minute: hermes_background
+  market_analysis: hermes_background
+  comparison_or_scouting: hermes_background
+  report_drafting: hermes_background
+  long_inspection: hermes_background
   small_code_change: codex_exec
   medium_large_code_change: omx_ralph
   finish_automatically: omx_ralph
