@@ -31,6 +31,7 @@
 - 2026-05-11: Recorded the rationale for using markdown-native lightweight ontology now instead of full RDF/OWL: lower operational overhead, better human/agent editability, git-friendly diffs, flexible schema evolution, and possible future RDF/JSON-LD export.
 - 2026-05-11: Added `hermes-background` to the routing pipeline for long research/analysis/review work, documented that synchronous `delegate_task` must not be treated as durable background execution, and added an acceptance test matrix plus `scripts/check_executor_routing_policy.py`.
 - 2026-05-11: Ran JARVIS routing tests: 8-case conversational routing rehearsal passed, durable background smoke test completed via `terminal(background=true, notify_on_complete=true)`, and no lingering background processes or cron jobs remained afterward.
+- 2026-05-11: Created `/home/hskim/projects/jarvis-executor-smoke` as a WSL-native git smoke repo, registered it in `config/projects.yaml`, verified `codex-exec` with a README-only change, and verified `omx-ralph` style execution with a subtract CLI feature plus unittest coverage.
 
 ## Next steps
 

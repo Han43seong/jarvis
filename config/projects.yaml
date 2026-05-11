@@ -20,3 +20,13 @@ projects:
     default_executor: hermes-direct
     status: active
     notes: Hermes/JARVIS central control-plane workspace.
+
+  jarvis-executor-smoke:
+    name: jarvis-executor-smoke
+    type: test-harness
+    path: /home/hskim/projects/jarvis-executor-smoke
+    repo: /home/hskim/projects/jarvis-executor-smoke
+    wiki: null
+    default_executor: codex-exec
+    status: active
+    notes: WSL-native smoke-test repository for verifying JARVIS Codex/OMX routing boundaries.
