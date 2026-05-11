@@ -30,6 +30,7 @@
 - 2026-05-11: Clarified the ontology-informed wiki model: pages act as graph nodes, YAML frontmatter acts as node metadata/properties, typed `relations` act as graph edges, and `SCHEMA.md` defines the allowed vocabulary.
 - 2026-05-11: Recorded the rationale for using markdown-native lightweight ontology now instead of full RDF/OWL: lower operational overhead, better human/agent editability, git-friendly diffs, flexible schema evolution, and possible future RDF/JSON-LD export.
 - 2026-05-11: Added `hermes-background` to the routing pipeline for long research/analysis/review work, documented that synchronous `delegate_task` must not be treated as durable background execution, and added an acceptance test matrix plus `scripts/check_executor_routing_policy.py`.
+- 2026-05-11: Ran JARVIS routing tests: 8-case conversational routing rehearsal passed, durable background smoke test completed via `terminal(background=true, notify_on_complete=true)`, and no lingering background processes or cron jobs remained afterward.
 
 ## Next steps
 
