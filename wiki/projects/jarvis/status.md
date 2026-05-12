@@ -5,6 +5,8 @@
 - WSL environment cleaned and ready.
 - Codex CLI and OMX installed and smoke-tested.
 - Codex OAuth/ChatGPT Pro Personal workspace verified previously.
+- Claude Code and OMC installed and smoke-tested as secondary external executors.
+- Claude Code OAuth/Claude Max account verified for external CLI use.
 - Bubblewrap installed and Codex sandbox warning removed.
 - Hermes approval policy set to smart.
 - Secret redaction enabled for future sessions.
@@ -14,7 +16,8 @@
 ## Active operating model
 
 - Hermes is the control-plane/orchestrator/verifier/memory manager.
-- OMX `$ralph` is the default medium/large implementation executor.
+- Codex CLI + OMX remain the default medium/large implementation executor line.
+- Claude Code + OMC are available as a secondary external executor line for Claude-strength review, planning, refactoring, and quota/load balancing.
 - Codex `/goal` is available for repo-local iterative cleanup when useful.
 - Harness documents define automatic routing and completion rules.
 
@@ -32,6 +35,7 @@
 - 2026-05-11: Added `hermes-background` to the routing pipeline for long research/analysis/review work, documented that synchronous `delegate_task` must not be treated as durable background execution, and added an acceptance test matrix plus `scripts/check_executor_routing_policy.py`.
 - 2026-05-11: Ran JARVIS routing tests: 8-case conversational routing rehearsal passed, durable background smoke test completed via `terminal(background=true, notify_on_complete=true)`, and no lingering background processes or cron jobs remained afterward.
 - 2026-05-11: Created `/home/hskim/projects/jarvis-executor-smoke` as a WSL-native git smoke repo, registered it in `config/projects.yaml`, verified `codex-exec` with a README-only change, and verified `omx-ralph` style execution with a subtract CLI feature plus unittest coverage.
+- 2026-05-12: Recovered Claude Code OAuth login for the user's Claude Max account, verified `claude -p` print mode with `CLAUDE-CODE-OK`, installed OMC package `oh-my-claude-sisyphus` 4.13.7 under the user npm prefix, and ran `omc setup` to sync Claude Code agents/skills/hooks.
 
 ## Next steps
 
