@@ -13,6 +13,20 @@ tmp/*
 /wiki/raw/sessions/
 /wiki/raw/executor-runs/
 
+
+# Personal research outputs kept local by default
+/research/
+/wiki/private/
+/wiki/reports/
+/wiki/queries/*
+!/wiki/queries/ontology-informed-wiki-rationale-2026-05-11.md
+/ai_consumer_app_niche_opportunities_ko.md
+/kfashion_overseas_ai_opportunities_ko.md
+/hallyu2024.txt
+
+# Large/source documents
+*.pdf
+
 # Keep directory placeholders
 !logs/.gitkeep
 !runs/.gitkeep
