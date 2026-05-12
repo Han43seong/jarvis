@@ -4,6 +4,47 @@
 
 JARVIS is not an application repository. It is a control plane: a small, durable workspace that keeps project registry, routing policy, operating rules, wiki notes, execution harnesses, and verification records in one place.
 
+
+## Why this exists
+
+The initial idea was to build a practical personal JARVIS: not a single all-powerful coding bot, but a control plane that can coordinate multiple AI executors, remember durable context, and keep work verifiable.
+
+The key design assumption is that AI work becomes safer and more useful when planning, execution, verification, and memory are separated:
+
+- Hermes owns orchestration, memory, skills, wiki updates, and final verification.
+- External coding CLIs do focused implementation work inside target project repositories.
+- The wiki stores durable project knowledge instead of relying on chat history alone.
+- Skills capture reusable procedures so successful workflows can be repeated.
+- Git remains the source of truth for what changed.
+
+## Methodology
+
+JARVIS follows a control-plane methodology:
+
+1. Keep the control plane small and mostly documentation/configuration focused.
+2. Keep application source code in independent project repositories.
+3. Route each task to the smallest capable executor.
+4. Give executors bounded prompts, allowed scope, forbidden actions, and clear completion criteria.
+5. Verify results with repo state, diffs, tests, lint, and targeted checks before reporting success.
+6. Promote recurring workflows into skills; promote durable knowledge into the wiki; keep memory compact.
+7. Prefer reversible, inspectable changes over hidden automation.
+
+## Build history and lessons learned
+
+The workflow was assembled iteratively. Important decisions and fixes include:
+
+- Established the control-plane repository as a management workspace rather than an application repository.
+- Added a project registry and routing policy so JARVIS can choose between Hermes direct work, Codex/OMX, Claude Code/OMC, background workers, cron, and kanban.
+- Verified the Codex CLI + OMX line with smoke tests before treating it as the primary implementation executor.
+- Added sandbox and approval hardening so routine automation can proceed while destructive operations remain gated.
+- Built an ontology-informed markdown wiki to preserve decisions, research, status, and architecture notes in a form both humans and agents can read.
+- Added background/research-worker conventions after recognizing that long research or comparison tasks should not block the main JARVIS chat.
+- Deferred the OMX Hermes MCP bridge after investigation showed the direction was promising but not yet stable enough for the default control-plane path.
+- Recovered Claude Code authentication after print mode returned an authentication error even though the interactive UI appeared logged in; the fix was to refresh the Claude Code OAuth flow through an interactive terminal session and then verify print mode separately.
+- Installed OMC after confirming the correct package/repository naming, avoiding similarly named packages.
+- Kept Claude Code + OMC as a secondary executor instead of switching the Hermes main provider, preserving the stable Codex-centered main workflow while gaining a second specialist executor.
+- Avoided committing large or unrelated research artifacts during README and setup commits; only intended files are staged for each commit.
+
 ## Operating model
 
 ```text
@@ -117,6 +158,47 @@ Use the right durability layer:
 > Hermes를 중심으로 AI 보조 개발 작업을 계획, 라우팅, 검증, 문서화하기 위한 운영 워크스페이스입니다.
 
 JARVIS는 애플리케이션 소스 저장소가 아닙니다. 여러 프로젝트를 관리하기 위한 컨트롤 플레인입니다. 프로젝트 레지스트리, 라우팅 정책, 운영 규칙, 위키, 실행 하네스, 검증 기록을 한곳에서 관리합니다.
+
+
+## 왜 만들었는가
+
+초기 구상은 실무적으로 쓸 수 있는 개인용 JARVIS를 만드는 것이었습니다. 하나의 만능 코딩 봇을 만드는 것이 아니라, 여러 AI 실행자를 조율하고, 중요한 맥락을 기억하고, 결과를 검증 가능한 형태로 남기는 컨트롤 플레인을 만드는 것이 핵심입니다.
+
+기본 전제는 명확합니다. AI 작업은 계획, 실행, 검증, 기억을 분리할수록 더 안전하고 유용해집니다.
+
+- Hermes는 관제, 메모리, 스킬, 위키 업데이트, 최종 검증을 담당합니다.
+- 외부 코딩 CLI는 대상 프로젝트 저장소 안에서 제한된 구현 작업을 수행합니다.
+- 위키는 채팅 기록에만 의존하지 않고 장기 프로젝트 지식을 보관합니다.
+- 스킬은 반복 가능한 절차를 보존해 성공한 워크플로우를 다시 사용할 수 있게 합니다.
+- Git은 실제 변경 사항에 대한 최종 기준으로 유지합니다.
+
+## 방법론
+
+JARVIS는 컨트롤 플레인 방법론을 따릅니다.
+
+1. 컨트롤 플레인은 작고 명확하게 유지하며 주로 문서, 설정, 라우팅, 검증을 담당합니다.
+2. 애플리케이션 소스코드는 독립 프로젝트 저장소에 둡니다.
+3. 각 작업은 처리 가능한 가장 작은 실행자에게 라우팅합니다.
+4. 실행자에게는 제한된 프롬프트, 허용 범위, 금지 행동, 완료 기준을 함께 제공합니다.
+5. 성공 보고 전에는 저장소 상태, diff, 테스트, lint, 표적 점검으로 검증합니다.
+6. 반복되는 절차는 skill로, 장기 지식은 wiki로, 아주 압축된 사실만 memory로 보존합니다.
+7. 숨겨진 자동화보다 되돌릴 수 있고 검토 가능한 변경을 우선합니다.
+
+## 구축 이력과 해결한 문제
+
+이 워크플로우는 한 번에 만든 것이 아니라 단계적으로 구축했습니다. 주요 결정과 해결 이력은 다음과 같습니다.
+
+- 컨트롤 플레인 저장소를 애플리케이션 저장소가 아니라 관리 워크스페이스로 정의했습니다.
+- 프로젝트 레지스트리와 라우팅 정책을 추가해 Hermes direct, Codex/OMX, Claude Code/OMC, background worker, cron, kanban 중 적절한 실행자를 고를 수 있게 했습니다.
+- Codex CLI + OMX 라인은 smoke test로 검증한 뒤 기본 구현 실행자로 채택했습니다.
+- sandbox와 approval 정책을 정리해 일반 자동화는 빠르게 진행하되 파괴적 작업은 명시적으로 막도록 했습니다.
+- 결정사항, 리서치, 상태, 아키텍처를 사람과 에이전트가 함께 읽을 수 있도록 ontology-informed markdown wiki 구조를 만들었습니다.
+- 긴 조사/비교 작업이 메인 JARVIS 대화를 막지 않도록 background/research-worker 관례를 추가했습니다.
+- OMX Hermes MCP bridge는 방향은 좋지만 기본 경로로 쓰기에는 아직 안정화가 부족하다고 판단해 보류했습니다.
+- Claude Code는 interactive UI상 로그인된 것처럼 보여도 print mode에서 인증 오류가 날 수 있었습니다. interactive terminal 세션에서 OAuth 로그인을 갱신하고 print mode를 별도로 smoke test하는 방식으로 해결했습니다.
+- OMC는 패키지/저장소 이름이 혼동되기 쉬워 정확한 출처와 패키지명을 확인한 뒤 설치했습니다.
+- Claude Code + OMC는 Hermes 메인 provider 전환이 아니라 보조 외부 실행자로 두었습니다. 이렇게 해서 Codex 중심의 안정적인 기본 라인을 유지하면서 Claude 계열의 강점도 사용할 수 있게 했습니다.
+- README와 세팅 커밋을 만들 때 대용량 또는 관련 없는 리서치 산출물은 커밋하지 않고, 의도한 파일만 staged 상태로 관리했습니다.
 
 ## 운영 모델
 
