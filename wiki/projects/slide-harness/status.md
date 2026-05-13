@@ -32,7 +32,7 @@ Implemented:
 - Static QA for slide count, placeholders, density, and visual elements
 - Playwright CLI export to `deck.pdf` and `preview.png` when local Playwright is available
 - Shared runner/state layer with `run.json` and `events.jsonl`
-- Optional FastAPI backend with run list/detail/artifacts/QA/events/review/rerun/requirements endpoints
+- Optional FastAPI backend with run list/detail/artifacts/QA/events/review/rerun/requirements/compare endpoints
 - Local Next.js + TypeScript operator dashboard under `web/`
 - Review/revision workflow:
   - events endpoint
@@ -58,6 +58,7 @@ Implemented:
   - revision/source run relationship visibility
   - user-facing invalid brief API errors
   - requirement checklist panel with enable/disable and notes overrides
+  - lightweight compare panel for source/revision metadata comparison
 - Deterministic revision semantics:
   - rerun with `revision_note` creates `input/revision-brief.json`
   - child run metadata records source/revision/applied transformations
@@ -85,9 +86,9 @@ Implemented:
   - `summary` command for compact machine-readable run summaries
   - optional `summary --api-base-url` artifact URLs using safe backend artifact endpoint paths
   - `doctor` command for non-destructive operator preflight diagnostics with human and JSON output
-  - `compare-runs` command for source/revision metadata comparison without HTML/PDF body diffs
+  - `compare-runs` command and API/dashboard view for source/revision metadata comparison without HTML/PDF body diffs
   - README runbook for create/run/inspect/review/rerun/requirements/diagnostics/comparison loops
-- Pytest suite with 40 passing tests as of Phase 13
+- Pytest suite with 40 passing tests as of Phase 14
 
 ## Verification
 
@@ -100,10 +101,10 @@ cd web && npm run build
 git diff --check
 ```
 
-Observed on 2026-05-13 after Phase 13:
+Observed on 2026-05-13 after Phase 14:
 
 - `python -m pytest -q` → `40 passed`
-- Compare-runs smoke passed for source run, request_changes review, revision child rerun, JSON comparison, and `--source` shortcut
+- Compare API smoke passed for source run, request_changes review, revision child rerun, source-vs-child endpoint comparison, `source=true` shortcut, and missing-run error handling
 - `npm run lint` → passed (`tsc --noEmit`)
 - `npm run build` → passed, Next.js production build completed
 - `git diff --check` → passed
@@ -112,6 +113,7 @@ Observed on 2026-05-13 after Phase 13:
 Recent local commits in project repo:
 
 ```text
+54edddf feat: add compare dashboard view
 8cd5dd6 feat: add run comparison CLI
 0255bf6 feat: add operator doctor command
 6eadb2d feat: populate summary artifact urls
@@ -139,5 +141,5 @@ cc63eda feat: improve dashboard artifact previews
 
 Recommended next phases:
 
-1. Add compare API/dashboard view for revision/source runs while preserving CLI-first compare logic.
+1. Decide whether the MVP should now pivot to real LLM/Hermes-assisted slide content generation, or remain deterministic and add export adapters.
 2. Add PPTX renderer/export adapter only if editable PowerPoint output is required.
