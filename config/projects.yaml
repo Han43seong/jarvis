@@ -30,3 +30,13 @@ projects:
     default_executor: codex-exec
     status: active
     notes: WSL-native smoke-test repository for verifying JARVIS Codex/OMX routing boundaries.
+
+  slide-harness:
+    name: slide-harness
+    type: presentation-harness
+    path: /home/hskim/projects/slide-harness
+    repo: /home/hskim/projects/slide-harness
+    wiki: /home/hskim/jarvis/wiki/projects/slide-harness
+    default_executor: omx-ralph
+    status: active
+    notes: HTML-first slide generation harness with Claude Design-style renderer, requirements gate, PDF export, and QA loop.
