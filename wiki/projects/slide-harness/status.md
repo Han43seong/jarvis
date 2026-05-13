@@ -16,7 +16,7 @@ confidence: high
 
 `slide-harness` is an HTML-first presentation/deck generation harness under `/home/hskim/projects/slide-harness`.
 
-It preserves a CLI-first core while adding an optional FastAPI backend and local Next.js operator dashboard. The filesystem run directory remains the source of truth: `run.json`, `events.jsonl`, generated artifacts, QA reports, review state, revision lineage, effective style preset metadata, requirement override/effective checklist artifacts, and Hermes/JARVIS-friendly summary JSON.
+It preserves a CLI-first core while adding an optional FastAPI backend and local Next.js operator dashboard. The filesystem run directory remains the source of truth: `run.json`, `events.jsonl`, generated artifacts, QA reports, review state, revision lineage, effective style/theme metadata, requirement override/effective checklist artifacts, and Hermes/JARVIS-friendly summary JSON.
 
 ## Current MVP
 
@@ -67,6 +67,12 @@ Implemented:
   - optional brief `style_preset` field with validation
   - CSS variable/token application in `deck.html`
   - run/planning/dashboard visibility for effective style preset
+- Local theme imports:
+  - local JSON token-only theme path support
+  - `examples/theme-light-ai.json`
+  - unknown token key rejection
+  - obvious CSS/HTML injection marker rejection
+  - sanitized token application to generated deck CSS variables
 - Requirement checklist overrides:
   - non-destructive `planning/requirements-overrides.json`
   - effective checklist artifact generation
@@ -76,7 +82,7 @@ Implemented:
   - `draft-brief` command for explicit-field brief JSON creation without LLM calls
   - `summary` command for compact machine-readable run summaries
   - README runbook for create/run/inspect/review/rerun/requirements loops
-- Pytest suite with 24 passing tests as of Phase 9
+- Pytest suite with 31 passing tests as of Phase 10
 
 ## Verification
 
@@ -89,10 +95,10 @@ cd web && npm run build
 git diff --check
 ```
 
-Observed on 2026-05-13 after Phase 9:
+Observed on 2026-05-13 after Phase 10:
 
-- `python -m pytest -q` → `24 passed`
-- JARVIS CLI smoke passed for `draft-brief`, `run`, and `summary` JSON parsing
+- `python -m pytest -q` → `31 passed`
+- Local theme smoke passed for `theme_path`, `planning/theme.json`, run metadata, and token application in generated HTML
 - `npm run lint` → passed (`tsc --noEmit`)
 - `npm run build` → passed, Next.js production build completed
 - `git diff --check` → passed
@@ -101,6 +107,7 @@ Observed on 2026-05-13 after Phase 9:
 Recent local commits in project repo:
 
 ```text
+d7e8fe1 feat: add local theme imports
 56fddc4 feat: add jarvis automation commands
 ed5dfa6 feat: add requirement checklist overrides
 e41966d feat: add style presets
@@ -124,6 +131,5 @@ cc63eda feat: improve dashboard artifact previews
 
 Recommended next phases:
 
-1. Add template/theme import path.
-2. Add optional API base URL artifact URL population for summaries.
-3. Add PPTX renderer/export adapter only if editable PowerPoint output is required.
+1. Add optional API base URL artifact URL population for summaries.
+2. Add PPTX renderer/export adapter only if editable PowerPoint output is required.
