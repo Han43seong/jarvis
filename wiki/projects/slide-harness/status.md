@@ -16,7 +16,7 @@ confidence: high
 
 `slide-harness` is an HTML-first presentation/deck generation harness under `/home/hskim/projects/slide-harness`.
 
-It preserves a CLI-first core while adding an optional FastAPI backend and local Next.js operator dashboard. The filesystem run directory remains the source of truth: `run.json`, `events.jsonl`, generated artifacts, QA reports, review state, revision lineage, effective style/theme metadata, requirement override/effective checklist artifacts, Hermes/JARVIS-friendly summary JSON with optional backend artifact URLs, and run comparison summaries.
+It preserves a CLI-first core while adding an optional FastAPI backend and local Next.js operator dashboard. The filesystem run directory remains the source of truth: `run.json`, `events.jsonl`, generated artifacts, QA reports, review state, revision lineage, effective style/theme metadata, requirement override/effective checklist artifacts, Hermes/JARVIS-friendly summary JSON with optional backend artifact URLs, structured content-plan inputs, and run comparison summaries.
 
 ## Current MVP
 
@@ -46,11 +46,13 @@ Implemented:
   - `events`
   - `summary`
   - `draft-brief`
+  - `content-template`
   - `doctor`
   - `compare-runs`
   - `review`
   - `rerun`
   - brief validation/template support
+  - content-plan import support
   - requirement checklist override command support
 - Dashboard productization:
   - safe inline HTML deck preview
@@ -83,12 +85,14 @@ Implemented:
   - API/dashboard controls for enabled state and notes
 - Hermes/JARVIS integration surface:
   - `draft-brief` command for explicit-field brief JSON creation without LLM calls
+  - `content-template` and `run --content-plan` for Hermes/LLM-authored structured slide content without importing Hermes or calling model APIs inside the harness
+  - content-plan validation rejects raw HTML/script markers and requires explicit plain-text slide fields
   - `summary` command for compact machine-readable run summaries
   - optional `summary --api-base-url` artifact URLs using safe backend artifact endpoint paths
   - `doctor` command for non-destructive operator preflight diagnostics with human and JSON output
   - `compare-runs` command and API/dashboard view for source/revision metadata comparison without HTML/PDF body diffs
-  - README runbook for create/run/inspect/review/rerun/requirements/diagnostics/comparison loops
-- Pytest suite with 40 passing tests as of Phase 14
+  - README runbook for create/run/inspect/review/rerun/requirements/diagnostics/comparison/content-plan loops
+- Pytest suite with 44 passing tests as of Phase 15
 
 ## Verification
 
@@ -101,10 +105,10 @@ cd web && npm run build
 git diff --check
 ```
 
-Observed on 2026-05-13 after Phase 14:
+Observed on 2026-05-13 after Phase 15:
 
-- `python -m pytest -q` → `40 passed`
-- Compare API smoke passed for source run, request_changes review, revision child rerun, source-vs-child endpoint comparison, `source=true` shortcut, and missing-run error handling
+- `python -m pytest -q` → `44 passed`
+- Content-plan smoke passed for `content-template`, `run --content-plan`, rendered authored slide content, and unsafe `<script>` marker rejection
 - `npm run lint` → passed (`tsc --noEmit`)
 - `npm run build` → passed, Next.js production build completed
 - `git diff --check` → passed
@@ -113,6 +117,7 @@ Observed on 2026-05-13 after Phase 14:
 Recent local commits in project repo:
 
 ```text
+42a93ee feat: add content plan import
 54edddf feat: add compare dashboard view
 8cd5dd6 feat: add run comparison CLI
 0255bf6 feat: add operator doctor command
@@ -141,5 +146,6 @@ cc63eda feat: improve dashboard artifact previews
 
 Recommended next phases:
 
-1. Decide whether the MVP should now pivot to real LLM/Hermes-assisted slide content generation, or remain deterministic and add export adapters.
-2. Add PPTX renderer/export adapter only if editable PowerPoint output is required.
+1. Add a Hermes/JARVIS-side content-authoring prompt/runbook that generates `content-plan.json` from a brief and project context.
+2. Add dashboard/API visibility for content-plan metadata if operator UX needs it.
+3. Add PPTX renderer/export adapter only if editable PowerPoint output is required.
