@@ -46,6 +46,7 @@ Implemented:
   - `events`
   - `summary`
   - `draft-brief`
+  - `doctor`
   - `review`
   - `rerun`
   - brief validation/template support
@@ -82,8 +83,9 @@ Implemented:
   - `draft-brief` command for explicit-field brief JSON creation without LLM calls
   - `summary` command for compact machine-readable run summaries
   - optional `summary --api-base-url` artifact URLs using safe backend artifact endpoint paths
-  - README runbook for create/run/inspect/review/rerun/requirements loops
-- Pytest suite with 35 passing tests as of Phase 11
+  - `doctor` command for non-destructive operator preflight diagnostics with human and JSON output
+  - README runbook for create/run/inspect/review/rerun/requirements/diagnostics loops
+- Pytest suite with 37 passing tests as of Phase 12
 
 ## Verification
 
@@ -96,10 +98,10 @@ cd web && npm run build
 git diff --check
 ```
 
-Observed on 2026-05-13 after Phase 11:
+Observed on 2026-05-13 after Phase 12:
 
-- `python -m pytest -q` → `35 passed`
-- Summary URL smoke passed for local summary, `--api-base-url` artifact URL population, URL encoding, and invalid base URL rejection
+- `python -m pytest -q` → `37 passed`
+- Doctor smoke passed for `doctor --json`, stable check ids, missing brief fail exit, and `--no-fail-exit`
 - `npm run lint` → passed (`tsc --noEmit`)
 - `npm run build` → passed, Next.js production build completed
 - `git diff --check` → passed
@@ -108,6 +110,7 @@ Observed on 2026-05-13 after Phase 11:
 Recent local commits in project repo:
 
 ```text
+0255bf6 feat: add operator doctor command
 6eadb2d feat: populate summary artifact urls
 d7e8fe1 feat: add local theme imports
 56fddc4 feat: add jarvis automation commands
@@ -133,5 +136,5 @@ cc63eda feat: improve dashboard artifact previews
 
 Recommended next phases:
 
-1. Add operator `doctor`/preflight command for environment, optional dependency, browser/export, and project health checks.
+1. Add run comparison/diff summaries for revision/source runs and operator review.
 2. Add PPTX renderer/export adapter only if editable PowerPoint output is required.
