@@ -16,7 +16,7 @@ confidence: high
 
 `slide-harness` is an HTML-first presentation/deck generation harness under `/home/hskim/projects/slide-harness`.
 
-It preserves a CLI-first core while adding an optional FastAPI backend and local Next.js operator dashboard. The filesystem run directory remains the source of truth: `run.json`, `events.jsonl`, generated artifacts, QA reports, review state, revision lineage, and effective style preset metadata.
+It preserves a CLI-first core while adding an optional FastAPI backend and local Next.js operator dashboard. The filesystem run directory remains the source of truth: `run.json`, `events.jsonl`, generated artifacts, QA reports, review state, revision lineage, effective style preset metadata, and requirement override/effective checklist artifacts.
 
 ## Current MVP
 
@@ -32,7 +32,7 @@ Implemented:
 - Static QA for slide count, placeholders, density, and visual elements
 - Playwright CLI export to `deck.pdf` and `preview.png` when local Playwright is available
 - Shared runner/state layer with `run.json` and `events.jsonl`
-- Optional FastAPI backend with run list/detail/artifacts/QA/events/review/rerun endpoints
+- Optional FastAPI backend with run list/detail/artifacts/QA/events/review/rerun/requirements endpoints
 - Local Next.js + TypeScript operator dashboard under `web/`
 - Review/revision workflow:
   - events endpoint
@@ -47,11 +47,13 @@ Implemented:
   - `review`
   - `rerun`
   - brief validation/template support
+  - requirement checklist override command support
 - Dashboard productization:
   - safe inline HTML deck preview
   - artifact open/download links
   - revision/source run relationship visibility
   - user-facing invalid brief API errors
+  - requirement checklist panel with enable/disable and notes overrides
 - Deterministic revision semantics:
   - rerun with `revision_note` creates `input/revision-brief.json`
   - child run metadata records source/revision/applied transformations
@@ -63,7 +65,12 @@ Implemented:
   - optional brief `style_preset` field with validation
   - CSS variable/token application in `deck.html`
   - run/planning/dashboard visibility for effective style preset
-- Pytest suite with 20 passing tests as of Phase 7
+- Requirement checklist overrides:
+  - non-destructive `planning/requirements-overrides.json`
+  - effective checklist artifact generation
+  - `requirements_edited` events
+  - API/dashboard controls for enabled state and notes
+- Pytest suite with 22 passing tests as of Phase 8
 
 ## Verification
 
@@ -76,10 +83,10 @@ cd web && npm run build
 git diff --check
 ```
 
-Observed on 2026-05-13 after Phase 7:
+Observed on 2026-05-13 after Phase 8:
 
-- `python -m pytest -q` → `20 passed`
-- Targeted style preset smoke passed for `technical-review` brief propagation, run metadata/planning, and generated `deck.html` CSS token markers
+- `python -m pytest -q` → `22 passed`
+- Targeted requirement smoke passed for effective requirements read, override write, generated artifact immutability, and `requirements_edited` event
 - `npm run lint` → passed (`tsc --noEmit`)
 - `npm run build` → passed, Next.js production build completed
 - `git diff --check` → passed
@@ -88,6 +95,7 @@ Observed on 2026-05-13 after Phase 7:
 Recent local commits in project repo:
 
 ```text
+ed5dfa6 feat: add requirement checklist overrides
 e41966d feat: add style presets
 3b25ce5 feat: apply deterministic revision notes
 cc63eda feat: improve dashboard artifact previews
@@ -109,7 +117,6 @@ cc63eda feat: improve dashboard artifact previews
 
 Recommended next phases:
 
-1. Add dashboard-side requirement checklist editing.
-2. Add a Hermes/JARVIS integration surface for creating a run from a natural-language brief and reading status/artifacts through CLI/API.
-3. Add template/theme import path.
-4. Add PPTX renderer/export adapter only if editable PowerPoint output is required.
+1. Add a Hermes/JARVIS integration surface for creating a run from a natural-language brief and reading status/artifacts through CLI/API.
+2. Add template/theme import path.
+3. Add PPTX renderer/export adapter only if editable PowerPoint output is required.
