@@ -16,7 +16,7 @@ confidence: high
 
 `slide-harness` is an HTML-first presentation/deck generation harness under `/home/hskim/projects/slide-harness`.
 
-It preserves a CLI-first core while adding an optional FastAPI backend and local Next.js operator dashboard. The filesystem run directory remains the source of truth: `run.json`, `events.jsonl`, generated artifacts, QA reports, review state, revision lineage, effective style preset metadata, and requirement override/effective checklist artifacts.
+It preserves a CLI-first core while adding an optional FastAPI backend and local Next.js operator dashboard. The filesystem run directory remains the source of truth: `run.json`, `events.jsonl`, generated artifacts, QA reports, review state, revision lineage, effective style preset metadata, requirement override/effective checklist artifacts, and Hermes/JARVIS-friendly summary JSON.
 
 ## Current MVP
 
@@ -44,6 +44,8 @@ Implemented:
   - `list-runs`
   - `show-run`
   - `events`
+  - `summary`
+  - `draft-brief`
   - `review`
   - `rerun`
   - brief validation/template support
@@ -70,7 +72,11 @@ Implemented:
   - effective checklist artifact generation
   - `requirements_edited` events
   - API/dashboard controls for enabled state and notes
-- Pytest suite with 22 passing tests as of Phase 8
+- Hermes/JARVIS integration surface:
+  - `draft-brief` command for explicit-field brief JSON creation without LLM calls
+  - `summary` command for compact machine-readable run summaries
+  - README runbook for create/run/inspect/review/rerun/requirements loops
+- Pytest suite with 24 passing tests as of Phase 9
 
 ## Verification
 
@@ -83,10 +89,10 @@ cd web && npm run build
 git diff --check
 ```
 
-Observed on 2026-05-13 after Phase 8:
+Observed on 2026-05-13 after Phase 9:
 
-- `python -m pytest -q` → `22 passed`
-- Targeted requirement smoke passed for effective requirements read, override write, generated artifact immutability, and `requirements_edited` event
+- `python -m pytest -q` → `24 passed`
+- JARVIS CLI smoke passed for `draft-brief`, `run`, and `summary` JSON parsing
 - `npm run lint` → passed (`tsc --noEmit`)
 - `npm run build` → passed, Next.js production build completed
 - `git diff --check` → passed
@@ -95,6 +101,7 @@ Observed on 2026-05-13 after Phase 8:
 Recent local commits in project repo:
 
 ```text
+56fddc4 feat: add jarvis automation commands
 ed5dfa6 feat: add requirement checklist overrides
 e41966d feat: add style presets
 3b25ce5 feat: apply deterministic revision notes
@@ -117,6 +124,6 @@ cc63eda feat: improve dashboard artifact previews
 
 Recommended next phases:
 
-1. Add a Hermes/JARVIS integration surface for creating a run from a natural-language brief and reading status/artifacts through CLI/API.
-2. Add template/theme import path.
+1. Add template/theme import path.
+2. Add optional API base URL artifact URL population for summaries.
 3. Add PPTX renderer/export adapter only if editable PowerPoint output is required.
