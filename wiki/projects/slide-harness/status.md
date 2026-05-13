@@ -52,7 +52,12 @@ Implemented:
   - artifact open/download links
   - revision/source run relationship visibility
   - user-facing invalid brief API errors
-- Pytest suite with 17 passing tests as of Phase 5
+- Deterministic revision semantics:
+  - rerun with `revision_note` creates `input/revision-brief.json`
+  - child run metadata records source/revision/applied transformations
+  - source run input remains unchanged
+  - CLI/API/dashboard surface compact revision details
+- Pytest suite with 18 passing tests as of Phase 6
 
 ## Verification
 
@@ -65,10 +70,10 @@ cd web && npm run build
 git diff --check
 ```
 
-Observed on 2026-05-13 after Phase 5:
+Observed on 2026-05-13 after Phase 6:
 
-- `python -m pytest -q` → `17 passed`
-- API route smoke passed for create run, artifacts, HTML safe endpoint, request-changes review, and rerun/revision creation
+- `python -m pytest -q` → `18 passed`
+- Targeted revision smoke passed for source run creation, revision rerun, source input immutability, child `input/revision-brief.json`, and revision metadata
 - `npm run lint` → passed (`tsc --noEmit`)
 - `npm run build` → passed, Next.js production build completed
 - `git diff --check` → passed
@@ -77,6 +82,7 @@ Observed on 2026-05-13 after Phase 5:
 Recent local commits in project repo:
 
 ```text
+3b25ce5 feat: apply deterministic revision notes
 cc63eda feat: improve dashboard artifact previews
 0b867ac feat: add operator CLI workflow
 168c3c4 feat: add review and revision workflow
@@ -96,9 +102,8 @@ cc63eda feat: improve dashboard artifact previews
 
 Recommended next phases:
 
-1. Implement revision semantics so a `revision_note` can alter the copied input/revision brief and downstream run metadata, not only record rerun lineage.
-2. Add design token files and named style presets.
-3. Add dashboard-side requirement checklist editing.
-4. Add a Hermes/JARVIS integration surface for creating a run from a natural-language brief and reading status/artifacts through CLI/API.
-5. Add template/theme import path.
-6. Add PPTX renderer/export adapter only if editable PowerPoint output is required.
+1. Add design token files and named style presets.
+2. Add dashboard-side requirement checklist editing.
+3. Add a Hermes/JARVIS integration surface for creating a run from a natural-language brief and reading status/artifacts through CLI/API.
+4. Add template/theme import path.
+5. Add PPTX renderer/export adapter only if editable PowerPoint output is required.
