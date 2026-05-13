@@ -61,7 +61,7 @@ Implemented:
   - user-facing invalid brief API errors
   - requirement checklist panel with enable/disable and notes overrides
   - lightweight compare panel for source/revision metadata comparison
-  - content-plan operator panel for loading a template, pasting/editing JSON, creating content-plan runs, surfacing validation errors, and showing compact content-plan metadata in run detail
+  - content-plan operator panel for loading Korean-default or English templates, pasting/editing JSON, creating content-plan runs, surfacing validation errors, and showing compact content-plan metadata in run detail
 - Deterministic revision semantics:
   - rerun with `revision_note` creates `input/revision-brief.json`
   - child run metadata records source/revision/applied transformations
@@ -86,7 +86,7 @@ Implemented:
   - API/dashboard controls for enabled state and notes
 - Hermes/JARVIS integration surface:
   - `draft-brief` command for explicit-field brief JSON creation without LLM calls
-  - `content-template` and `run --content-plan` for Hermes/LLM-authored structured slide content without importing Hermes or calling model APIs inside the harness
+  - `content-template` and `run --content-plan` for Hermes/LLM-authored structured slide content without importing Hermes or calling model APIs inside the harness; content-template defaults to Korean placeholders and supports `--language en`
   - API/dashboard content-plan import path for operator-driven Hermes-authored JSON rendering
   - content-plan validation rejects raw HTML/script markers and requires explicit plain-text slide fields
   - JARVIS runbook/prompt bundle for Hermes-side content authoring:
@@ -98,7 +98,7 @@ Implemented:
   - `doctor` command for non-destructive operator preflight diagnostics with human and JSON output
   - `compare-runs` command and API/dashboard view for source/revision metadata comparison without HTML/PDF body diffs
   - README runbook for create/run/inspect/review/rerun/requirements/diagnostics/comparison/content-plan loops
-- Pytest suite with 47 passing tests as of Phase 17
+- Pytest suite with 48 passing tests after Korean-default template language switching
 
 ## Verification
 
@@ -111,9 +111,10 @@ cd web && npm run build
 git diff --check
 ```
 
-Observed on 2026-05-13 after Phase 17:
+Observed on 2026-05-13 after Korean-default template update:
 
-- `python -m pytest -q` → `47 passed`
+- `python -m pytest -q` → `48 passed`
+- Content-template language smoke passed for Korean default and `--language en`
 - Content-plan API smoke passed for template endpoint, content-plan run creation, and invalid `<script>` content-plan rejection
 - `npm run lint` → passed (`tsc --noEmit`)
 - `npm run build` → passed, Next.js production build completed
@@ -123,6 +124,7 @@ Observed on 2026-05-13 after Phase 17:
 Recent local/project commits:
 
 ```text
+0075906 feat: default content templates to Korean
 ed35191 feat: add content plan dashboard UX
 42a93ee feat: add content plan import
 54edddf feat: add compare dashboard view
@@ -145,7 +147,7 @@ cc63eda feat: improve dashboard artifact previews
 
 - Hermes/JARVIS scopes phases, launches OMX for implementation, verifies results, commits locally, and updates this status note.
 - OMX handles repo-local implementation and test/fix loops inside `/home/hskim/projects/slide-harness`.
-- `slide-harness` now has a private GitHub remote and Phase 17 is pushed to `origin/main`.
+- `slide-harness` now has a private GitHub remote and the Korean-default template update is pushed to `origin/main`.
 - Long verification should run in background so the main chat remains responsive.
 - GStack adoption is intentionally deferred until active slide-harness work is complete, to avoid changing the workflow pipeline mid-project.
 
