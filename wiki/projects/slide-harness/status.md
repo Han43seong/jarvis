@@ -62,6 +62,7 @@ Implemented:
   - requirement checklist panel with enable/disable and notes overrides
   - lightweight compare panel for source/revision metadata comparison
   - Korean-localized dashboard UI with content-plan operator panel for loading Korean-default or English templates, pasting/editing JSON, creating content-plan runs, surfacing validation errors, and showing compact content-plan metadata in run detail
+  - Guided Brief primary authoring panel with assisted structured fields, deterministic requirement proposal, critic/challenge notes, user approval gate, automatic brief/content-plan writing, and linked ordinary run artifact generation
 - Deterministic revision semantics:
   - rerun with `revision_note` creates `input/revision-brief.json`
   - child run metadata records source/revision/applied transformations
@@ -100,7 +101,7 @@ Implemented:
   - `doctor` command for non-destructive operator preflight diagnostics with human and JSON output
   - `compare-runs` command and API/dashboard view for source/revision metadata comparison without HTML/PDF body diffs
   - README runbook for create/run/inspect/review/rerun/requirements/diagnostics/comparison/content-plan loops
-- Pytest suite with 48 passing tests after Korean-default template language switching and dashboard Korean localization
+- Pytest suite with 52 passing tests after Guided Brief backend/API/dashboard implementation
 
 ## Verification
 
@@ -113,20 +114,25 @@ cd web && npm run build
 git diff --check
 ```
 
-Observed on 2026-05-13 after dashboard Korean localization:
+Observed on 2026-05-14 after Guided Brief dashboard flow implementation:
 
-- `python -m pytest -q` → `48 passed`
-- Dashboard Korean localization verification passed
-- Content-template language smoke previously passed for Korean default and `--language en`
-- Content-plan API smoke previously passed for template endpoint, content-plan run creation, and invalid `<script>` content-plan rejection
-- `npm run lint` → passed (`tsc --noEmit`)
-- `npm run build` → passed, Next.js production build completed
+- `python -m pytest -q` → `52 passed`
+- `cd web && npm run lint` → passed (`tsc --noEmit`)
+- `cd web && npm run build` → passed, Next.js production build completed
 - `git diff --check` → passed
+- Guided API smoke passed against local backend:
+  - `POST /api/agent-jobs` created `guided-smoke-hermes` with proposed requirements and slide outline
+  - `POST /api/agent-jobs/{job_id}/approve` marked requirements approved
+  - `POST /api/agent-jobs/{job_id}/generate` produced ordinary run `guided-smoke-hermes` with status `done`
+  - `python -m slide_harness.cli summary guided-smoke-hermes --runs-root runs --api-base-url http://127.0.0.1:8000` returned artifact URLs including `final/deck.html`, `deck.pdf`, and `preview.png`
+- Dashboard visual smoke at `http://127.0.0.1:3000` showed the new `새 작업 · Guided Brief` panel with structured fields and the existing run detail/preview panels
 - No secret/auth-sensitive files were changed
 
 Recent local/project commits:
 
 ```text
+e1a3c86 feat: add guided brief dashboard flow
+1ab4c68 docs: describe agent-first slide workflow
 16d789b feat: localize dashboard UI to Korean
 0075906 feat: default content templates to Korean
 ed35191 feat: add content plan dashboard UX
@@ -143,9 +149,9 @@ e41966d feat: add style presets
 cc63eda feat: improve dashboard artifact previews
 0b867ac feat: add operator CLI workflow
 168c3c4 feat: add review and revision workflow
-9a3c0a2 feat: add operator dashboard skeleton
 51ee6d5 feat: initialize slide harness with API foundation
 ```
+
 
 ## Active Operating Model
 
@@ -159,6 +165,7 @@ cc63eda feat: improve dashboard artifact previews
 
 Recommended next phases:
 
-1. Use the new agent-first runbook to produce a real deck from a natural-language user request and inspect it in the dashboard.
-2. Add richer dashboard editing for individual content-plan slides if operator UX needs it.
-3. Add PPTX renderer/export adapter only if editable PowerPoint output is required.
+1. Exercise the Guided Brief form with a real RFP/proposal topic and tune the deterministic requirement proposal/critic wording based on operator review.
+2. Add a stronger requirements-compliance critic loop after generation: compare approved requirements against generated content and create bounded revisions until pass or max-iteration/user gate.
+3. Add richer dashboard editing for individual content-plan slides if operator UX needs it.
+4. Add PPTX renderer/export adapter only if editable PowerPoint output is required.
