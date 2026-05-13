@@ -89,8 +89,10 @@ Implemented:
   - `content-template` and `run --content-plan` for Hermes/LLM-authored structured slide content without importing Hermes or calling model APIs inside the harness; content-template defaults to Korean placeholders and supports `--language en`
   - API/dashboard content-plan import path for operator-driven Hermes-authored JSON rendering
   - content-plan validation rejects raw HTML/script markers and requires explicit plain-text slide fields
-  - JARVIS runbook/prompt bundle for Hermes-side content authoring:
+  - JARVIS runbook/prompt bundle for Hermes-side content authoring, including agent-first brief authoring from natural-language user requests:
     - `wiki/runbooks/slide-harness-content-authoring.md`
+    - `wiki/runbooks/slide-harness-agent-first-generation.md`
+    - `templates/slide-harness/brief-author-prompt.md`
     - `templates/slide-harness/content-plan-author-prompt.md`
     - `scripts/slide_harness_content_authoring_bundle.py`
   - `summary` command for compact machine-readable run summaries
@@ -157,6 +159,6 @@ cc63eda feat: improve dashboard artifact previews
 
 Recommended next phases:
 
-1. Use the Hermes content-authoring runbook to produce a real deck for a concrete user topic/RFP and inspect it in the dashboard.
+1. Use the new agent-first runbook to produce a real deck from a natural-language user request and inspect it in the dashboard.
 2. Add richer dashboard editing for individual content-plan slides if operator UX needs it.
 3. Add PPTX renderer/export adapter only if editable PowerPoint output is required.

@@ -42,6 +42,12 @@ Useful context sources:
 - Project-specific wiki notes, RFP notes, or research notes.
 - Existing `brief.json` and `examples/content-plan-template.json` in `/home/hskim/projects/slide-harness`.
 
+## Agent-first default
+
+For normal use, the user should only describe the deck they want. Hermes/JARVIS should infer and write the brief first, then write the content plan, run the harness, and return dashboard/result paths. Do not require the user to manually fill JSON fields unless the request is genuinely ambiguous.
+
+Detailed agent-first workflow: `wiki/runbooks/slide-harness-agent-first-generation.md`.
+
 ## Standard workflow
 
 From `/home/hskim/projects/slide-harness`:
