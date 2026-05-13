@@ -16,7 +16,7 @@ confidence: high
 
 `slide-harness` is an HTML-first presentation/deck generation harness under `/home/hskim/projects/slide-harness`.
 
-It preserves a CLI-first core while adding an optional FastAPI backend and local Next.js operator dashboard. The filesystem run directory remains the source of truth: `run.json`, `events.jsonl`, generated artifacts, QA reports, review state, and revision lineage.
+It preserves a CLI-first core while adding an optional FastAPI backend and local Next.js operator dashboard. The filesystem run directory remains the source of truth: `run.json`, `events.jsonl`, generated artifacts, QA reports, review state, revision lineage, and effective style preset metadata.
 
 ## Current MVP
 
@@ -57,7 +57,13 @@ Implemented:
   - child run metadata records source/revision/applied transformations
   - source run input remains unchanged
   - CLI/API/dashboard surface compact revision details
-- Pytest suite with 18 passing tests as of Phase 6
+- Style presets/design tokens:
+  - static local `light-engineering` default preset
+  - `executive-brief` and `technical-review` presets
+  - optional brief `style_preset` field with validation
+  - CSS variable/token application in `deck.html`
+  - run/planning/dashboard visibility for effective style preset
+- Pytest suite with 20 passing tests as of Phase 7
 
 ## Verification
 
@@ -70,10 +76,10 @@ cd web && npm run build
 git diff --check
 ```
 
-Observed on 2026-05-13 after Phase 6:
+Observed on 2026-05-13 after Phase 7:
 
-- `python -m pytest -q` → `18 passed`
-- Targeted revision smoke passed for source run creation, revision rerun, source input immutability, child `input/revision-brief.json`, and revision metadata
+- `python -m pytest -q` → `20 passed`
+- Targeted style preset smoke passed for `technical-review` brief propagation, run metadata/planning, and generated `deck.html` CSS token markers
 - `npm run lint` → passed (`tsc --noEmit`)
 - `npm run build` → passed, Next.js production build completed
 - `git diff --check` → passed
@@ -82,6 +88,7 @@ Observed on 2026-05-13 after Phase 6:
 Recent local commits in project repo:
 
 ```text
+e41966d feat: add style presets
 3b25ce5 feat: apply deterministic revision notes
 cc63eda feat: improve dashboard artifact previews
 0b867ac feat: add operator CLI workflow
@@ -102,8 +109,7 @@ cc63eda feat: improve dashboard artifact previews
 
 Recommended next phases:
 
-1. Add design token files and named style presets.
-2. Add dashboard-side requirement checklist editing.
-3. Add a Hermes/JARVIS integration surface for creating a run from a natural-language brief and reading status/artifacts through CLI/API.
-4. Add template/theme import path.
-5. Add PPTX renderer/export adapter only if editable PowerPoint output is required.
+1. Add dashboard-side requirement checklist editing.
+2. Add a Hermes/JARVIS integration surface for creating a run from a natural-language brief and reading status/artifacts through CLI/API.
+3. Add template/theme import path.
+4. Add PPTX renderer/export adapter only if editable PowerPoint output is required.
