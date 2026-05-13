@@ -61,7 +61,7 @@ Implemented:
   - user-facing invalid brief API errors
   - requirement checklist panel with enable/disable and notes overrides
   - lightweight compare panel for source/revision metadata comparison
-  - content-plan operator panel for loading Korean-default or English templates, pasting/editing JSON, creating content-plan runs, surfacing validation errors, and showing compact content-plan metadata in run detail
+  - Korean-localized dashboard UI with content-plan operator panel for loading Korean-default or English templates, pasting/editing JSON, creating content-plan runs, surfacing validation errors, and showing compact content-plan metadata in run detail
 - Deterministic revision semantics:
   - rerun with `revision_note` creates `input/revision-brief.json`
   - child run metadata records source/revision/applied transformations
@@ -98,7 +98,7 @@ Implemented:
   - `doctor` command for non-destructive operator preflight diagnostics with human and JSON output
   - `compare-runs` command and API/dashboard view for source/revision metadata comparison without HTML/PDF body diffs
   - README runbook for create/run/inspect/review/rerun/requirements/diagnostics/comparison/content-plan loops
-- Pytest suite with 48 passing tests after Korean-default template language switching
+- Pytest suite with 48 passing tests after Korean-default template language switching and dashboard Korean localization
 
 ## Verification
 
@@ -111,11 +111,12 @@ cd web && npm run build
 git diff --check
 ```
 
-Observed on 2026-05-13 after Korean-default template update:
+Observed on 2026-05-13 after dashboard Korean localization:
 
 - `python -m pytest -q` → `48 passed`
-- Content-template language smoke passed for Korean default and `--language en`
-- Content-plan API smoke passed for template endpoint, content-plan run creation, and invalid `<script>` content-plan rejection
+- Dashboard Korean localization verification passed
+- Content-template language smoke previously passed for Korean default and `--language en`
+- Content-plan API smoke previously passed for template endpoint, content-plan run creation, and invalid `<script>` content-plan rejection
 - `npm run lint` → passed (`tsc --noEmit`)
 - `npm run build` → passed, Next.js production build completed
 - `git diff --check` → passed
@@ -124,6 +125,7 @@ Observed on 2026-05-13 after Korean-default template update:
 Recent local/project commits:
 
 ```text
+16d789b feat: localize dashboard UI to Korean
 0075906 feat: default content templates to Korean
 ed35191 feat: add content plan dashboard UX
 42a93ee feat: add content plan import
@@ -147,7 +149,7 @@ cc63eda feat: improve dashboard artifact previews
 
 - Hermes/JARVIS scopes phases, launches OMX for implementation, verifies results, commits locally, and updates this status note.
 - OMX handles repo-local implementation and test/fix loops inside `/home/hskim/projects/slide-harness`.
-- `slide-harness` now has a private GitHub remote and the Korean-default template update is pushed to `origin/main`.
+- `slide-harness` now has a private GitHub remote, Korean-default templates, and Korean-localized dashboard UI pushed to `origin/main`.
 - Long verification should run in background so the main chat remains responsive.
 - GStack adoption is intentionally deferred until active slide-harness work is complete, to avoid changing the workflow pipeline mid-project.
 
