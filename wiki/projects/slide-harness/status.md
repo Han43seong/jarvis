@@ -14,7 +14,7 @@ confidence: high
 
 ## Summary
 
-`slide-harness` is an HTML-first presentation/deck generation harness under `/home/hskim/projects/slide-harness`.
+`slide-harness` is an HTML-first presentation/deck generation harness under `/home/hskim/projects/slide-harness` and published as a private GitHub repository at `https://github.com/Han43seong/slide-harness`.
 
 It preserves a CLI-first core while adding an optional FastAPI backend and local Next.js operator dashboard. The filesystem run directory remains the source of truth: `run.json`, `events.jsonl`, generated artifacts, QA reports, review state, revision lineage, effective style/theme metadata, requirement override/effective checklist artifacts, Hermes/JARVIS-friendly summary JSON with optional backend artifact URLs, structured content-plan inputs, and run comparison summaries.
 
@@ -32,7 +32,7 @@ Implemented:
 - Static QA for slide count, placeholders, density, and visual elements
 - Playwright CLI export to `deck.pdf` and `preview.png` when local Playwright is available
 - Shared runner/state layer with `run.json` and `events.jsonl`
-- Optional FastAPI backend with run list/detail/artifacts/QA/events/review/rerun/requirements/compare endpoints
+- Optional FastAPI backend with run list/detail/artifacts/QA/events/review/rerun/requirements/compare/content-plan endpoints
 - Local Next.js + TypeScript operator dashboard under `web/`
 - Review/revision workflow:
   - events endpoint
@@ -61,6 +61,7 @@ Implemented:
   - user-facing invalid brief API errors
   - requirement checklist panel with enable/disable and notes overrides
   - lightweight compare panel for source/revision metadata comparison
+  - content-plan operator panel for loading a template, pasting/editing JSON, creating content-plan runs, surfacing validation errors, and showing compact content-plan metadata in run detail
 - Deterministic revision semantics:
   - rerun with `revision_note` creates `input/revision-brief.json`
   - child run metadata records source/revision/applied transformations
@@ -86,13 +87,18 @@ Implemented:
 - Hermes/JARVIS integration surface:
   - `draft-brief` command for explicit-field brief JSON creation without LLM calls
   - `content-template` and `run --content-plan` for Hermes/LLM-authored structured slide content without importing Hermes or calling model APIs inside the harness
+  - API/dashboard content-plan import path for operator-driven Hermes-authored JSON rendering
   - content-plan validation rejects raw HTML/script markers and requires explicit plain-text slide fields
+  - JARVIS runbook/prompt bundle for Hermes-side content authoring:
+    - `wiki/runbooks/slide-harness-content-authoring.md`
+    - `templates/slide-harness/content-plan-author-prompt.md`
+    - `scripts/slide_harness_content_authoring_bundle.py`
   - `summary` command for compact machine-readable run summaries
   - optional `summary --api-base-url` artifact URLs using safe backend artifact endpoint paths
   - `doctor` command for non-destructive operator preflight diagnostics with human and JSON output
   - `compare-runs` command and API/dashboard view for source/revision metadata comparison without HTML/PDF body diffs
   - README runbook for create/run/inspect/review/rerun/requirements/diagnostics/comparison/content-plan loops
-- Pytest suite with 44 passing tests as of Phase 15
+- Pytest suite with 47 passing tests as of Phase 17
 
 ## Verification
 
@@ -105,18 +111,19 @@ cd web && npm run build
 git diff --check
 ```
 
-Observed on 2026-05-13 after Phase 15:
+Observed on 2026-05-13 after Phase 17:
 
-- `python -m pytest -q` → `44 passed`
-- Content-plan smoke passed for `content-template`, `run --content-plan`, rendered authored slide content, and unsafe `<script>` marker rejection
+- `python -m pytest -q` → `47 passed`
+- Content-plan API smoke passed for template endpoint, content-plan run creation, and invalid `<script>` content-plan rejection
 - `npm run lint` → passed (`tsc --noEmit`)
 - `npm run build` → passed, Next.js production build completed
 - `git diff --check` → passed
 - No secret/auth-sensitive files were changed
 
-Recent local commits in project repo:
+Recent local/project commits:
 
 ```text
+ed35191 feat: add content plan dashboard UX
 42a93ee feat: add content plan import
 54edddf feat: add compare dashboard view
 8cd5dd6 feat: add run comparison CLI
@@ -138,7 +145,7 @@ cc63eda feat: improve dashboard artifact previews
 
 - Hermes/JARVIS scopes phases, launches OMX for implementation, verifies results, commits locally, and updates this status note.
 - OMX handles repo-local implementation and test/fix loops inside `/home/hskim/projects/slide-harness`.
-- Push/deploy remain manual approval gates.
+- `slide-harness` now has a private GitHub remote and Phase 17 is pushed to `origin/main`.
 - Long verification should run in background so the main chat remains responsive.
 - GStack adoption is intentionally deferred until active slide-harness work is complete, to avoid changing the workflow pipeline mid-project.
 
@@ -146,6 +153,6 @@ cc63eda feat: improve dashboard artifact previews
 
 Recommended next phases:
 
-1. Add a Hermes/JARVIS-side content-authoring prompt/runbook that generates `content-plan.json` from a brief and project context.
-2. Add dashboard/API visibility for content-plan metadata if operator UX needs it.
+1. Use the Hermes content-authoring runbook to produce a real deck for a concrete user topic/RFP and inspect it in the dashboard.
+2. Add richer dashboard editing for individual content-plan slides if operator UX needs it.
 3. Add PPTX renderer/export adapter only if editable PowerPoint output is required.
