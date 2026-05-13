@@ -16,7 +16,7 @@ confidence: high
 
 `slide-harness` is an HTML-first presentation/deck generation harness under `/home/hskim/projects/slide-harness`.
 
-It preserves a CLI-first core while adding an optional FastAPI backend and local Next.js operator dashboard. The filesystem run directory remains the source of truth: `run.json`, `events.jsonl`, generated artifacts, QA reports, review state, revision lineage, effective style/theme metadata, requirement override/effective checklist artifacts, and Hermes/JARVIS-friendly summary JSON with optional backend artifact URLs.
+It preserves a CLI-first core while adding an optional FastAPI backend and local Next.js operator dashboard. The filesystem run directory remains the source of truth: `run.json`, `events.jsonl`, generated artifacts, QA reports, review state, revision lineage, effective style/theme metadata, requirement override/effective checklist artifacts, Hermes/JARVIS-friendly summary JSON with optional backend artifact URLs, and run comparison summaries.
 
 ## Current MVP
 
@@ -47,6 +47,7 @@ Implemented:
   - `summary`
   - `draft-brief`
   - `doctor`
+  - `compare-runs`
   - `review`
   - `rerun`
   - brief validation/template support
@@ -84,8 +85,9 @@ Implemented:
   - `summary` command for compact machine-readable run summaries
   - optional `summary --api-base-url` artifact URLs using safe backend artifact endpoint paths
   - `doctor` command for non-destructive operator preflight diagnostics with human and JSON output
-  - README runbook for create/run/inspect/review/rerun/requirements/diagnostics loops
-- Pytest suite with 37 passing tests as of Phase 12
+  - `compare-runs` command for source/revision metadata comparison without HTML/PDF body diffs
+  - README runbook for create/run/inspect/review/rerun/requirements/diagnostics/comparison loops
+- Pytest suite with 40 passing tests as of Phase 13
 
 ## Verification
 
@@ -98,10 +100,10 @@ cd web && npm run build
 git diff --check
 ```
 
-Observed on 2026-05-13 after Phase 12:
+Observed on 2026-05-13 after Phase 13:
 
-- `python -m pytest -q` → `37 passed`
-- Doctor smoke passed for `doctor --json`, stable check ids, missing brief fail exit, and `--no-fail-exit`
+- `python -m pytest -q` → `40 passed`
+- Compare-runs smoke passed for source run, request_changes review, revision child rerun, JSON comparison, and `--source` shortcut
 - `npm run lint` → passed (`tsc --noEmit`)
 - `npm run build` → passed, Next.js production build completed
 - `git diff --check` → passed
@@ -110,6 +112,7 @@ Observed on 2026-05-13 after Phase 12:
 Recent local commits in project repo:
 
 ```text
+8cd5dd6 feat: add run comparison CLI
 0255bf6 feat: add operator doctor command
 6eadb2d feat: populate summary artifact urls
 d7e8fe1 feat: add local theme imports
@@ -136,5 +139,5 @@ cc63eda feat: improve dashboard artifact previews
 
 Recommended next phases:
 
-1. Add run comparison/diff summaries for revision/source runs and operator review.
+1. Add compare API/dashboard view for revision/source runs while preserving CLI-first compare logic.
 2. Add PPTX renderer/export adapter only if editable PowerPoint output is required.
