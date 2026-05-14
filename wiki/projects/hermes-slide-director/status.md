@@ -53,6 +53,7 @@ Hermes then:
 - `src/hermes_slide_director/phase13.py` — Phase 13 deterministic local final package manifest writer for finalized runs.
 - `src/hermes_slide_director/phase14.py` — Phase 14 conversation-first slide job intake and proposed-criteria artifact writer.
 - `src/hermes_slide_director/phase15.py` — Phase 15 Hermes-authored Claude Design producer prompt/contract preparation from operator intake plus approved criteria.
+- `src/hermes_slide_director/phase16.py` — Phase 16 local/dry-run Producer handoff package preparation before any real Claude/OMC/provider generation.
 - `tests/test_models.py` — schema alignment and model validation tests.
 - `tests/test_phase1.py` — CLI/source-ingestion/propose/approve artifact tests.
 - `tests/test_phase2.py` — prepare-generation contract/brief/failure-path tests.
@@ -69,6 +70,7 @@ Hermes then:
 - `tests/test_phase13.py` — final package manifest/report tests, source-artifact reference behavior, optional browser artifact warnings, and CLI parsing tests.
 - `tests/test_phase14.py` — conversation-first intake artifact, proposed criteria, validation, and CLI parsing tests.
 - `tests/test_phase15.py` — design producer contract, brief, Claude Design prompt, approved-criteria gate, allow-proposed behavior, and CLI parsing tests.
+- `tests/test_phase16.py` — local Producer handoff package, safety booleans, expected output directory, launch-template, and CLI parsing tests.
 
 ## Recent progress
 
@@ -208,10 +210,21 @@ Hermes then:
   - Reviewer: independent background Codex read-only session `proc_ed26aed5e6fc` returned `PASS` with no required changes; read-only pytest limitation was covered by Hermes full test run.
   - Verification: Phase 15 tests -> `7 passed`; full suite -> `98 passed`; doctor OK; Hermes smoke under `/tmp/hermes-phase15-hermes-verify.XwmUPu/run` created all three generation artifacts and verified required structured sections.
   - Commit pushed: `4921e32 feat: add design producer prompt preparation`; GitHub repo remains `https://github.com/Han43seong/hermes-slide-director`.
+- `2026-05-14`: Built Phase 16 local/dry-run Producer handoff adapter.
+  - Command added: `prepare-producer-handoff`.
+  - Purpose: package the Phase 15 Claude Design prompt/contract/brief into a local handoff package before any real Claude/OMC/provider generation. This is the safe bridge between the Hermes-authored prompt and a future real Producer launch.
+  - Artifacts: `generation/producer-handoff.json`, `generation/producer-handoff.md`, and `generation/producer-launch-command.txt`.
+  - Safety behavior: `external_call_made=false`, `approval_required_before_real_launch=true`; expected output directory is `iterations/001/`; expected outputs are `deck.html`, `producer-report.md`, and `asset-manifest.json`.
+  - Launch command template avoids putting the full prompt in argv.
+  - Scope: no real Claude, OMC, provider, browser, network, dashboard, or deck generation was added.
+  - Reviewer: independent reviewer `proc_73754be86170` returned `PASS` with no required changes.
+  - Verification: Phase 16 tests -> `7 passed`; full suite -> `105 passed`; doctor OK; Hermes smoke under `/tmp/hermes-phase16-hermes-verify.Ge4ImX/run` created all three handoff artifacts and verified the safety booleans/path.
+  - Note: Hermes smoke initially checked the wrong key name `expected_output_dir`; actual JSON key is `expected_output_directory`, and verification was rerun successfully before commit.
+  - Commit pushed: `f09b437 feat: add dry-run producer handoff preparation`; GitHub repo remains `https://github.com/Han43seong/hermes-slide-director`.
 
 ## Next steps
 
-1. Next likely phase: real background Producer adapter/handoff that can consume the Phase 15 contract.
-   - Still gate before provider, secrets, cost, or actual external generation.
+1. Next likely phase: real Producer adapter design/launch gate that consumes `generation/producer-handoff.json`.
+   - Gate required before provider, secrets, cost, or actual external generation.
 2. Keep dashboard work deferred until the conversation-first flow and Producer/Reviewer generation loop are stronger.
 3. Background executor hygiene cleanup is already completed and recorded in the JARVIS wiki/status history.
