@@ -47,6 +47,7 @@ Hermes then:
 - `src/hermes_slide_director/phase8.py` — Phase 8 deterministic local max-iteration loop orchestrator and report writer.
 - `src/hermes_slide_director/phase9.py` — Phase 9 optional Playwright browser-render/export checks with screenshot/PDF/report artifacts.
 - `src/hermes_slide_director/phase10.py` — Phase 10 critic hook contract preparation for future semantic/design/combined external critic handoff; writes durable contract/brief artifacts without invoking an external critic.
+- `src/hermes_slide_director/phase11.py` — Phase 11 critic report ingestion for file-only external critic reports, with schema validation and job-status mapping.
 - `tests/test_models.py` — schema alignment and model validation tests.
 - `tests/test_phase1.py` — CLI/source-ingestion/propose/approve artifact tests.
 - `tests/test_phase2.py` — prepare-generation contract/brief/failure-path tests.
@@ -58,6 +59,7 @@ Hermes then:
 - `tests/test_phase8.py` — deterministic local max-iteration loop/report tests.
 - `tests/test_phase9.py` — optional browser-render report/artifact/failure-path tests using fake Playwright.
 - `tests/test_phase10.py` — critic contract/brief/job-artifact tests, local-QA prerequisite checks, optional browser-report behavior, critic-kind validation, and CLI parsing tests.
+- `tests/test_phase11.py` — critic report ingestion validation, artifact writing, status mapping, confidence/finding schema, and CLI parsing tests.
 
 ## Recent progress
 
@@ -151,8 +153,18 @@ Hermes then:
   - Producer/Reviewer loop: separate reviewer verdict `PASS`.
   - Verification: `PYTHONPATH=src python -m pytest -q` -> `52 passed`; doctor OK; smoke through `run-local-loop` -> `prepare-critic` OK.
   - Commit: `dfea114 feat: add critic hook contract CLI`.
+- `2026-05-14`: Built Phase 11 critic report ingestion CLI.
+  - Command added: `ingest-critic-report --run <run_dir> --report <path> [--iteration <n>]`.
+  - Artifacts: `iterations/<NNN>/critic-report.json` and `critic-report.md`.
+  - Scope is file-only report ingestion: validates and records an already-produced critic report; it does not call an external critic, LLM, browser, network API, or paid service.
+  - Prerequisite: `prepare-critic` must have created `iterations/<NNN>/critic-contract.json` for the target iteration.
+  - Validation requires verdict `PASS`, `REQUEST_CHANGES`, `ESCALATE_TO_USER`, or `ABORT`; numeric confidence in `0..1`; and findings with `criterion_id`, `passed`, `evidence`, and `required_fixes` fields.
+  - Job status mapping: `PASS` -> `passed`, `REQUEST_CHANGES` -> `revising`, `ESCALATE_TO_USER` -> `user_review`, `ABORT` -> `failed`.
+  - Producer/Reviewer loop: final reviewer verdict `PASS` after two `REQUEST_CHANGES` fixes aligning Phase 10/11 confidence and finding schema.
+  - Verification: `PYTHONPATH=src python -m pytest -q` -> `68 passed`; doctor OK; smoke through `run-local-loop` -> `prepare-critic` -> `ingest-critic-report` OK.
+  - Commit: `b3c1182 feat: add critic report ingestion CLI`.
 
 ## Next steps
 
-1. Add actual external critic invocation/report adapter for content, narrative, risk, and design review beyond deterministic local checks.
-2. Add dashboard only after the CLI quality loop and critic invocation/report adapter are stable.
+1. Add the actual external critic invocation/report producer adapter for content, narrative, risk, and design review beyond deterministic local checks.
+2. Add dashboard only after the CLI quality loop and external critic invocation/report adapter are stable.
