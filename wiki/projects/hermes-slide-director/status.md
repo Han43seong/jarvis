@@ -5,7 +5,7 @@
 - Project created as a clean-start repository at `/home/hskim/projects/hermes-slide-director`.
 - GitHub private repo created and pushed at `https://github.com/Han43seong/hermes-slide-director`; local `origin` tracks `origin/main`.
 - Purpose: Hermes-orchestrated Claude Design loop harness for high-fidelity slide decks.
-- The project intentionally starts from product/architecture contracts before implementing a dashboard or generator.
+- The project intentionally centers on the Hermes conversation-first flow before implementing any dashboard.
 - Existing `slide-harness` remains as prior experiment/reference; this project is the new direction.
 
 ## Active product model
@@ -18,13 +18,14 @@ User supplies:
 
 Hermes then:
 
-1. Analyzes material and design reference.
+1. Converts the conversation into operator intake artifacts.
 2. Proposes verification criteria.
 3. Waits for user review/edit/approval.
-4. Directs Claude Design-style HTML deck generation.
-5. Renders PDF/screenshots.
-6. Runs content/design/readability/export QA.
-7. Creates revision briefs and loops until pass or max iteration.
+4. Prepares generation from approved criteria.
+5. Directs Claude Design-style HTML deck generation.
+6. Renders PDF/screenshots.
+7. Runs content/design/readability/export QA.
+8. Creates revision briefs and loops until pass or max iteration.
 
 ## Repository contents
 
@@ -35,7 +36,7 @@ Hermes then:
 - `schemas/verification-criteria.schema.json` — approved criteria contract.
 - `schemas/job.schema.json` — job state contract.
 - `examples/user-scenario.md` — representative use case.
-- `src/hermes_slide_director/cli.py` — CLI scaffold with doctor, loop description, criteria proposal/approval, generation preparation, dry-run deck production, local render-check, local QA, revision-brief, apply-revision, local loop, and optional browser-render commands.
+- `src/hermes_slide_director/cli.py` — CLI scaffold with doctor, loop description, conversation-first intake, criteria proposal/approval, generation preparation, dry-run deck production, local render-check, local QA, revision-brief, apply-revision, local loop, optional browser-render, critic, and finalization commands.
 - `src/hermes_slide_director/models.py` — Phase 0 Pydantic models for criteria, jobs, iterations, artifacts, QA reports, and reviewer verdicts.
 - `src/hermes_slide_director/phase1.py` — Phase 1 source ingestion and deterministic baseline criteria proposal utilities.
 - `src/hermes_slide_director/phase2.py` — Phase 2 dry-run producer contract and Claude Design-style producer brief preparation utilities.
@@ -50,6 +51,7 @@ Hermes then:
 - `src/hermes_slide_director/phase11.py` — Phase 11 critic report ingestion for file-only external critic reports, with schema validation and job-status mapping.
 - `src/hermes_slide_director/phase12.py` — Phase 12 dry-run critic report producer adapter for Phase 11-compatible reports.
 - `src/hermes_slide_director/phase13.py` — Phase 13 deterministic local final package manifest writer for finalized runs.
+- `src/hermes_slide_director/phase14.py` — Phase 14 conversation-first slide job intake and proposed-criteria artifact writer.
 - `tests/test_models.py` — schema alignment and model validation tests.
 - `tests/test_phase1.py` — CLI/source-ingestion/propose/approve artifact tests.
 - `tests/test_phase2.py` — prepare-generation contract/brief/failure-path tests.
@@ -64,6 +66,7 @@ Hermes then:
 - `tests/test_phase11.py` — critic report ingestion validation, artifact writing, status mapping, confidence/finding schema, and CLI parsing tests.
 - `tests/test_phase12.py` — dry-run critic report producer validation, default artifact path, Phase 11-compatible shape, scope guards, and CLI parsing tests.
 - `tests/test_phase13.py` — final package manifest/report tests, source-artifact reference behavior, optional browser artifact warnings, and CLI parsing tests.
+- `tests/test_phase14.py` — conversation-first intake artifact, proposed criteria, validation, and CLI parsing tests.
 
 ## Recent progress
 
@@ -185,9 +188,20 @@ Hermes then:
   - Producer/Reviewer separation: background OMX producer returned exit 0; independent read-only background Codex reviewer returned `PASS`, while Hermes/JARVIS ran full verification separately. This kept the main channel responsive during implementation and review.
   - Verification: `PYTHONPATH=src python -m pytest -q` -> `81 passed in 0.36s`; doctor OK with `11 job statuses, 4 reviewer verdicts`; corrected finalize smoke through propose/approve/prepare-generation/produce-deck/check-render/review-qa/prepare-critic/produce-critic-report PASS/ingest-critic-report/finalize-run produced the final package artifacts.
   - Commit: `b0778d4 feat: add final package manifest CLI`; branch `main` synced with `origin/main` after push (`ahead/behind 0/0`).
+- `2026-05-14`: Built Phase 14 conversation-first slide job intake.
+  - User decision: dashboard is deferred; Hermes conversation-first flow is the product center.
+  - Command added: `start-slide-job`.
+  - Purpose: Hermes/JARVIS can convert user-provided materials, design reference/template, audience, purpose, slide count, language, output format, and constraints into stable run artifacts without requiring the user to handle internal JSON/brief paths directly.
+  - Artifacts: `inputs/operator-intake.json`, `inputs/operator-intake.md`, `criteria/proposed.json`, and `criteria/proposed.md`.
+  - Product model: conversation -> operator intake -> proposed criteria -> user approval -> prepare-generation -> Producer/Reviewer generation loop.
+  - Reviewer: independent background Codex read-only session `proc_3050402e2460` returned no blocking findings or required changes; read-only pytest limitation was covered by Hermes full test run.
+  - Verification: Phase 14 tests -> `10 passed`; full suite -> `91 passed`; doctor OK; Hermes smoke under `/tmp/hermes-phase14-hermes-verify.W7Z0LB/run` created intake and proposed criteria artifacts.
+  - Commit pushed: `656fd4b feat: add conversation-first slide job intake`; GitHub repo remains `https://github.com/Han43seong/hermes-slide-director`.
 
 ## Next steps
 
-1. Gate the real external critic adapter behind explicit setup/approval for provider, secrets, and cost.
+1. Phase 15 should generate a Hermes-authored Claude Design producer prompt/contract from intake + approved criteria.
+   - Scope remains offline/local contract only.
+   - No provider, secrets, or cost setup yet.
 2. Run JARVIS background executor hygiene cleanup from `wiki/projects/jarvis/background-executor-hygiene-followup-2026-05-14.md`.
-3. Next product phase can be dashboard cockpit or real external critic integration after explicit setup decisions.
+3. Keep dashboard work deferred until the conversation-first flow and Producer/Reviewer generation loop are stronger.
