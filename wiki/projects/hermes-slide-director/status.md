@@ -49,6 +49,7 @@ Hermes then:
 - `src/hermes_slide_director/phase10.py` — Phase 10 critic hook contract preparation for future semantic/design/combined external critic handoff; writes durable contract/brief artifacts without invoking an external critic.
 - `src/hermes_slide_director/phase11.py` — Phase 11 critic report ingestion for file-only external critic reports, with schema validation and job-status mapping.
 - `src/hermes_slide_director/phase12.py` — Phase 12 dry-run critic report producer adapter for Phase 11-compatible reports.
+- `src/hermes_slide_director/phase13.py` — Phase 13 deterministic local final package manifest writer for finalized runs.
 - `tests/test_models.py` — schema alignment and model validation tests.
 - `tests/test_phase1.py` — CLI/source-ingestion/propose/approve artifact tests.
 - `tests/test_phase2.py` — prepare-generation contract/brief/failure-path tests.
@@ -62,6 +63,7 @@ Hermes then:
 - `tests/test_phase10.py` — critic contract/brief/job-artifact tests, local-QA prerequisite checks, optional browser-report behavior, critic-kind validation, and CLI parsing tests.
 - `tests/test_phase11.py` — critic report ingestion validation, artifact writing, status mapping, confidence/finding schema, and CLI parsing tests.
 - `tests/test_phase12.py` — dry-run critic report producer validation, default artifact path, Phase 11-compatible shape, scope guards, and CLI parsing tests.
+- `tests/test_phase13.py` — final package manifest/report tests, source-artifact reference behavior, optional browser artifact warnings, and CLI parsing tests.
 
 ## Recent progress
 
@@ -174,8 +176,18 @@ Hermes then:
   - Producer/Reviewer loop: `PASS`.
   - Verification: `PYTHONPATH=src python -m pytest -q` -> `75 passed`; doctor OK; smoke through `run-local-loop` -> `prepare-critic` -> `produce-critic-report` -> `ingest-critic-report` OK.
   - Commit: `39dfef9 feat: add dry-run critic report producer`.
+- `2026-05-14`: Built Phase 13 deterministic local final package CLI.
+  - Command added: `finalize-run --run <run_dir> [--iteration <n>]`.
+  - Artifacts: `final/final-package.json` and `final/final-package.md`.
+  - Scope is local finalization only: the final package references source artifacts instead of copying every deck/report/source file.
+  - Optional browser/PDF/screenshot artifacts are recorded as warnings when absent, not as hard failures.
+  - `job.json` moves to `finalized`; corrected smoke selected iteration `001` for job id `phase13-verify`.
+  - Producer/Reviewer separation: background OMX producer returned exit 0; independent read-only background Codex reviewer returned `PASS`, while Hermes/JARVIS ran full verification separately. This kept the main channel responsive during implementation and review.
+  - Verification: `PYTHONPATH=src python -m pytest -q` -> `81 passed in 0.36s`; doctor OK with `11 job statuses, 4 reviewer verdicts`; corrected finalize smoke through propose/approve/prepare-generation/produce-deck/check-render/review-qa/prepare-critic/produce-critic-report PASS/ingest-critic-report/finalize-run produced the final package artifacts.
+  - Commit: `b0778d4 feat: add final package manifest CLI`; branch `main` synced with `origin/main` after push (`ahead/behind 0/0`).
 
 ## Next steps
 
 1. Gate the real external critic adapter behind explicit setup/approval for provider, secrets, and cost.
-2. Next safe CLI work can be finalization/export packaging or dashboard cockpit after CLI quality loop stability.
+2. Run JARVIS background executor hygiene cleanup from `wiki/projects/jarvis/background-executor-hygiene-followup-2026-05-14.md`.
+3. Next product phase can be dashboard cockpit or real external critic integration after explicit setup decisions.
