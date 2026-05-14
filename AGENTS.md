@@ -50,6 +50,18 @@ Default routing:
 
 When the user explicitly names an executor, obey that unless it conflicts with safety.
 
+## Producer/Reviewer rejection loop policy
+
+For non-trivial implementation, design, or artifact-generation work, prefer a role-separated loop before reporting completion:
+
+1. JARVIS/Hermes acts as Director: define the task, acceptance criteria, allowed paths, forbidden actions, verification commands, and max iterations.
+2. A Producer agent/executor creates or modifies the artifact. Codex-family producers include `codex exec`, `omx exec`, and `omx ralph`; Claude-family producers include `claude -p`, `omc launch`, and OMC team flows.
+3. Hermes performs basic verification: git status/diff, relevant tests/builds/lints, artifact existence, and secret/scope checks.
+4. A separate Reviewer/Critic agent evaluates the result against the original criteria and returns `PASS`, `REQUEST_CHANGES`, `ESCALATE_TO_USER`, or `ABORT`.
+5. If changes are requested, Hermes or a separate Revision Planner converts findings into a bounded producer prompt and repeats until pass, max iterations, escalation, or abort.
+
+Use `harnesses/producer-reviewer-rejection-loop.md` as the protocol. Do not spend full loop overhead on quick reads, status checks, one-line docs/config edits, or local server start/stop. This policy does not relax safety gates; push/deploy, secrets/auth, sudo/system changes, permanent deletes, broad rewrites, and paid/cloud actions still require explicit approval.
+
 ## Safety policy
 
 Automatic/low-friction actions are allowed for:

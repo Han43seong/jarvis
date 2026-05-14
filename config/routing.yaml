@@ -142,6 +142,72 @@ routing_defaults:
   recurring_work: cron
   backlog_work: kanban
 
+review_loop:
+  default: selective
+  protocol: /home/hskim/jarvis/harnesses/producer-reviewer-rejection-loop.md
+  director: hermes_jarvis_main_session
+  use_for:
+    - medium_large_implementation
+    - design_or_slide_generation
+    - artifact_quality_sensitive_work
+    - user_explicitly_requests_rejection_loop
+    - hermes_slide_director_development
+  skip_for:
+    - status_checks
+    - file_reads
+    - one_line_docs_or_config_edits
+    - local_server_start_stop
+    - quick_git_diff_or_log_checks
+  producer_families:
+    codex_family:
+      - codex_exec
+      - omx_exec
+      - omx_ralph
+      - omx_team
+    claude_family:
+      - claude_print
+      - claude_interactive_tmux
+      - omc_launch
+      - omc_team
+    hermes_native:
+      - delegate_task
+      - spawned_hermes_worker
+      - kanban_worker
+  reviewer_selection:
+    prefer_different_family_from_producer: true
+    same_session_self_review_allowed: false
+    require_original_spec_and_artifact_paths: true
+  max_iterations:
+    normal: 3
+    design_artifact: 5
+  verdicts:
+    - PASS
+    - REQUEST_CHANGES
+    - ESCALATE_TO_USER
+    - ABORT
+  gates:
+    preflight:
+      - target_repo_or_workspace_identified
+      - allowed_paths_listed
+      - forbidden_actions_listed
+      - acceptance_criteria_listed
+      - verification_commands_listed
+    revision:
+      - git_status_checked
+      - git_diff_checked
+      - relevant_tests_or_artifact_checks_run
+      - reviewer_verdict_recorded
+    escalation:
+      - repeated_producer_reviewer_disagreement
+      - max_iterations_reached
+      - scope_or_risk_expands
+      - user_taste_or_business_tradeoff_required
+    abort:
+      - wrong_target_path
+      - unexpected_secret_or_auth_file_change
+      - unrelated_environment_failure_blocks_verification
+      - repeated_revisions_make_artifact_worse
+
 require_user_approval:
   - sudo
   - destructive_delete
