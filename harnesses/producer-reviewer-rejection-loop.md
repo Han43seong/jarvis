@@ -55,9 +55,8 @@ A separate executor/subagent responsible for making the artifact.
 Examples:
 
 - `delegate_task` implementer
-- `omx exec` / `$ralph`
-- `codex exec`
-- `claude -p`
+- Codex-family producer: `codex exec` directly, or `omx exec` / `omx ralph` as the oh-my-codex orchestration layer on top of Codex CLI
+- Claude-family producer: `claude -p` directly, or `omc launch` / OMC team flows as the oh-my-claudecode orchestration layer on top of Claude Code
 - spawned Hermes worker
 
 Producer rules:
