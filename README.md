@@ -122,8 +122,8 @@ The durable protocol lives at `harnesses/producer-reviewer-rejection-loop.md`, w
 | --- | --- |
 | `AGENTS.md` | Standing operating rules for JARVIS sessions launched from this repository. |
 | `config/projects.yaml` | Project registry. |
-| `config/routing.yaml` | Executor routing policy. |
-| `harnesses/` | Reusable execution procedures and verification harnesses. |
+| `config/routing.yaml` | Executor routing policy, including selective Producer/Reviewer loop triggers. |
+| `harnesses/` | Reusable execution procedures and verification harnesses, including the Producer/Reviewer rejection-loop protocol. |
 | `plans/` | Implementation and migration plans. |
 | `runs/` | Run logs and executor summaries. |
 | `scripts/` | Helper scripts for control-plane checks and automation. |
@@ -192,6 +192,7 @@ The workflow was assembled iteratively. Important decisions and fixes include:
 | --- | --- | --- |
 | Control-plane boundary | Established this repository as a management workspace rather than an application repository. | Keep orchestration separate from application source. |
 | Routing | Added a project registry and routing policy so JARVIS can choose between Hermes direct work, Codex/OMX, Claude Code/OMC, background workers, cron, kanban, and selective Producer/Reviewer loops. | Routing should be explicit, not improvised. |
+| Producer/Reviewer loop | Wired the loop into `AGENTS.md`, `config/routing.yaml`, `harnesses/producer-reviewer-rejection-loop.md`, README, and relevant JARVIS skills. | Quality-sensitive work needs independent critique, but loop overhead should remain selective. |
 | Primary executor | Verified the Codex CLI + OMX line with smoke tests before treating it as the primary implementation path. | Executor trust should be earned by live verification. |
 | Safety | Added sandbox and approval hardening so routine automation can proceed while destructive operations remain gated. | Autonomy needs guardrails. |
 | Wiki | Built an ontology-informed markdown wiki for decisions, research, status, and architecture notes. | Durable knowledge should be human-readable and git-friendly. |
@@ -313,8 +314,8 @@ Hermes / JARVIS 컨트롤 플레인
 | --- | --- |
 | `AGENTS.md` | 이 저장소에서 시작되는 JARVIS 세션의 상시 운영 규칙. |
 | `config/projects.yaml` | 프로젝트 레지스트리. |
-| `config/routing.yaml` | 실행자 라우팅 정책. |
-| `harnesses/` | 재사용 가능한 실행 절차와 검증 하네스. |
+| `config/routing.yaml` | 실행자 라우팅 정책과 선택적 Producer/Reviewer 루프 트리거. |
+| `harnesses/` | 재사용 가능한 실행 절차와 검증 하네스. Producer/Reviewer 반려 루프 프로토콜을 포함합니다. |
 | `plans/` | 구현 및 마이그레이션 계획. |
 | `runs/` | 실행 로그와 executor 요약. |
 | `scripts/` | 컨트롤 플레인 점검 및 자동화 보조 스크립트. |
@@ -383,6 +384,7 @@ JARVIS는 높은 자율성을 목표로 하지만 명시적인 안전 게이트�
 | --- | --- | --- |
 | 컨트롤 플레인 경계 | 이 저장소를 애플리케이션 저장소가 아니라 관리 워크스페이스로 정의했습니다. | 관제와 애플리케이션 소스는 분리해야 합니다. |
 | 라우팅 | Hermes direct, Codex/OMX, Claude Code/OMC, background worker, cron, kanban, 선택적 Producer/Reviewer 루프 중 선택할 수 있도록 레지스트리와 라우팅 정책을 추가했습니다. | 라우팅은 즉흥적으로 정하지 않고 명시해야 합니다. |
+| Producer/Reviewer 루프 | `AGENTS.md`, `config/routing.yaml`, `harnesses/producer-reviewer-rejection-loop.md`, README, 관련 JARVIS skill에 루프 정책을 연결했습니다. | 품질 민감 작업에는 독립 비평이 필요하지만, 루프 비용은 선택적으로 써야 합니다. |
 | 기본 실행자 | Codex CLI + OMX 라인을 smoke test로 검증한 뒤 기본 구현 경로로 채택했습니다. | 실행자 신뢰는 실제 검증으로 확보해야 합니다. |
 | 안전성 | sandbox와 approval 정책을 정리했습니다. | 자율성에는 안전 게이트가 필요합니다. |
 | 위키 | ontology-informed markdown wiki를 구축했습니다. | 장기 지식은 사람이 읽기 쉽고 git 친화적이어야 합니다. |
