@@ -35,11 +35,13 @@ Hermes then:
 - `schemas/verification-criteria.schema.json` — approved criteria contract.
 - `schemas/job.schema.json` — job state contract.
 - `examples/user-scenario.md` — representative use case.
-- `src/hermes_slide_director/cli.py` — CLI scaffold with doctor, loop description, Phase 1 criteria proposal, and criteria approval commands.
+- `src/hermes_slide_director/cli.py` — CLI scaffold with doctor, loop description, Phase 1 criteria proposal/approval, and Phase 2 generation preparation commands.
 - `src/hermes_slide_director/models.py` — Phase 0 Pydantic models for criteria, jobs, iterations, artifacts, QA reports, and reviewer verdicts.
 - `src/hermes_slide_director/phase1.py` — Phase 1 source ingestion and deterministic baseline criteria proposal utilities.
+- `src/hermes_slide_director/phase2.py` — Phase 2 dry-run producer contract and Claude Design-style producer brief preparation utilities.
 - `tests/test_models.py` — schema alignment and model validation tests.
 - `tests/test_phase1.py` — CLI/source-ingestion/propose/approve artifact tests.
+- `tests/test_phase2.py` — prepare-generation contract/brief/failure-path tests.
 
 ## Recent progress
 
@@ -57,11 +59,18 @@ Hermes then:
   - Producer/Reviewer loop: initial reviewer requested path-only `--materials` enforcement and README correction; fixes applied; final reviewer verdict `PASS`.
   - Verification: `PYTHONPATH=src python -m pytest -q` -> `10 passed`; doctor OK; propose/approve smoke OK; missing-material smoke exits non-zero with expected message.
   - Commit: `34bb0d0 feat: add Phase 1 criteria proposal CLI`.
+- `2026-05-14`: Built Phase 2 dry-run generation prompt contract.
+  - Command added: `prepare-generation --run <run_dir> [--deck-title ...] [--audience ...] [--language ...] [--slide-count ...]`.
+  - Artifacts: `generation/producer-contract.json` and `generation/producer-brief.md`.
+  - The contract records job id, run marker, title/audience/language/slide count, source materials, design references, approved criteria path, required producer outputs, constraints, and QA inputs.
+  - `job.json` status moves to `generating` to mark generation preparation; no deck/renderer/LLM call is performed yet.
+  - Producer/Reviewer loop: separate reviewer verdict `PASS`.
+  - Verification: `PYTHONPATH=src python -m pytest -q` -> `14 passed`; doctor OK; propose -> approve -> prepare-generation smoke OK.
+  - Commit: `3f257a0 feat: add Phase 2 generation brief CLI`.
 
 ## Next steps
 
-1. Add generator prompt contract for Claude Design-style HTML decks.
-2. Add a dry-run `generate-brief` or `prepare-generation` CLI command that turns approved criteria + inputs into a producer prompt artifact.
-3. Add renderer checks for HTML/PDF/screenshots.
-4. Add critic report schema persistence and one QA loop.
-5. Add dashboard only after CLI proof and quality loop are stable.
+1. Add actual producer execution adapter in dry-run-first form: consume `generation/producer-brief.md`, write a placeholder `iterations/001/` output contract, and keep external LLM/OMC calls optional/explicit.
+2. Add renderer checks for HTML/PDF/screenshots once a deck artifact exists.
+3. Add critic report schema persistence and one QA loop.
+4. Add dashboard only after CLI proof and quality loop are stable.
