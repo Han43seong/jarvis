@@ -35,13 +35,15 @@ Hermes then:
 - `schemas/verification-criteria.schema.json` — approved criteria contract.
 - `schemas/job.schema.json` — job state contract.
 - `examples/user-scenario.md` — representative use case.
-- `src/hermes_slide_director/cli.py` — CLI scaffold with doctor, loop description, Phase 1 criteria proposal/approval, and Phase 2 generation preparation commands.
+- `src/hermes_slide_director/cli.py` — CLI scaffold with doctor, loop description, criteria proposal/approval, generation preparation, and dry-run deck production commands.
 - `src/hermes_slide_director/models.py` — Phase 0 Pydantic models for criteria, jobs, iterations, artifacts, QA reports, and reviewer verdicts.
 - `src/hermes_slide_director/phase1.py` — Phase 1 source ingestion and deterministic baseline criteria proposal utilities.
 - `src/hermes_slide_director/phase2.py` — Phase 2 dry-run producer contract and Claude Design-style producer brief preparation utilities.
+- `src/hermes_slide_director/phase3.py` — Phase 3 local dry-run deck producer adapter that writes placeholder iteration artifacts.
 - `tests/test_models.py` — schema alignment and model validation tests.
 - `tests/test_phase1.py` — CLI/source-ingestion/propose/approve artifact tests.
 - `tests/test_phase2.py` — prepare-generation contract/brief/failure-path tests.
+- `tests/test_phase3.py` — dry-run deck production artifact/job-status tests.
 
 ## Recent progress
 
@@ -67,10 +69,18 @@ Hermes then:
   - Producer/Reviewer loop: separate reviewer verdict `PASS`.
   - Verification: `PYTHONPATH=src python -m pytest -q` -> `14 passed`; doctor OK; propose -> approve -> prepare-generation smoke OK.
   - Commit: `3f257a0 feat: add Phase 2 generation brief CLI`.
+- `2026-05-14`: Built Phase 3 local dry-run deck producer adapter.
+  - Command added: `produce-deck --run <run_dir> [--iteration <n>] [--mode dry-run]`.
+  - Artifacts: `iterations/<NNN>/deck.html`, `speaker-notes.md`, and `artifact-manifest.json`.
+  - The placeholder HTML deck is deterministic, self-contained, 16:9-friendly, visibly watermarked as dry-run output, and includes source/criteria trace notices.
+  - `job.json` receives an `Iteration` entry and moves to `rendering` because renderer checks are next.
+  - Producer/Reviewer loop: separate reviewer verdict `PASS`.
+  - Verification: `PYTHONPATH=src python -m pytest -q` -> `19 passed`; doctor OK; propose -> approve -> prepare-generation -> produce-deck smoke OK.
+  - Commit: `1a5e9a6 feat: add dry-run deck producer adapter`.
 
 ## Next steps
 
-1. Add actual producer execution adapter in dry-run-first form: consume `generation/producer-brief.md`, write a placeholder `iterations/001/` output contract, and keep external LLM/OMC calls optional/explicit.
-2. Add renderer checks for HTML/PDF/screenshots once a deck artifact exists.
-3. Add critic report schema persistence and one QA loop.
+1. Add renderer checks for existing `iterations/<NNN>/deck.html` artifacts: local HTML validation, manifest consistency, basic 16:9/readability heuristics, and render report persistence without external services.
+2. Add critic report schema persistence and one QA loop against approved criteria.
+3. Add revision brief generation for `REQUEST_CHANGES` findings.
 4. Add dashboard only after CLI proof and quality loop are stable.
