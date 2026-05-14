@@ -25,7 +25,7 @@ Hermes then:
 6. Runs content/design/readability/export QA.
 7. Creates revision briefs and loops until pass or max iteration.
 
-## Initial repository contents
+## Repository contents
 
 - `README.md` — product definition and canonical pipeline.
 - `docs/product-vision.md` — what this is and is not.
@@ -34,13 +34,24 @@ Hermes then:
 - `schemas/verification-criteria.schema.json` — approved criteria contract.
 - `schemas/job.schema.json` — job state contract.
 - `examples/user-scenario.md` — representative use case.
-- `src/hermes_slide_director/cli.py` — minimal CLI scaffold.
+- `src/hermes_slide_director/cli.py` — minimal CLI scaffold and doctor command.
+- `src/hermes_slide_director/models.py` — Phase 0 Pydantic models for criteria, jobs, iterations, artifacts, QA reports, and reviewer verdicts.
+- `tests/test_models.py` — schema alignment and model validation tests.
+
+## Recent progress
+
+- `2026-05-14`: Dogfooded the new JARVIS Producer/Reviewer rejection loop on Phase 0 domain models.
+  - Producer: delegate_task implementation agent.
+  - Reviewer: separate delegate_task critic.
+  - Reviewer verdict: `PASS`.
+  - Verification: `PYTHONPATH=src python -m pytest -q` -> `6 passed`; `PYTHONPATH=src python -m hermes_slide_director.cli doctor` -> OK; `python -m py_compile src/hermes_slide_director/*.py` -> OK.
+  - Commit: `f8433f1 feat: add Phase 0 domain models`.
 
 ## Next steps
 
-1. Implement Phase 0 contracts in code: Pydantic models for jobs, criteria, iterations, and QA reports.
-2. Build a CLI-only proof before any dashboard work.
-3. Add material/design-reference ingestion for Markdown/text first.
+1. Build a CLI-only proof before any dashboard work.
+2. Add material/design-reference ingestion for Markdown/text first.
+3. Add criteria proposal artifact generation using the Phase 0 models.
 4. Add generator prompt contract for Claude Design-style HTML decks.
 5. Add renderer checks for HTML/PDF/screenshots.
-6. Add critic report schema and one QA loop.
+6. Add critic report schema persistence and one QA loop.
