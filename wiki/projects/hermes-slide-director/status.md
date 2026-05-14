@@ -35,7 +35,7 @@ Hermes then:
 - `schemas/verification-criteria.schema.json` — approved criteria contract.
 - `schemas/job.schema.json` — job state contract.
 - `examples/user-scenario.md` — representative use case.
-- `src/hermes_slide_director/cli.py` — CLI scaffold with doctor, loop description, criteria proposal/approval, generation preparation, dry-run deck production, local render-check, local QA, revision-brief, and apply-revision commands.
+- `src/hermes_slide_director/cli.py` — CLI scaffold with doctor, loop description, criteria proposal/approval, generation preparation, dry-run deck production, local render-check, local QA, revision-brief, apply-revision, and local loop commands.
 - `src/hermes_slide_director/models.py` — Phase 0 Pydantic models for criteria, jobs, iterations, artifacts, QA reports, and reviewer verdicts.
 - `src/hermes_slide_director/phase1.py` — Phase 1 source ingestion and deterministic baseline criteria proposal utilities.
 - `src/hermes_slide_director/phase2.py` — Phase 2 dry-run producer contract and Claude Design-style producer brief preparation utilities.
@@ -44,6 +44,7 @@ Hermes then:
 - `src/hermes_slide_director/phase5.py` — Phase 5 deterministic local criteria QA reviewer and report writer.
 - `src/hermes_slide_director/phase6.py` — Phase 6 deterministic revision brief planner for REQUEST_CHANGES findings.
 - `src/hermes_slide_director/phase7.py` — Phase 7 deterministic local revision-iteration applicator for next-iteration artifacts.
+- `src/hermes_slide_director/phase8.py` — Phase 8 deterministic local max-iteration loop orchestrator and report writer.
 - `tests/test_models.py` — schema alignment and model validation tests.
 - `tests/test_phase1.py` — CLI/source-ingestion/propose/approve artifact tests.
 - `tests/test_phase2.py` — prepare-generation contract/brief/failure-path tests.
@@ -52,6 +53,7 @@ Hermes then:
 - `tests/test_phase5.py` — local criteria QA verdict/report/status tests.
 - `tests/test_phase6.py` — deterministic revision brief generation/status/failure-path tests.
 - `tests/test_phase7.py` — deterministic revision application/iteration-2 render-QA PASS tests.
+- `tests/test_phase8.py` — deterministic local max-iteration loop/report tests.
 
 ## Recent progress
 
@@ -119,9 +121,16 @@ Hermes then:
   - Producer/Reviewer loop: separate reviewer verdict `PASS`.
   - Verification: `PYTHONPATH=src python -m pytest -q` -> `35 passed`; doctor OK; full CLI smoke through `apply-revision`, `check-render --iteration 2`, and `review-qa --iteration 2` -> PASS.
   - Commit: `9b28aa7 feat: add deterministic revision iteration CLI`.
+- `2026-05-14`: Built Phase 8 deterministic local max-iteration loop orchestration.
+  - Command added: `run-local-loop --run <run_dir> [--max-iterations <n>]`; default max iterations is 3.
+  - Artifacts: `loop/local-loop-report.json` and `loop/local-loop-report.md`.
+  - The orchestrator requires `prepare-generation`, starts at iteration 1, runs local produce/check/review, plans/applies revisions on REQUEST_CHANGES, and stops at PASS or `MAX_ITERATIONS_REACHED` without external generation.
+  - `job.json` reaches `passed` when the final local QA verdict is PASS; max-iteration unresolved loops remain non-passed and report `REQUEST_CHANGES/MAX_ITERATIONS_REACHED`.
+  - Producer/Reviewer loop: separate reviewer verdict `PASS`.
+  - Verification: `PYTHONPATH=src python -m pytest -q` -> `40 passed`; doctor OK; propose -> approve -> prepare-generation -> `run-local-loop --max-iterations 2` smoke -> PASS at iteration 2.
+  - Commit: `95eb057 feat: add deterministic local loop CLI`.
 
 ## Next steps
 
-1. Add max-iteration orchestration command for the local deterministic loop.
-2. Add real browser/Playwright rendering, screenshot/PDF export, console capture, and layout overflow checks after the local QA/revision loop is stable.
-3. Add dashboard only after CLI proof and quality loop are stable.
+1. Add real browser/Playwright rendering, screenshot/PDF export, console capture, and layout overflow checks after the local QA/revision loop is stable.
+2. Add dashboard only after CLI proof and quality loop are stable.
