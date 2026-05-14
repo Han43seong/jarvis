@@ -3,6 +3,7 @@
 ## Current state
 
 - Project created as a clean-start repository at `/home/hskim/projects/hermes-slide-director`.
+- GitHub private repo created at `https://github.com/Han43seong/hermes-slide-director`; local `origin` remote is configured. Initial project push is still pending explicit approval.
 - Purpose: Hermes-orchestrated Claude Design loop harness for high-fidelity slide decks.
 - The project intentionally starts from product/architecture contracts before implementing a dashboard or generator.
 - Existing `slide-harness` remains as prior experiment/reference; this project is the new direction.

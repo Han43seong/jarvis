@@ -46,6 +46,7 @@ projects:
     type: presentation-agent-harness
     path: /home/hskim/projects/hermes-slide-director
     repo: /home/hskim/projects/hermes-slide-director
+    remote: https://github.com/Han43seong/hermes-slide-director.git
     wiki: /home/hskim/jarvis/wiki/projects/hermes-slide-director
     default_executor: omx-ralph
     status: active
