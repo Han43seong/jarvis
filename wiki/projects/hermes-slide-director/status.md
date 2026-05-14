@@ -48,6 +48,7 @@ Hermes then:
 - `src/hermes_slide_director/phase9.py` — Phase 9 optional Playwright browser-render/export checks with screenshot/PDF/report artifacts.
 - `src/hermes_slide_director/phase10.py` — Phase 10 critic hook contract preparation for future semantic/design/combined external critic handoff; writes durable contract/brief artifacts without invoking an external critic.
 - `src/hermes_slide_director/phase11.py` — Phase 11 critic report ingestion for file-only external critic reports, with schema validation and job-status mapping.
+- `src/hermes_slide_director/phase12.py` — Phase 12 dry-run critic report producer adapter for Phase 11-compatible reports.
 - `tests/test_models.py` — schema alignment and model validation tests.
 - `tests/test_phase1.py` — CLI/source-ingestion/propose/approve artifact tests.
 - `tests/test_phase2.py` — prepare-generation contract/brief/failure-path tests.
@@ -60,6 +61,7 @@ Hermes then:
 - `tests/test_phase9.py` — optional browser-render report/artifact/failure-path tests using fake Playwright.
 - `tests/test_phase10.py` — critic contract/brief/job-artifact tests, local-QA prerequisite checks, optional browser-report behavior, critic-kind validation, and CLI parsing tests.
 - `tests/test_phase11.py` — critic report ingestion validation, artifact writing, status mapping, confidence/finding schema, and CLI parsing tests.
+- `tests/test_phase12.py` — dry-run critic report producer validation, default artifact path, Phase 11-compatible shape, scope guards, and CLI parsing tests.
 
 ## Recent progress
 
@@ -163,8 +165,17 @@ Hermes then:
   - Producer/Reviewer loop: final reviewer verdict `PASS` after two `REQUEST_CHANGES` fixes aligning Phase 10/11 confidence and finding schema.
   - Verification: `PYTHONPATH=src python -m pytest -q` -> `68 passed`; doctor OK; smoke through `run-local-loop` -> `prepare-critic` -> `ingest-critic-report` OK.
   - Commit: `b3c1182 feat: add critic report ingestion CLI`.
+- `2026-05-14`: Built Phase 12 dry-run critic report producer adapter.
+  - Command added: `produce-critic-report --run <run_dir> [--iteration <n>] [--mode dry-run] [--verdict PASS|REQUEST_CHANGES|ESCALATE_TO_USER|ABORT] [--out <path>]`.
+  - Default artifact: `iterations/<NNN>/external-critic-report.dry-run.json`.
+  - Scope is dry-run-only: no external critic call, no automatic ingestion, and no job mutation.
+  - Prerequisite: `prepare-critic` must have created `iterations/<NNN>/critic-contract.json` first.
+  - Produces a Phase 11-compatible report shape for follow-up `ingest-critic-report`.
+  - Producer/Reviewer loop: `PASS`.
+  - Verification: `PYTHONPATH=src python -m pytest -q` -> `75 passed`; doctor OK; smoke through `run-local-loop` -> `prepare-critic` -> `produce-critic-report` -> `ingest-critic-report` OK.
+  - Commit: `39dfef9 feat: add dry-run critic report producer`.
 
 ## Next steps
 
-1. Add the actual external critic invocation/report producer adapter for content, narrative, risk, and design review beyond deterministic local checks.
-2. Add dashboard only after the CLI quality loop and external critic invocation/report adapter are stable.
+1. Gate the real external critic adapter behind explicit setup/approval for provider, secrets, and cost.
+2. Next safe CLI work can be finalization/export packaging or dashboard cockpit after CLI quality loop stability.
