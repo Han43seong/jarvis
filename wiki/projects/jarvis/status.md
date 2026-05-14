@@ -36,9 +36,11 @@
 - 2026-05-11: Ran JARVIS routing tests: 8-case conversational routing rehearsal passed, durable background smoke test completed via `terminal(background=true, notify_on_complete=true)`, and no lingering background processes or cron jobs remained afterward.
 - 2026-05-11: Created `/home/hskim/projects/jarvis-executor-smoke` as a WSL-native git smoke repo, registered it in `config/projects.yaml`, verified `codex-exec` with a README-only change, and verified `omx-ralph` style execution with a subtract CLI feature plus unittest coverage.
 - 2026-05-12: Recovered Claude Code OAuth login for the user's Claude Max account, verified `claude -p` print mode with `CLAUDE-CODE-OK`, installed OMC package `oh-my-claude-sisyphus` 4.13.7 under the user npm prefix, and ran `omc setup` to sync Claude Code agents/skills/hooks.
+- 2026-05-14: Implemented background executor hygiene standards after `hermes-slide-director` Phase 13: long Producer/Reviewer work now prefers durable background execution, executor prompts/logs are standardized under ignored `tmp/executor-*` paths, `.omx/` is documented as ignored runtime state, and harnesses warn against long prompts in process argv.
 
 ## Next steps
 
 1. Register the first real project in `config/projects.yaml`.
 2. Promote or refine JARVIS skills after a few real routing/executor runs.
 3. Consider a future RDF/JSON-LD export path only after the markdown ontology schema stabilizes and graph queries become necessary.
+4. Investigate whether OMX has a native stdin or prompt-file flag so JARVIS can replace short argv prompt references with direct file/stdin execution when available.

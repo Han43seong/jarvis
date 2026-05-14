@@ -16,6 +16,31 @@ Use this harness when Hermes delegates implementation to Codex CLI or OMX.
 - Use `omx exec` for one-shot ralph-style execution with OMX overlays.
 - Use interactive `omx --madmax --high` plus `$ralplan`/`$ralph` for complex long-running sessions.
 - Use Codex `/goal` in an interactive Codex session for repo-local iterative cleanup when OMX is not needed or the user specifically asks for Codex goal.
+- For long Producer/Reviewer tasks where the main Hermes/JARVIS channel must stay responsive, use a background process such as `terminal(background=true, notify_on_complete=true)` or an equivalent tmux/background runner. Do not use synchronous `delegate_task` as a durability or responsiveness substitute.
+
+## Runtime paths
+
+Keep executor runtime files out of the tracked JARVIS root.
+
+- Store generated executor prompts under `/home/hskim/jarvis/tmp/executor-prompts/`.
+- Store captured logs, pid files, and run metadata under `/home/hskim/jarvis/tmp/executor-runs/`.
+- Run long executor processes from an ignored runtime work directory when practical.
+- Treat `.omx/` created under `/home/hskim/jarvis` as ignored local runtime state. Future launches should still prefer ignored work directories so the root stays visually clean.
+- Do not place prompt files at repo root or under tracked wiki/project documentation unless the prompt is intentionally curated documentation.
+
+## Prompt handling
+
+Avoid placing long or sensitive prompts directly in process argv.
+
+- Prefer stdin/file-prompt patterns where supported.
+- Codex supports stdin prompts:
+
+```bash
+codex exec -C <target_repo> - < /home/hskim/jarvis/tmp/executor-prompts/<task>.md
+```
+
+- If an executor cannot read stdin or a prompt file directly, pass a short argv prompt that points to an ignored prompt file path.
+- Never include secrets, credentials, auth tokens, private keys, or `.env` content in executor prompts.
 
 ## Standard OMX exec prompt structure
 
@@ -54,10 +79,20 @@ Report exactly:
 ## Standard command
 
 ```bash
-omx exec -C <target_repo> "<generated prompt>"
+omx exec -C <target_repo> "<short prompt that references /home/hskim/jarvis/tmp/executor-prompts/<task>.md>"
 ```
 
-For long-running work, run in background or tmux and capture output to `runs/`.
+For long-running work, run in background or tmux and capture output under `/home/hskim/jarvis/tmp/executor-runs/`.
+
+Immediately after launching a background Codex/OMX process, poll it once before stepping away:
+
+```text
+1. Launch the background executor with notify-on-complete.
+2. Poll early for update prompts, auth prompts, sandbox prompts, or other interactive blockers.
+3. Answer only safe defaults allowed by JARVIS policy. For example, decline optional tool updates unless the user approved an update.
+4. If credentials, auth, paid actions, destructive actions, or production access are requested, pause and ask the user.
+5. Record the process id, prompt path, log path, target repo, and verification commands in the Director notes.
+```
 
 ## Hermes post-check
 

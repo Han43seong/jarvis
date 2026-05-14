@@ -2,6 +2,11 @@
 logs/*
 runs/*
 tmp/*
+/.omx/
+
+# Executor runtime prompts/logs belong under ignored runtime directories.
+/tmp/executor-prompts/
+/tmp/executor-runs/
 
 # Project repositories are managed outside this control-plane repo.
 # Canonical location: /home/hskim/projects/<project>

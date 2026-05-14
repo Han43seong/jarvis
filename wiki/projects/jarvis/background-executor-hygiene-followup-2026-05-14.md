@@ -1,5 +1,22 @@
 # Background Executor Hygiene Follow-up — 2026-05-14
 
+## Cleanup implementation status
+
+Implemented in the JARVIS control-plane repo after `hermes-slide-director` Phase 13 was committed as `e4e6666`.
+
+Changes made:
+
+- `.gitignore` now explicitly ignores root `.omx/` runtime state and the standardized executor runtime directories under `tmp/`.
+- `harnesses/producer-reviewer-rejection-loop.md` now distinguishes short synchronous `delegate_task` slices from durable background Producer/Reviewer execution.
+- `harnesses/execute-codex-omx.md` now defines ignored runtime prompt/log paths, stdin/file-prompt preference, short argv fallback, early background poll/preflight, and `.omx/` handling.
+- `config/routing.yaml` now records standard background executor runtime paths and hygiene notes for prompt handling and early interactive prompt detection.
+- `wiki/projects/jarvis/background-executor-runbook-2026-05-14.md` records the reusable launch/check/cleanup procedure.
+
+Remaining follow-up:
+
+- Investigate whether current OMX provides a native stdin or prompt-file option for `omx exec`.
+- Patch reusable Hermes skills only if future executor runs show the same procedure should be surfaced as an operator command.
+
 ## Context
 
 During `hermes-slide-director` Phase 13, JARVIS switched from synchronous `delegate_task` to background Codex/OMX execution so the main Hermes/JARVIS conversation channel stays responsive while implementation/review work continues.

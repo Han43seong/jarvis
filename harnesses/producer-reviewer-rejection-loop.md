@@ -54,7 +54,7 @@ A separate executor/subagent responsible for making the artifact.
 
 Examples:
 
-- `delegate_task` implementer
+- `delegate_task` implementer for short synchronous slices only
 - Codex-family producer: `codex exec` directly, or `omx exec` / `omx ralph` as the oh-my-codex orchestration layer on top of Codex CLI
 - Claude-family producer: `claude -p` directly, or `omc launch` / OMC team flows as the oh-my-claudecode orchestration layer on top of Claude Code
 - spawned Hermes worker
@@ -67,6 +67,8 @@ Producer rules:
 - do not delete unrelated files
 - run specified checks where feasible
 - report changed files, commands, results, and remaining risks
+
+Long Producer or Reviewer work must use a durable background executor when the main Hermes/JARVIS channel needs to remain responsive. Prefer `terminal(background=true, notify_on_complete=true)`, `/background`, cron, kanban, or an equivalent external background process. `delegate_task` is synchronous and non-durable; it can be cancelled when the parent conversation is interrupted and must not be presented as equivalent to background execution for long Producer/Reviewer tasks.
 
 ### 3. Reviewer / Critic
 
@@ -124,6 +126,10 @@ Required before producer starts:
 - acceptance criteria listed
 - verification commands listed
 - max iterations selected
+- executor lane selected: synchronous for short work, durable background for long work or when main-channel responsiveness matters
+- prompt/log/work directory selected under ignored runtime paths, usually `/home/hskim/jarvis/tmp/executor-prompts/` and `/home/hskim/jarvis/tmp/executor-runs/`
+- prompt handling checked: no secrets in prompts, and long/sensitive prompts are passed by stdin/file where supported or by a short argv prompt pointing to an ignored prompt file
+- background launch plan includes an immediate poll for update/auth/interactive prompts
 
 ### Revision gate
 
@@ -160,6 +166,7 @@ Abort when:
 - Reviewer should receive the original spec and artifact paths, not only the producer summary.
 - For design/deck work, reviewer should inspect rendered artifacts/screenshots where possible.
 - For code work, reviewer should inspect diff and test output.
+- Runtime artifacts created from the JARVIS control-plane root, including `.omx/`, are local ignored state. Future executor launches should prefer ignored work directories so the repo root stays clean.
 
 ## Prompt templates
 

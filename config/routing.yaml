@@ -39,6 +39,10 @@ executors:
       - slash_background
       - one_shot_cron
       - kanban_for_durable_backlog
+    runtime_paths:
+      prompt_dir: /home/hskim/jarvis/tmp/executor-prompts
+      run_dir: /home/hskim/jarvis/tmp/executor-runs
+      omx_state: /home/hskim/jarvis/.omx
     avoid_when:
       - quick_direct_check
       - destructive_or_high_risk_action
@@ -46,6 +50,10 @@ executors:
     notes:
       - delegate_task is synchronous and is cancelled if the parent is interrupted; do not use it as durable background work.
       - Give the user a short first-pass response before launching long research when practical.
+      - Use ignored runtime prompt/log directories rather than root-level prompt files or tracked wiki/project docs.
+      - Prefer stdin or file-prompt execution for long prompts; if unsupported, pass only a short argv prompt that points to an ignored prompt file.
+      - Never include secrets, credentials, tokens, private keys, or .env content in executor prompts.
+      - Poll newly launched background Codex/OMX processes early for update, auth, sandbox, or other interactive prompts.
 
   codex_exec:
     description: One-shot repo-local Codex execution for clear small/medium implementation.
@@ -69,6 +77,9 @@ executors:
       - medium_code_change
       - approved_prompt
       - single_repo
+    runtime_paths:
+      prompt_dir: /home/hskim/jarvis/tmp/executor-prompts
+      run_dir: /home/hskim/jarvis/tmp/executor-runs
 
   omx_ralph:
     description: Default medium/large implementation executor. Use ralph-style complete-and-verify prompts.
@@ -85,6 +96,9 @@ executors:
       - finish_automatically
       - complete_the_feature
       - large_refactor
+    runtime_paths:
+      prompt_dir: /home/hskim/jarvis/tmp/executor-prompts
+      run_dir: /home/hskim/jarvis/tmp/executor-runs
 
   omx_team:
     description: Parallel OMX execution for independent subcomponents.
