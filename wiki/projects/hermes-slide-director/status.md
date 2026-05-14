@@ -46,6 +46,7 @@ Hermes then:
 - `src/hermes_slide_director/phase7.py` — Phase 7 deterministic local revision-iteration applicator for next-iteration artifacts.
 - `src/hermes_slide_director/phase8.py` — Phase 8 deterministic local max-iteration loop orchestrator and report writer.
 - `src/hermes_slide_director/phase9.py` — Phase 9 optional Playwright browser-render/export checks with screenshot/PDF/report artifacts.
+- `src/hermes_slide_director/phase10.py` — Phase 10 critic hook contract preparation for future semantic/design/combined external critic handoff; writes durable contract/brief artifacts without invoking an external critic.
 - `tests/test_models.py` — schema alignment and model validation tests.
 - `tests/test_phase1.py` — CLI/source-ingestion/propose/approve artifact tests.
 - `tests/test_phase2.py` — prepare-generation contract/brief/failure-path tests.
@@ -56,6 +57,7 @@ Hermes then:
 - `tests/test_phase7.py` — deterministic revision application/iteration-2 render-QA PASS tests.
 - `tests/test_phase8.py` — deterministic local max-iteration loop/report tests.
 - `tests/test_phase9.py` — optional browser-render report/artifact/failure-path tests using fake Playwright.
+- `tests/test_phase10.py` — critic contract/brief/job-artifact tests, local-QA prerequisite checks, optional browser-report behavior, critic-kind validation, and CLI parsing tests.
 
 ## Recent progress
 
@@ -141,8 +143,16 @@ Hermes then:
   - Producer/Reviewer loop: separate reviewer verdict `PASS`.
   - Verification: `PYTHONPATH=src python -m pytest -q` -> `45 passed`; doctor OK; propose -> approve -> prepare-generation -> produce-deck -> browser-render negative smoke failed clearly in current environment because Playwright is not installed.
   - Commit: `0b6e038 feat: add optional browser render checks`.
+- `2026-05-14`: Built Phase 10 critic hook contract CLI.
+  - Command added: `prepare-critic --run <run_dir> [--iteration <n>] [--critic-kind semantic|design|combined] [--include-browser-report]`.
+  - Artifacts: `iterations/<NNN>/critic-contract.json` and `critic-brief.md`.
+  - Scope is contract-only: prepares durable handoff artifacts and does not call an external critic, LLM, browser, network API, or paid service.
+  - Requires local QA (`review-qa`) first; `--include-browser-report` includes `browser-render-report.json` only when that optional report already exists, otherwise it fails clearly.
+  - Producer/Reviewer loop: separate reviewer verdict `PASS`.
+  - Verification: `PYTHONPATH=src python -m pytest -q` -> `52 passed`; doctor OK; smoke through `run-local-loop` -> `prepare-critic` OK.
+  - Commit: `dfea114 feat: add critic hook contract CLI`.
 
 ## Next steps
 
-1. Add semantic critic hook / LLM-agent critic contract for content, narrative, risk, and design review beyond deterministic local checks.
-2. Add dashboard only after the CLI proof, quality loop, browser-render path, and semantic critic contract are stable.
+1. Add actual external critic invocation/report adapter for content, narrative, risk, and design review beyond deterministic local checks.
+2. Add dashboard only after the CLI quality loop and critic invocation/report adapter are stable.
