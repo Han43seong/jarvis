@@ -35,17 +35,19 @@ Hermes then:
 - `schemas/verification-criteria.schema.json` — approved criteria contract.
 - `schemas/job.schema.json` — job state contract.
 - `examples/user-scenario.md` — representative use case.
-- `src/hermes_slide_director/cli.py` — CLI scaffold with doctor, loop description, criteria proposal/approval, generation preparation, dry-run deck production, and local render-check commands.
+- `src/hermes_slide_director/cli.py` — CLI scaffold with doctor, loop description, criteria proposal/approval, generation preparation, dry-run deck production, local render-check, and local QA commands.
 - `src/hermes_slide_director/models.py` — Phase 0 Pydantic models for criteria, jobs, iterations, artifacts, QA reports, and reviewer verdicts.
 - `src/hermes_slide_director/phase1.py` — Phase 1 source ingestion and deterministic baseline criteria proposal utilities.
 - `src/hermes_slide_director/phase2.py` — Phase 2 dry-run producer contract and Claude Design-style producer brief preparation utilities.
 - `src/hermes_slide_director/phase3.py` — Phase 3 local dry-run deck producer adapter that writes placeholder iteration artifacts.
 - `src/hermes_slide_director/phase4.py` — Phase 4 deterministic local render-contract checker and report writer.
+- `src/hermes_slide_director/phase5.py` — Phase 5 deterministic local criteria QA reviewer and report writer.
 - `tests/test_models.py` — schema alignment and model validation tests.
 - `tests/test_phase1.py` — CLI/source-ingestion/propose/approve artifact tests.
 - `tests/test_phase2.py` — prepare-generation contract/brief/failure-path tests.
 - `tests/test_phase3.py` — dry-run deck production artifact/job-status tests.
 - `tests/test_phase4.py` — local render-check report/status/failure-path tests.
+- `tests/test_phase5.py` — local criteria QA verdict/report/status tests.
 
 ## Recent progress
 
@@ -88,10 +90,18 @@ Hermes then:
   - Producer/Reviewer loop: separate reviewer verdict `PASS`.
   - Verification: `PYTHONPATH=src python -m pytest -q` -> `24 passed`; doctor OK; propose -> approve -> prepare-generation -> produce-deck -> check-render smoke OK.
   - Commit: `7c2a467 feat: add local render check CLI`.
+- `2026-05-14`: Built Phase 5 deterministic local criteria QA reports.
+  - Command added: `review-qa --run <run_dir> [--iteration <n>]`.
+  - Artifacts: `iterations/<NNN>/qa-report.json` and `qa-report.md`.
+  - QA evaluates approved criteria with local filesystem/text checks only: export depends on render PASS and artifacts; design/readability depend on structural markers; content/narrative/risk require literal acceptance evidence until semantic critics are added.
+  - Dry-run placeholder decks intentionally produce `REQUEST_CHANGES`, moving `job.json` to `revising` and setting the iteration verdict/`qa_report_path`.
+  - Producer/Reviewer loop: separate reviewer verdict `PASS`.
+  - Verification: `PYTHONPATH=src python -m pytest -q` -> `28 passed`; doctor OK; propose -> approve -> prepare-generation -> produce-deck -> check-render -> review-qa smoke OK.
+  - Commit: `e2bc616 feat: add local criteria QA CLI`.
 
 ## Next steps
 
-1. Add criteria QA report persistence and one local critic loop against approved criteria and render reports.
-2. Add revision brief generation for `REQUEST_CHANGES` findings.
-3. Add real browser/Playwright rendering, screenshot/PDF export, console capture, and layout overflow checks after the local QA loop is stable.
+1. Add revision brief generation for `REQUEST_CHANGES` findings.
+2. Add a local revision-iteration stub that consumes revision brief instructions into a next iteration contract.
+3. Add real browser/Playwright rendering, screenshot/PDF export, console capture, and layout overflow checks after the local QA/revision loop is stable.
 4. Add dashboard only after CLI proof and quality loop are stable.
