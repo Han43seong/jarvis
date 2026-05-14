@@ -35,7 +35,7 @@ Hermes then:
 - `schemas/verification-criteria.schema.json` — approved criteria contract.
 - `schemas/job.schema.json` — job state contract.
 - `examples/user-scenario.md` — representative use case.
-- `src/hermes_slide_director/cli.py` — CLI scaffold with doctor, loop description, criteria proposal/approval, generation preparation, dry-run deck production, local render-check, local QA, revision-brief, apply-revision, and local loop commands.
+- `src/hermes_slide_director/cli.py` — CLI scaffold with doctor, loop description, criteria proposal/approval, generation preparation, dry-run deck production, local render-check, local QA, revision-brief, apply-revision, local loop, and optional browser-render commands.
 - `src/hermes_slide_director/models.py` — Phase 0 Pydantic models for criteria, jobs, iterations, artifacts, QA reports, and reviewer verdicts.
 - `src/hermes_slide_director/phase1.py` — Phase 1 source ingestion and deterministic baseline criteria proposal utilities.
 - `src/hermes_slide_director/phase2.py` — Phase 2 dry-run producer contract and Claude Design-style producer brief preparation utilities.
@@ -45,6 +45,7 @@ Hermes then:
 - `src/hermes_slide_director/phase6.py` — Phase 6 deterministic revision brief planner for REQUEST_CHANGES findings.
 - `src/hermes_slide_director/phase7.py` — Phase 7 deterministic local revision-iteration applicator for next-iteration artifacts.
 - `src/hermes_slide_director/phase8.py` — Phase 8 deterministic local max-iteration loop orchestrator and report writer.
+- `src/hermes_slide_director/phase9.py` — Phase 9 optional Playwright browser-render/export checks with screenshot/PDF/report artifacts.
 - `tests/test_models.py` — schema alignment and model validation tests.
 - `tests/test_phase1.py` — CLI/source-ingestion/propose/approve artifact tests.
 - `tests/test_phase2.py` — prepare-generation contract/brief/failure-path tests.
@@ -54,6 +55,7 @@ Hermes then:
 - `tests/test_phase6.py` — deterministic revision brief generation/status/failure-path tests.
 - `tests/test_phase7.py` — deterministic revision application/iteration-2 render-QA PASS tests.
 - `tests/test_phase8.py` — deterministic local max-iteration loop/report tests.
+- `tests/test_phase9.py` — optional browser-render report/artifact/failure-path tests using fake Playwright.
 
 ## Recent progress
 
@@ -129,8 +131,18 @@ Hermes then:
   - Producer/Reviewer loop: separate reviewer verdict `PASS`.
   - Verification: `PYTHONPATH=src python -m pytest -q` -> `40 passed`; doctor OK; propose -> approve -> prepare-generation -> `run-local-loop --max-iterations 2` smoke -> PASS at iteration 2.
   - Commit: `95eb057 feat: add deterministic local loop CLI`.
+- `2026-05-14`: Built Phase 9 optional Playwright browser-render/export checks.
+  - Command added: `browser-render --run <run_dir> [--iteration <n>] [--viewport WIDTHxHEIGHT] [--no-pdf] [--no-screenshot]`; default viewport is `1280x720`.
+  - Optional dependency extra added: `hermes-slide-director[browser]`; Chromium install remains manual via `python -m playwright install chromium`.
+  - Artifacts on success: `iterations/<NNN>/browser-render-report.json`, `browser-render-report.md`, `deck-screenshot.png` unless disabled, and `deck.pdf` unless disabled.
+  - Checks capture console/page errors, deck load, `.slide` presence, approximate 16:9 slide boxes, horizontal overflow, obvious element/text overflow, screenshot export, and PDF export.
+  - Missing Playwright or Chromium fails clearly without automatic install/download.
+  - `job.json` records browser-render artifacts on the current iteration and moves/remains `qa_reviewing`.
+  - Producer/Reviewer loop: separate reviewer verdict `PASS`.
+  - Verification: `PYTHONPATH=src python -m pytest -q` -> `45 passed`; doctor OK; propose -> approve -> prepare-generation -> produce-deck -> browser-render negative smoke failed clearly in current environment because Playwright is not installed.
+  - Commit: `0b6e038 feat: add optional browser render checks`.
 
 ## Next steps
 
-1. Add real browser/Playwright rendering, screenshot/PDF export, console capture, and layout overflow checks after the local QA/revision loop is stable.
-2. Add dashboard only after CLI proof and quality loop are stable.
+1. Add semantic critic hook / LLM-agent critic contract for content, narrative, risk, and design review beyond deterministic local checks.
+2. Add dashboard only after the CLI proof, quality loop, browser-render path, and semantic critic contract are stable.
