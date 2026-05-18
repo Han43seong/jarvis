@@ -471,11 +471,33 @@ Hermes then:
   - Semantics: `codex-editable-html-slides` now has real-generation smoke evidence, but this is not a final winner, not final design/product acceptance, and not native PPTX/PPTX-editability validation.
   - Push: `4aa5ea0` pushed to `origin/main`; local/remote ahead-behind `0 0`.
 
+- `2026-05-18`: Ran and recorded Phase 34 `codex-reveal-playwright` real Codex/OMX same-content generation plus Playwright render/export smoke.
+  - Commit: `dd01871 feat: record Phase 34 reveal real generation smoke`.
+  - Runtime reference: Phase 30 temp stack `/tmp/hermes-slide-director-phase30-reveal.SS5uk0` with installed reveal.js/playwright.
+  - Temp workspace: `/tmp/hermes-slide-director-phase34-reveal-realgen.ECDonV`.
+  - Locked content plan: Korean reveal smoke plan under the temp workspace.
+  - Producer: `omx exec` constrained to the temp workspace; no repo writes, install, sudo, or global install.
+  - Generated temp artifacts: `output/deck.html` and `output/producer-report.json`.
+  - Render/export: Playwright via Phase 30 runtime using `NODE_PATH`; screenshot and PDF generated under temp `output/render/`.
+  - Render facts: reveal present `true`, reveal ready `true`, slide count `4`, placeholder count `0`, external refs `0`, horizontal overflow `false`, vertical overflow `false`, screenshot bytes `358334`, PDF bytes `649685`, browser console/page errors empty, smoke passed `true`.
+  - Browser/manual visual evidence: local file opened successfully; visual verdict `PASS_WITH_WARNINGS`; blockers empty. Warnings cover small secondary/candidate text, low-contrast Reveal navigation arrow, secondary text contrast, and capability-smoke-only semantics.
+  - CLI added: `record-reveal-real-generation-smoke`.
+  - Artifacts written by recorder:
+    - `candidates/codex-reveal-playwright/phase34-reveal-real-generation-smoke.json`.
+    - `candidates/codex-reveal-playwright/phase34-reveal-real-generation-smoke.md`.
+    - `reviews/codex-reveal-playwright-phase34-real-generation-visual-review.json`.
+    - `reviews/codex-reveal-playwright-phase34-real-generation-visual-review.md`.
+  - Real smoke: Phase 34 in `/tmp/hermes-phase34-verify.YDDtVz`; status `reveal_real_generation_smoke_recorded`, `real_generation_smoke_done=true`, `render_export_smoke_done=true`, `ranking_ready=true`, `visual_verdict=PASS_WITH_WARNINGS`, slide count `4`, screenshot/PDF bytes positive, persisted result contains no `/tmp`, `/home`, `file://`, `.html`, `.png`, `.pdf`, `<html`, `deck_path`, `screenshot_path`, or `pdf_path` leakage.
+  - Verification: `tests/test_phase34.py` -> `52 passed`; full suite -> `481 passed`; `git diff --check` clean.
+  - Reviewer verdict: `PASS`.
+  - Safety: Phase 34 recorder validates existing generation/render/visual JSON only. It does not install, launch browsers, render/export, run producers/providers, generate decks, or copy temp deck/screenshot/PDF artifacts into the repo.
+  - Semantics: `codex-reveal-playwright` now has real-generation plus render/export smoke evidence, but this is not a final winner, not final design/product acceptance, and not native PPTX/PPTX-editability validation.
+  - Push: `dd01871` pushed to `origin/main`; local/remote ahead-behind `0 0`.
+
 ## Next steps
 
-1. Run `codex-reveal-playwright` real Codex/OMX same-content generation smoke using the installed/reinstallable temp stack and record screenshot/PDF/visual metadata.
-2. Integrate comparable HTML/PPTX/reveal candidate evidence in a cross-candidate readiness report without declaring a final bakeoff winner.
-3. After enough candidates pass real-generation capability gates, create a true content-locked bakeoff using identical Hermes-authored content plan plus common design reference/template direction and shared QA criteria.
-4. Keep hosted Claude Design as a separate design quality benchmark only, not an automation path.
-5. Keep dashboard work deferred until the conversation-first flow and Producer/Reviewer generation loop are stronger.
-6. Update JARVIS registry/status hygiene for the completed legacy `slide-harness` when convenient.
+1. Integrate comparable HTML/PPTX/reveal candidate evidence in a cross-candidate real-generation readiness report without declaring a final bakeoff winner.
+2. After enough candidates pass real-generation capability gates, create a true content-locked bakeoff using identical Hermes-authored content plan plus common design reference/template direction and shared QA criteria.
+3. Keep hosted Claude Design as a separate design quality benchmark only, not an automation path.
+4. Keep dashboard work deferred until the conversation-first flow and Producer/Reviewer generation loop are stronger.
+5. Update JARVIS registry/status hygiene for the completed legacy `slide-harness` when convenient.
