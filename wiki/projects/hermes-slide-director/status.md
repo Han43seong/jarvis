@@ -241,10 +241,19 @@ Hermes then:
   - Reviewer loop: independent reviewer first returned `REQUEST_CHANGES` because a companion freshness override could pass without a deduction; Hermes added a regression test and fixed `_override_recorded` to require an override marker/status plus a deduction field. Re-review verdict: `PASS`.
   - Verification: `tests/test_phase19.py` -> `13 passed`; full suite -> `135 passed in 0.49s`; CLI smoke for `run-candidate` and `inspect-candidate` emitted stable JSON and returned `ranking_ready=true` only after required outputs plus PASS gate artifacts existed; staged diff hygiene/security scans were clean.
   - Local repo status after commit: `main...origin/main [ahead 6]`.
+- `2026-05-18`: Built Phase 20 Codex/OMX OSS Producer candidate registry.
+  - Commit: `59a1edb feat: add Phase 20 Codex OSS producer registry`.
+  - Command added: `prepare-codex-oss-candidates`.
+  - User decision: exclude `claude-code-html-native` and `slidev-native` as primary automation candidates; keep `hosted-claude-design-benchmark` only as a manual quality benchmark reference.
+  - New default candidates: `codex-presentation-pptx`, `codex-guizang-html`, `codex-reveal-playwright`, and `codex-editable-html-slides`; PptxGenJS is recorded as a lower-level engine/reference.
+  - Purpose: write a deterministic Codex/OMX OSS candidate registry, candidate exclusion record, and per-candidate dry-run launch contracts without installing, cloning, running Codex/OMX/Claude, calling network/provider/paid services, or generating slides.
+  - Verification: `tests/test_phase20.py` -> `6 passed`; full suite -> `141 passed in 0.53s`; CLI smoke for `prepare-codex-oss-candidates` verified default candidates, benchmark-only hosted Claude Design, exclusions, and `external_call_made=false`; independent reviewer verdict: `PASS`.
+  - Local repo status after commit: `main...origin/main [ahead 1]`.
 
 ## Next steps
 
-1. Push the six local `hermes-slide-director` commits only after explicit user approval.
-2. Keep Phase 20 focused on real Producer launch gating or stricter gate schemas; do not auto-call external providers without a separate approval gate.
-3. Keep dashboard work deferred until the conversation-first flow and Producer/Reviewer generation loop are stronger.
-4. Update JARVIS registry/status hygiene for the completed legacy `slide-harness` when convenient.
+1. Push the Phase 20 `hermes-slide-director` commit only after explicit user approval.
+2. Phase 21 should inspect/smoke one isolated target first: `codex-presentation-pptx` from `appautomaton/presentation`, with no global config mutation and explicit approval before network/install/provider actions.
+3. Keep hosted Claude Design as a separate design quality benchmark only, not an automation path.
+4. Keep dashboard work deferred until the conversation-first flow and Producer/Reviewer generation loop are stronger.
+5. Update JARVIS registry/status hygiene for the completed legacy `slide-harness` when convenient.
