@@ -293,12 +293,23 @@ Hermes then:
   - Real smoke: replayed Phase 21B/22A/22B recorders against the existing PPTX/render evidence, then ran Phase 23. Result: `ranking_candidate_ready`, `ranking_ready=true`, `ranking_score=0.75`, `ranking_penalty=0.25`, `warnings=9`, artifacts present.
   - Verification: `tests/test_phase23.py` -> `6 passed`; full suite -> `172 passed in 4.14s`; `git diff --check` clean; independent reviewer verdict: `PASS`. Reviewer suggested phase-field validation as a minor improvement; Hermes added it and reran tests successfully.
   - Limitation: `ranking_ready=true` means eligible for the next bakeoff/ranking comparison, not final deck/design acceptance.
+  - Push: `ea38365` pushed to `origin/main`; local/remote ahead-behind `0 0`.
+
+- `2026-05-18`: Built Phase 24 PPTX ranking/bakeoff readiness report.
+  - Commit: `1385d74 feat: add Phase 24 PPTX ranking report`.
+  - Command added: `prepare-pptx-ranking-report`.
+  - Behavior: reads Phase 23 ranking integration/evidence, validates candidate id, `ranking_candidate_ready`, score/penalty bounds, hard-gate pass status, expected gate phases (`phase21b`, `phase22a`, `phase22b`), and Phase 23 safety flags. Writes a ranking report plus next-candidate decision gate.
+  - Outcome semantics: marks `codex-presentation-pptx` as `shortlist_ready_single_candidate`; does not claim it is a bakeoff winner, final design acceptance, or final product acceptance.
+  - Real smoke: replayed Phase 21B/22A/22B/23/24 on existing PPTX/render evidence. Result: `shortlist_ready_single_candidate`, `shortlist_ready=true`, `bakeoff_winner=false`, `ranking_score=0.75`, `ranking_penalty=0.25`, `warnings=9`, and `requires_user_decision_before_next_candidate_install_or_execution=true`.
+  - Safety: Phase 24 itself does not install packages, render, generate decks, call network APIs/providers, invoke producers, or use browsers/LibreOffice.
+  - Verification: `tests/test_phase24.py` -> `11 passed`; full suite -> `183 passed in 4.45s`; `git diff --check` clean; independent reviewer verdict: `PASS`. Reviewer suggested exact hard-gate phase validation as a minor improvement; Hermes added it and reran tests successfully.
   - Local repo status after commit: `main...origin/main [ahead 1]`.
 
 ## Next steps
 
-1. Push the Phase 23 `hermes-slide-director` commit after verification.
-2. Phase 24 should decide whether to run a ranking report around the now-ready `codex-presentation-pptx` candidate or start the same evidence pipeline for the next Codex/OMX OSS candidate.
-3. Keep hosted Claude Design as a separate design quality benchmark only, not an automation path.
-4. Keep dashboard work deferred until the conversation-first flow and Producer/Reviewer generation loop are stronger.
-5. Update JARVIS registry/status hygiene for the completed legacy `slide-harness` when convenient.
+1. Push the Phase 24 `hermes-slide-director` commit after verification.
+2. Decide the next candidate path before running installs/execution: `run_next_candidate_pipeline` is recommended, but it may require user-approved installs/execution for the selected OSS candidate.
+3. Candidate options remain `codex-guizang-html`, `codex-reveal-playwright`, and `codex-editable-html-slides`; pick one and request approval before any install/execution.
+4. Keep hosted Claude Design as a separate design quality benchmark only, not an automation path.
+5. Keep dashboard work deferred until the conversation-first flow and Producer/Reviewer generation loop are stronger.
+6. Update JARVIS registry/status hygiene for the completed legacy `slide-harness` when convenient.
