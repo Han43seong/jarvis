@@ -389,14 +389,13 @@ Hermes then:
   - Verification: `tests/test_phase29.py` -> `23 passed`; full suite -> `300 passed`; `git diff --check` clean; independent reviewer verdict: `PASS`.
   - Safety/hardening: Phase 29 validates Phase 27/28 linkage and source metadata, requires Phase 27 pre-browser `ranking_ready=false`, requires Phase 28 browser/visual gates passed with no blockers/placeholders/horizontal overflow, rejects content/path/screenshot leakage, and persists relative metadata only. It does not install, use network, launch browser, render, run validators, generate decks, call providers/producers, or copy HTML/source/screenshot contents.
   - Semantics: `codex-editable-html-slides` is now ranking-integration-ready for comparison, not a final winner, not final design/product acceptance, and not native PPTX/PPTX-editability validation.
-  - Local repo status after commit: `main...origin/main [ahead 1]`.
+  - Push: `b1f3576` pushed to `origin/main`; local/remote ahead-behind `0 0`.
 
 ## Next steps
 
-1. Push the Phase 29 `hermes-slide-director` commit after verification.
-2. Continue remaining candidate capability smokes such as `codex-reveal-playwright` if source/evidence is available without prohibited setup; request approval before any install/execution that needs dependencies.
-3. Integrate comparable HTML/PPTX candidate evidence in a cross-candidate readiness report without declaring a final bakeoff winner.
-4. After enough candidates pass capability gates, create a true content-locked bakeoff using identical Hermes-authored content plan plus common design reference/template direction and shared QA criteria.
-5. Keep hosted Claude Design as a separate design quality benchmark only, not an automation path.
-6. Keep dashboard work deferred until the conversation-first flow and Producer/Reviewer generation loop are stronger.
-7. Update JARVIS registry/status hygiene for the completed legacy `slide-harness` when convenient.
+1. Continue remaining candidate capability smokes such as `codex-reveal-playwright` if source/evidence is available without prohibited setup; request approval before any install/execution that needs dependencies.
+2. Integrate comparable HTML/PPTX candidate evidence in a cross-candidate readiness report without declaring a final bakeoff winner.
+3. After enough candidates pass capability gates, create a true content-locked bakeoff using identical Hermes-authored content plan plus common design reference/template direction and shared QA criteria.
+4. Keep hosted Claude Design as a separate design quality benchmark only, not an automation path.
+5. Keep dashboard work deferred until the conversation-first flow and Producer/Reviewer generation loop are stronger.
+6. Update JARVIS registry/status hygiene for the completed legacy `slide-harness` when convenient.
