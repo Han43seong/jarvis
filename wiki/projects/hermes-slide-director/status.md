@@ -391,11 +391,31 @@ Hermes then:
   - Semantics: `codex-editable-html-slides` is now ranking-integration-ready for comparison, not a final winner, not final design/product acceptance, and not native PPTX/PPTX-editability validation.
   - Push: `b1f3576` pushed to `origin/main`; local/remote ahead-behind `0 0`.
 
+- `2026-05-18`: Built Phase 30 `codex-reveal-playwright` install/render/export capability smoke recorder.
+  - Commit: `9d5b661 feat: record Phase 30 reveal Playwright smoke`.
+  - User-approved install scope: isolated temp workspace only, no sudo, no global install.
+  - Temp workspace: `/tmp/hermes-slide-director-phase30-reveal.SS5uk0`.
+  - Installed packages: `reveal.js 6.0.1`, `playwright 1.60.0` via `npm install reveal.js playwright --no-audit --no-fund`.
+  - Manual smoke facts: Reveal runtime ready, slide count `3`, required placeholders `0`, horizontal overflow `false`, browser errors `0`, screenshot created `89003 bytes`, PDF exported `33602 bytes`, smoke passed.
+  - Visual verdict: `PASS_WITH_WARNINGS`; blockers empty. Warnings cover tight bottom safe margin around cards/progress/navigation and capability-smoke-only semantics.
+  - CLI added: `record-reveal-playwright-smoke`.
+  - Artifacts written by recorder:
+    - `candidates/codex-reveal-playwright/phase30-reveal-playwright-smoke.json`.
+    - `candidates/codex-reveal-playwright/phase30-reveal-playwright-smoke.md`.
+    - `reviews/codex-reveal-playwright-phase30-visual-review-evidence.json`.
+    - `reviews/codex-reveal-playwright-phase30-visual-review-evidence.md`.
+  - Real smoke: Phase 30 in `/tmp/hermes-phase30-verify.GSIilE`; status `reveal_playwright_smoke_recorded`, `smoke_passed=true`, `ranking_ready=true`, `visual_verdict=PASS_WITH_WARNINGS`, warnings carried forward `3`, persisted result contains no `/tmp`, `/home`, `file://`, `.png`, `.pdf`, or `.html` leakage.
+  - Verification: `tests/test_phase30.py` -> `36 passed`; full suite -> `336 passed`; `git diff --check` clean; independent reviewer verdict: `PASS`.
+  - Safety/hardening: Phase 30 recorder validates existing install/smoke/visual JSON evidence only. It does not install, use network, launch browser, render, export PDF/screenshots, generate decks, call providers/producers, or copy temp artifacts. It records install as approved temp-local evidence and persists sanitized metadata only.
+  - Semantics: `codex-reveal-playwright` is now capability-comparison ready, not a final winner, not final design/product acceptance, and not native PPTX/PPTX-editability validation.
+  - Push: `9d5b661` pushed to `origin/main`; local/remote ahead-behind `0 0`.
+
 ## Next steps
 
-1. Continue remaining candidate capability smokes such as `codex-reveal-playwright` if source/evidence is available without prohibited setup; request approval before any install/execution that needs dependencies.
-2. Integrate comparable HTML/PPTX candidate evidence in a cross-candidate readiness report without declaring a final bakeoff winner.
-3. After enough candidates pass capability gates, create a true content-locked bakeoff using identical Hermes-authored content plan plus common design reference/template direction and shared QA criteria.
-4. Keep hosted Claude Design as a separate design quality benchmark only, not an automation path.
-5. Keep dashboard work deferred until the conversation-first flow and Producer/Reviewer generation loop are stronger.
-6. Update JARVIS registry/status hygiene for the completed legacy `slide-harness` when convenient.
+1. Prepare an install/real-generation readiness gap report for all recommended candidates, separating already-installed smoke evidence from remaining true generation smoke gaps.
+2. For candidates with only static/manual HTML evidence (`codex-guizang-html`, `codex-editable-html-slides`), run user-approved real Codex/OMX generation smokes in isolated temp workspaces before final bakeoff.
+3. Integrate comparable HTML/PPTX/reveal candidate evidence in a cross-candidate readiness report without declaring a final bakeoff winner.
+4. After enough candidates pass real-generation capability gates, create a true content-locked bakeoff using identical Hermes-authored content plan plus common design reference/template direction and shared QA criteria.
+5. Keep hosted Claude Design as a separate design quality benchmark only, not an automation path.
+6. Keep dashboard work deferred until the conversation-first flow and Producer/Reviewer generation loop are stronger.
+7. Update JARVIS registry/status hygiene for the completed legacy `slide-harness` when convenient.
