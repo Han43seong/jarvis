@@ -316,13 +316,32 @@ Hermes then:
   - Safety: recorder does not clone, install, generate, render, launch browsers, invoke providers/producers, or copy source/deck HTML contents into repo artifacts. Smoke-report evidence is sanitized to reject content-bearing keys, contradictory readiness/safety flags, nested content, multiline/HTML-like values, and unknown Swiss layouts.
   - Verification: `tests/test_phase25.py` -> `18 passed`; full suite -> `201 passed`; `git diff --check` clean; real CLI smoke -> `guizang_html_smoke_recorded`, `html_smoke_passed=true`, `blockers=[]`, `ranking_ready=false`; independent reviewer verdict: `PASS` after two requested hardening rounds.
   - Limitation: this is a source/template HTML smoke only, not browser render, visual QA, ranking readiness, or PPTX editability validation.
+  - Push: `984c6c6` pushed to `origin/main`; local/remote ahead-behind `0 0`.
+
+- `2026-05-18`: Built Phase 26 `codex-guizang-html` browser render/visual gate evidence recorder.
+  - Commit: `b94684a feat: record Phase 26 Guizang render gate`.
+  - CLI: `record-guizang-html-render-gate --run-dir <run_dir> --candidate-id codex-guizang-html --render-report <existing-render-report.json> --visual-review <existing-visual-review.json>`.
+  - Manual browser evidence source:
+    - HTML smoke deck: `/tmp/hermes-slide-director-phase25-guizang.tTLNIZ/outputs/codex-guizang-html-smoke/deck.html`.
+    - Render report: `/tmp/hermes-slide-director-phase25-guizang.tTLNIZ/guizang-html-browser-render-report.json`.
+    - Visual review: `/tmp/hermes-slide-director-phase25-guizang.tTLNIZ/guizang-html-visual-review.json`.
+    - Screenshots: `/home/hskim/.hermes/cache/screenshots/browser_screenshot_e745dfc8f080450cb8dbc9c5e5136c88.png`, `/home/hskim/.hermes/cache/screenshots/browser_screenshot_4b7e96b849bd4059847c6c275351bde7.png`.
+  - Artifacts:
+    - `candidates/codex-guizang-html/phase26-guizang-html-render-gate.json`.
+    - `candidates/codex-guizang-html/phase26-guizang-html-render-gate.md`.
+    - `reviews/codex-guizang-html-phase26-visual-review-evidence.json`.
+    - `reviews/codex-guizang-html-phase26-visual-review-evidence.md`.
+  - Real smoke: Phase 25 then Phase 26 replayed into `/tmp/hermes-phase26-verify2.G1CRuf`; status `guizang_html_render_gate_recorded`, `render_gate_passed=true`, `ranking_ready=true`, `visual_verdict=PASS_WITH_WARNINGS`, `warnings=7`, `blockers=0`.
+  - Verification: `tests/test_phase26.py` -> `13 passed`; full suite -> `214 passed`; `git diff --check` clean; independent reviewer verdict: `PASS` after one requested hardening round.
+  - Safety/hardening: Phase 26 validates Phase 25 smoke + source inventory, requires Phase 25 render/visual gates to remain unopened, rejects render/visual blocking defects or overflow, and sanitizes persisted warnings/checks against HTML/source/path/screenshot smuggling. It records existing JSON evidence only and does not render, install, invoke providers/producers, or copy source/deck HTML contents into repo artifacts.
+  - Semantics: `codex-guizang-html` is now `ranking_ready=true` for the next comparison stage, but this is not final design/product acceptance and not PPTX editability validation.
   - Local repo status after commit: `main...origin/main [ahead 1]`.
 
 ## Next steps
 
-1. Push the Phase 25 `hermes-slide-director` commit after verification.
-2. Implement the next gated step for `codex-guizang-html`: browser render/visual gate. This may require browser tooling or other dependencies, so request explicit user approval before any install/execution.
-3. Candidate options after Guizang remain `codex-reveal-playwright` and `codex-editable-html-slides`; request approval before any install/execution.
+1. Push the Phase 26 `hermes-slide-director` commit after verification.
+2. Prepare the next candidate capability smoke path, likely `codex-reveal-playwright` or `codex-editable-html-slides`; request approval before any install/execution.
+3. After enough candidates pass capability gates, create a true content-locked bakeoff using identical Hermes-authored content plan plus common design reference/template direction and shared QA criteria.
 4. Keep hosted Claude Design as a separate design quality benchmark only, not an automation path.
 5. Keep dashboard work deferred until the conversation-first flow and Producer/Reviewer generation loop are stronger.
 6. Update JARVIS registry/status hygiene for the completed legacy `slide-harness` when convenient.
