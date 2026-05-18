@@ -335,13 +335,33 @@ Hermes then:
   - Verification: `tests/test_phase26.py` -> `13 passed`; full suite -> `214 passed`; `git diff --check` clean; independent reviewer verdict: `PASS` after one requested hardening round.
   - Safety/hardening: Phase 26 validates Phase 25 smoke + source inventory, requires Phase 25 render/visual gates to remain unopened, rejects render/visual blocking defects or overflow, and sanitizes persisted warnings/checks against HTML/source/path/screenshot smuggling. It records existing JSON evidence only and does not render, install, invoke providers/producers, or copy source/deck HTML contents into repo artifacts.
   - Semantics: `codex-guizang-html` is now `ranking_ready=true` for the next comparison stage, but this is not final design/product acceptance and not PPTX editability validation.
+  - Push: `b94684a` pushed to `origin/main`; local/remote ahead-behind `0 0`.
+
+- `2026-05-18`: Built Phase 27 `codex-editable-html-slides` source/static validator smoke recorder.
+  - Commit: `0359257 feat: record Phase 27 editable HTML static smoke`.
+  - Candidate source: `/home/hskim/jarvis/research_codex_omx/ext/archlizheng__frontend-slides-editable`, remote `https://github.com/archlizheng/frontend-slides-editable`, commit `f530ae3`.
+  - Manual evidence: `/tmp/hermes-slide-director-phase27-editable-static-report.json`.
+  - Discovery/static smoke used existing local source only; no npm/pip/sudo/global install, no clone/network access for smoke, no browser/render/visual gate, no validator execution inside recorder, and no deck generation.
+  - Validator checks already performed outside recorder on existing examples:
+    - `examples/editable-deck-reference.html` -> `PASS`.
+    - `examples/generated/presets/swiss-modern.html` -> `PASS`.
+  - CLI added: `record-editable-html-static-smoke`.
+  - Artifacts written by recorder:
+    - `candidates/codex-editable-html-slides/phase27-editable-html-static-smoke.json`.
+    - `candidates/codex-editable-html-slides/phase27-editable-html-static-smoke.md`.
+    - `candidates/codex-editable-html-slides/phase27-source-inventory.json`.
+  - Real smoke: `/tmp/hermes-phase27-verify3.PRQVMA`; status `editable_html_static_smoke_recorded`, `validator_smoke_performed=true`, `browser_smoke_performed=false`, `render_performed=false`, `visual_inspection_performed=false`, `ranking_ready=false`, `next_required_gate=browser_interaction_visual_gate`, `warnings=3`, `blockers=0`.
+  - Verification: `tests/test_phase27.py` -> `28 passed`; full suite -> `242 passed`; `git diff --check` clean; independent reviewer verdict: `PASS` after two requested sanitizer-hardening rounds.
+  - Safety/hardening: Phase 27 requires the expected candidate/source remote/source commit, required source files, exact validator commands, PASS validator results, empty blockers, pre-browser/pre-render flags, and `ranking_ready=false`. It rejects content-bearing keys, HTML/source signatures, path-bearing keys, POSIX/WSL/Windows/UNC/file URL paths, and screenshot/image paths to avoid copying source/deck/runtime artifacts into repo evidence.
+  - Semantics: `codex-editable-html-slides` now has static/source smoke evidence only. It is not ranking-ready until the next `browser_interaction_visual_gate` validates actual editable runtime behavior and visual rendering.
   - Local repo status after commit: `main...origin/main [ahead 1]`.
 
 ## Next steps
 
-1. Push the Phase 26 `hermes-slide-director` commit after verification.
-2. Prepare the next candidate capability smoke path, likely `codex-reveal-playwright` or `codex-editable-html-slides`; request approval before any install/execution.
-3. After enough candidates pass capability gates, create a true content-locked bakeoff using identical Hermes-authored content plan plus common design reference/template direction and shared QA criteria.
-4. Keep hosted Claude Design as a separate design quality benchmark only, not an automation path.
-5. Keep dashboard work deferred until the conversation-first flow and Producer/Reviewer generation loop are stronger.
-6. Update JARVIS registry/status hygiene for the completed legacy `slide-harness` when convenient.
+1. Push the Phase 27 `hermes-slide-director` commit after verification.
+2. Implement the `codex-editable-html-slides` browser interaction/visual gate if it can be done without additional installation; if any install is needed, stop and request approval.
+3. Continue remaining candidate capability smokes such as `codex-reveal-playwright` if source/evidence is available without prohibited setup; request approval before any install/execution that needs dependencies.
+4. After enough candidates pass capability gates, create a true content-locked bakeoff using identical Hermes-authored content plan plus common design reference/template direction and shared QA criteria.
+5. Keep hosted Claude Design as a separate design quality benchmark only, not an automation path.
+6. Keep dashboard work deferred until the conversation-first flow and Producer/Reviewer generation loop are stronger.
+7. Update JARVIS registry/status hygiene for the completed legacy `slide-harness` when convenient.
