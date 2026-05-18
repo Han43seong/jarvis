@@ -354,13 +354,33 @@ Hermes then:
   - Verification: `tests/test_phase27.py` -> `28 passed`; full suite -> `242 passed`; `git diff --check` clean; independent reviewer verdict: `PASS` after two requested sanitizer-hardening rounds.
   - Safety/hardening: Phase 27 requires the expected candidate/source remote/source commit, required source files, exact validator commands, PASS validator results, empty blockers, pre-browser/pre-render flags, and `ranking_ready=false`. It rejects content-bearing keys, HTML/source signatures, path-bearing keys, POSIX/WSL/Windows/UNC/file URL paths, and screenshot/image paths to avoid copying source/deck/runtime artifacts into repo evidence.
   - Semantics: `codex-editable-html-slides` now has static/source smoke evidence only. It is not ranking-ready until the next `browser_interaction_visual_gate` validates actual editable runtime behavior and visual rendering.
+  - Push: `0359257` pushed to `origin/main`; local/remote ahead-behind `0 0`.
+
+- `2026-05-18`: Built Phase 28 `codex-editable-html-slides` browser interaction/visual gate recorder.
+  - Commit: `3e07e19 feat: record Phase 28 editable HTML browser gate`.
+  - Browser evidence source: existing local HTML `/home/hskim/jarvis/research_codex_omx/ext/archlizheng__frontend-slides-editable/examples/generated/presets/swiss-modern.html`, opened with Hermes built-in browser automation only; no additional browser/package install.
+  - Manual evidence files:
+    - `/tmp/hermes-slide-director-phase28-editable-browser-report.json`.
+    - `/tmp/hermes-slide-director-phase28-editable-visual-review.json`.
+  - Browser/manual observations: slide nav count `4`, edit button/pages/export/+new page controls visible, edit mode toggled, contenteditable count increased after edit, required placeholder count `0`, horizontal overflow `false`, document vertical overflow `true` treated as warning, screenshot count `2` recorded without persisting screenshot paths.
+  - Visual verdict: `PASS_WITH_WARNINGS`; blockers empty. Warnings cover cramped editor chrome/sidebar, small selection handles/pagination controls, and muted Save/Add element controls immediately after edit mode.
+  - CLI added: `record-editable-html-browser-gate`.
+  - Artifacts written by recorder:
+    - `candidates/codex-editable-html-slides/phase28-editable-html-browser-gate.json`.
+    - `candidates/codex-editable-html-slides/phase28-editable-html-browser-gate.md`.
+    - `reviews/codex-editable-html-slides-phase28-visual-review-evidence.json`.
+    - `reviews/codex-editable-html-slides-phase28-visual-review-evidence.md`.
+  - Real smoke: Phase 27 replay + Phase 28 in `/tmp/hermes-phase28-verify3.UqWO3u`; status `editable_html_browser_gate_recorded`, `browser_gate_passed=true`, `visual_verdict=PASS_WITH_WARNINGS`, `ranking_ready=true`, `screenshot_count=2`, persisted result contains no `/tmp`, `/home`, or Windows absolute path leakage.
+  - Verification: `tests/test_phase28.py` -> `35 passed`; full suite -> `277 passed`; `git diff --check` clean; independent reviewer verdict: `PASS` after two requested hardening rounds.
+  - Safety/hardening: Phase 28 requires linked Phase 27 static smoke evidence and source inventory, validates browser/visual evidence flags, rejects blockers/placeholders/horizontal overflow, rejects content/path/screenshot smuggling including negative screenshot counts, and persists metadata only. It does not run browser/render/validators/deck generation/providers/producers and does not copy HTML/source/screenshot contents.
+  - Semantics: `codex-editable-html-slides` is now `ranking_ready=true` for candidate comparison, but this remains capability smoke evidence only, not final design/product acceptance and not native PPTX validation.
   - Local repo status after commit: `main...origin/main [ahead 1]`.
 
 ## Next steps
 
-1. Push the Phase 27 `hermes-slide-director` commit after verification.
-2. Implement the `codex-editable-html-slides` browser interaction/visual gate if it can be done without additional installation; if any install is needed, stop and request approval.
-3. Continue remaining candidate capability smokes such as `codex-reveal-playwright` if source/evidence is available without prohibited setup; request approval before any install/execution that needs dependencies.
+1. Push the Phase 28 `hermes-slide-director` commit after verification.
+2. Continue remaining candidate capability smokes such as `codex-reveal-playwright` if source/evidence is available without prohibited setup; request approval before any install/execution that needs dependencies.
+3. Integrate/rank `codex-editable-html-slides` evidence against prior candidates in a follow-up phase, without declaring a final bakeoff winner.
 4. After enough candidates pass capability gates, create a true content-locked bakeoff using identical Hermes-authored content plan plus common design reference/template direction and shared QA criteria.
 5. Keep hosted Claude Design as a separate design quality benchmark only, not an automation path.
 6. Keep dashboard work deferred until the conversation-first flow and Producer/Reviewer generation loop are stronger.
