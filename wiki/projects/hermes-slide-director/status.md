@@ -494,10 +494,31 @@ Hermes then:
   - Semantics: `codex-reveal-playwright` now has real-generation plus render/export smoke evidence, but this is not a final winner, not final design/product acceptance, and not native PPTX/PPTX-editability validation.
   - Push: `dd01871` pushed to `origin/main`; local/remote ahead-behind `0 0`.
 
+- `2026-05-18`: Built Phase 35 cross-candidate real-generation readiness report.
+  - Commit: `a414dfd feat: add Phase 35 cross-candidate readiness report`.
+  - Purpose: deterministic, sanitized comparison of the four primary candidates after Phase 32-34 real-generation smokes.
+  - CLI added: `prepare-cross-candidate-real-generation-readiness-report`.
+  - Report artifacts:
+    - `generation/cross-candidate-real-generation-readiness-report.json`.
+    - `generation/cross-candidate-real-generation-readiness-report.md`.
+  - Candidates summarized:
+    - `codex-presentation-pptx`: Phase 24, commit `1385d74`, native PPTX family, install/render/export smoke done, ranking-ready, but lacks the same post-Phase-31 real-generation parity gate.
+    - `codex-guizang-html`: Phase 32, commit `8bcaf74`, real Codex/OMX generation smoke done, browser/visual gate done, `PASS_WITH_WARNINGS`, ranking-ready.
+    - `codex-editable-html-slides`: Phase 33, commit `4aa5ea0`, real Codex/OMX new-deck generation smoke done, editable interaction evidence done, `PASS_WITH_WARNINGS`, ranking-ready.
+    - `codex-reveal-playwright`: Phase 34, commit `dd01871`, real Codex/OMX generation plus Playwright screenshot/PDF export smoke done, `PASS_WITH_WARNINGS`, ranking-ready.
+  - Counts: candidate count `4`, ready-for-same-content-bakeoff count `3`, PPTX parity gap count `1`.
+  - Recommendation: run a true content-locked bakeoff for real-generation-ready HTML/reveal candidates while deciding whether to add PPTX real-generation parity first if native PPTX output is mandatory.
+  - Safety: report-only/static comparison. Phase 35 did not install, render/export, launch browsers, invoke producers/providers, generate decks, clone repos, read temp evidence files, or copy external artifacts.
+  - Semantics: no winner, no final acceptance, no final design approval.
+  - Verification: `tests/test_phase35.py` -> `5 passed`; full suite -> `486 passed`; `git diff --check` clean.
+  - Reviewer verdict: `PASS`.
+  - Real smoke: `/tmp/hermes-phase35-verify.8am0XA`, status `cross_candidate_real_generation_readiness_report_prepared`, candidate count `4`, ready count `3`, PPTX parity gap `1`, sanitized output contains no `/tmp`, `/home`, `file://`, `.html`, `.png`, or `.pdf`.
+  - Push: `a414dfd` pushed to `origin/main`; local/remote ahead-behind `0 0`.
+
 ## Next steps
 
-1. Integrate comparable HTML/PPTX/reveal candidate evidence in a cross-candidate real-generation readiness report without declaring a final bakeoff winner.
-2. After enough candidates pass real-generation capability gates, create a true content-locked bakeoff using identical Hermes-authored content plan plus common design reference/template direction and shared QA criteria.
+1. Decide whether native PPTX output is mandatory for the first true bakeoff. If yes, run a PPTX real-generation parity gate before bakeoff; if no, proceed with the three real-generation-ready HTML/reveal candidates.
+2. Create a true content-locked bakeoff using identical Hermes-authored content plan plus common design reference/template direction and shared QA criteria.
 3. Keep hosted Claude Design as a separate design quality benchmark only, not an automation path.
 4. Keep dashboard work deferred until the conversation-first flow and Producer/Reviewer generation loop are stronger.
 5. Update JARVIS registry/status hygiene for the completed legacy `slide-harness` when convenient.
