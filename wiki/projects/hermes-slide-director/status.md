@@ -303,13 +303,26 @@ Hermes then:
   - Real smoke: replayed Phase 21B/22A/22B/23/24 on existing PPTX/render evidence. Result: `shortlist_ready_single_candidate`, `shortlist_ready=true`, `bakeoff_winner=false`, `ranking_score=0.75`, `ranking_penalty=0.25`, `warnings=9`, and `requires_user_decision_before_next_candidate_install_or_execution=true`.
   - Safety: Phase 24 itself does not install packages, render, generate decks, call network APIs/providers, invoke producers, or use browsers/LibreOffice.
   - Verification: `tests/test_phase24.py` -> `11 passed`; full suite -> `183 passed in 4.45s`; `git diff --check` clean; independent reviewer verdict: `PASS`. Reviewer suggested exact hard-gate phase validation as a minor improvement; Hermes added it and reran tests successfully.
+  - Push: `1385d74` pushed to `origin/main`; local/remote ahead-behind `0 0`.
+
+- `2026-05-18`: Built Phase 25 `codex-guizang-html` source/html smoke evidence recorder.
+  - Commit: `984c6c6 feat: record Phase 25 Guizang HTML smoke`.
+  - Command added: `record-guizang-html-smoke`.
+  - Candidate/source: `https://github.com/op7418/guizang-ppt-skill`, temp clone `/tmp/hermes-slide-director-phase25-guizang.tTLNIZ/guizang-ppt-skill`, commit `3d87acc`.
+  - Manual smoke deck: `/tmp/hermes-slide-director-phase25-guizang.tTLNIZ/outputs/codex-guizang-html-smoke/deck.html`.
+  - Manual validation: `node scripts/validate-swiss-deck.mjs deck.html` -> `Swiss deck validation passed: 2 slide(s)` after replacing remaining `[必填]` placeholders.
+  - Recorder artifacts: `candidates/codex-guizang-html/phase25-guizang-html-smoke.json`, `.md`, and `phase25-source-inventory.json`.
+  - Semantics: records source inventory, template hashes/sizes, existing HTML smoke metadata, slide count, observed Swiss layouts, and sanitized smoke-report metadata only. `render_performed=false`, `visual_inspection_performed=false`, `ranking_ready=false`, `next_required_gate=browser_render_visual_gate`.
+  - Safety: recorder does not clone, install, generate, render, launch browsers, invoke providers/producers, or copy source/deck HTML contents into repo artifacts. Smoke-report evidence is sanitized to reject content-bearing keys, contradictory readiness/safety flags, nested content, multiline/HTML-like values, and unknown Swiss layouts.
+  - Verification: `tests/test_phase25.py` -> `18 passed`; full suite -> `201 passed`; `git diff --check` clean; real CLI smoke -> `guizang_html_smoke_recorded`, `html_smoke_passed=true`, `blockers=[]`, `ranking_ready=false`; independent reviewer verdict: `PASS` after two requested hardening rounds.
+  - Limitation: this is a source/template HTML smoke only, not browser render, visual QA, ranking readiness, or PPTX editability validation.
   - Local repo status after commit: `main...origin/main [ahead 1]`.
 
 ## Next steps
 
-1. Push the Phase 24 `hermes-slide-director` commit after verification.
-2. Decide the next candidate path before running installs/execution: `run_next_candidate_pipeline` is recommended, but it may require user-approved installs/execution for the selected OSS candidate.
-3. Candidate options remain `codex-guizang-html`, `codex-reveal-playwright`, and `codex-editable-html-slides`; pick one and request approval before any install/execution.
+1. Push the Phase 25 `hermes-slide-director` commit after verification.
+2. Implement the next gated step for `codex-guizang-html`: browser render/visual gate. This may require browser tooling or other dependencies, so request explicit user approval before any install/execution.
+3. Candidate options after Guizang remain `codex-reveal-playwright` and `codex-editable-html-slides`; request approval before any install/execution.
 4. Keep hosted Claude Design as a separate design quality benchmark only, not an automation path.
 5. Keep dashboard work deferred until the conversation-first flow and Producer/Reviewer generation loop are stronger.
 6. Update JARVIS registry/status hygiene for the completed legacy `slide-harness` when convenient.
