@@ -449,12 +449,33 @@ Hermes then:
   - Semantics: `codex-guizang-html` now has real-generation smoke evidence, but this is not a final winner, not final design/product acceptance, and not native PPTX/PPTX-editability validation.
   - Push: `8bcaf74` pushed to `origin/main`; local/remote ahead-behind `0 0`.
 
+- `2026-05-18`: Ran and recorded Phase 33 `codex-editable-html-slides` real Codex/OMX new-deck generation smoke.
+  - Commit: `4aa5ea0 feat: record Phase 33 editable HTML real generation smoke`.
+  - Temp workspace: `/tmp/hermes-slide-director-phase33-editable-realgen.nL3eoq`.
+  - Source reference: existing editable HTML candidate source `/home/hskim/jarvis/research_codex_omx/ext/archlizheng__frontend-slides-editable`.
+  - Locked content plan: small Korean editable-deck smoke plan under the temp workspace.
+  - Producer: `omx exec` constrained to the temp workspace; no install, sudo, global install, or repo writes.
+  - Generated temp artifacts: `output/deck.html` and `output/producer-report.json` only.
+  - Producer validation: slide count `3`, browser contenteditable count `29`, browser button count `9`, edit mode toggled, Save/Add/Export/page navigation present, Korean content present, forbidden placeholders `0`, external refs `0`.
+  - Browser/manual visual evidence: opened generated HTML with Hermes browser automation; edit button toggled from `편집 켜기` to `편집 끄기`; visual verdict `PASS_WITH_WARNINGS`; blockers empty. Warnings cover nonblocking vertical viewport clipping, noisy editable outlines, possible lower-card text crowding, decorative overlap, and capability-smoke-only semantics.
+  - CLI added: `record-editable-html-real-generation-smoke`.
+  - Artifacts written by recorder:
+    - `candidates/codex-editable-html-slides/phase33-editable-html-real-generation-smoke.json`.
+    - `candidates/codex-editable-html-slides/phase33-editable-html-real-generation-smoke.md`.
+    - `reviews/codex-editable-html-slides-phase33-real-generation-visual-review.json`.
+    - `reviews/codex-editable-html-slides-phase33-real-generation-visual-review.md`.
+  - Real smoke: Phase 33 in `/tmp/hermes-phase33-verify2.ZYR05c`; status `editable_html_real_generation_smoke_recorded`, `real_generation_smoke_done=true`, `ranking_ready=true`, `visual_verdict=PASS_WITH_WARNINGS`, slide count `3`, contenteditable count `29`, button count `9`, warnings carried forward `8`, persisted result contains no `/tmp`, `/home`, `file://`, `.html`, `.png`, `.pdf`, `<html`, `deck_path`, or edit-button text leakage.
+  - Reviewer loop: initial reviewer returned `REQUEST_CHANGES` because reports claiming `browser_launched_by_recorder`, `render_invoked_by_recorder`, or `artifacts_copied_into_repo` true were accepted; recorder was patched to require all three false and tests were added. Final reviewer verdict: `PASS`.
+  - Verification after patch: `tests/test_phase33.py` -> `48 passed`; full suite -> `429 passed`; `git diff --check` clean.
+  - Safety: Phase 33 recorder validates existing generation/visual JSON only. It does not install, launch browsers, render/export, run producers/providers, generate decks, or copy temp deck/screenshot artifacts into the repo.
+  - Semantics: `codex-editable-html-slides` now has real-generation smoke evidence, but this is not a final winner, not final design/product acceptance, and not native PPTX/PPTX-editability validation.
+  - Push: `4aa5ea0` pushed to `origin/main`; local/remote ahead-behind `0 0`.
+
 ## Next steps
 
-1. Run `codex-editable-html-slides` real Codex/OMX new-deck generation smoke in an isolated temp workspace and record generated-deck interaction/editability/browser/visual metadata.
-2. Run `codex-reveal-playwright` real Codex/OMX same-content generation smoke using the installed/reinstallable temp stack and record screenshot/PDF/visual metadata.
-3. Integrate comparable HTML/PPTX/reveal candidate evidence in a cross-candidate readiness report without declaring a final bakeoff winner.
-4. After enough candidates pass real-generation capability gates, create a true content-locked bakeoff using identical Hermes-authored content plan plus common design reference/template direction and shared QA criteria.
-5. Keep hosted Claude Design as a separate design quality benchmark only, not an automation path.
-6. Keep dashboard work deferred until the conversation-first flow and Producer/Reviewer generation loop are stronger.
-7. Update JARVIS registry/status hygiene for the completed legacy `slide-harness` when convenient.
+1. Run `codex-reveal-playwright` real Codex/OMX same-content generation smoke using the installed/reinstallable temp stack and record screenshot/PDF/visual metadata.
+2. Integrate comparable HTML/PPTX/reveal candidate evidence in a cross-candidate readiness report without declaring a final bakeoff winner.
+3. After enough candidates pass real-generation capability gates, create a true content-locked bakeoff using identical Hermes-authored content plan plus common design reference/template direction and shared QA criteria.
+4. Keep hosted Claude Design as a separate design quality benchmark only, not an automation path.
+5. Keep dashboard work deferred until the conversation-first flow and Producer/Reviewer generation loop are stronger.
+6. Update JARVIS registry/status hygiene for the completed legacy `slide-harness` when convenient.
