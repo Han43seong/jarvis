@@ -248,12 +248,20 @@ Hermes then:
   - New default candidates: `codex-presentation-pptx`, `codex-guizang-html`, `codex-reveal-playwright`, and `codex-editable-html-slides`; PptxGenJS is recorded as a lower-level engine/reference.
   - Purpose: write a deterministic Codex/OMX OSS candidate registry, candidate exclusion record, and per-candidate dry-run launch contracts without installing, cloning, running Codex/OMX/Claude, calling network/provider/paid services, or generating slides.
   - Verification: `tests/test_phase20.py` -> `6 passed`; full suite -> `141 passed in 0.53s`; CLI smoke for `prepare-codex-oss-candidates` verified default candidates, benchmark-only hosted Claude Design, exclusions, and `external_call_made=false`; independent reviewer verdict: `PASS`.
+  - Pushed to `origin/main` after user approval.
+- `2026-05-18`: Built Phase 21A codex-presentation-pptx source inspection and isolated smoke planning.
+  - Commit: `4e1ea75 feat: add Phase 21A PPTX smoke planning`.
+  - Command added: `prepare-codex-presentation-pptx-smoke`.
+  - Purpose: inspect a local `appautomaton/presentation` source tree for `deck-design-ppt` metadata and produce a Phase 21B smoke plan without installing, cloning, running Codex/OMX/Claude/provider/browser, generating PPTX, or mutating global config.
+  - Real local source smoke: read-only inspection against `/home/hskim/jarvis/research_codex_omx/ext/appautomaton__presentation` found `pptxgenjs`, `playwright-core`, `sharp`, 21 pattern JS files, and 21 slot markdown files.
+  - Reviewer loop: first review returned `REQUEST_CHANGES` because `--run-dir` could be equal to or nested inside `--source-dir`; Hermes added resolved-path validation and tests to preserve source-tree read-only guarantees. Re-review verdict: `PASS`.
+  - Verification: `tests/test_phase21.py` -> `7 passed`; full suite -> `148 passed in 0.51s`; `git diff --check` clean; CLI smoke emitted `source inspected: true`, `candidate execution: not_run`, and `external call made: false`.
   - Local repo status after commit: `main...origin/main [ahead 1]`.
 
 ## Next steps
 
-1. Push the Phase 20 `hermes-slide-director` commit only after explicit user approval.
-2. Phase 21 should inspect/smoke one isolated target first: `codex-presentation-pptx` from `appautomaton/presentation`, with no global config mutation and explicit approval before network/install/provider actions.
+1. Push the Phase 21A `hermes-slide-director` commit only after explicit user approval.
+2. Phase 21B can perform an isolated real smoke for `codex-presentation-pptx`, but only after explicit approval for any npm install/network/Codex or OMX producer execution/browser/PPTX inspection; keep it in a temp/project-local workspace with no `~/.codex` or `~/.claude` mutation.
 3. Keep hosted Claude Design as a separate design quality benchmark only, not an automation path.
 4. Keep dashboard work deferred until the conversation-first flow and Producer/Reviewer generation loop are stronger.
 5. Update JARVIS registry/status hygiene for the completed legacy `slide-harness` when convenient.
