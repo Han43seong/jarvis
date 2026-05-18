@@ -265,12 +265,20 @@ Hermes then:
   - Command added: `record-codex-presentation-pptx-smoke` to record existing PPTX smoke evidence without running npm, generating decks, invoking Codex/OMX/Claude/provider/browser/LibreOffice, copying the temp PPTX, or mutating global config.
   - Verification: `tests/test_phase21.py` -> `14 passed`; full suite -> `155 passed in 0.53s`; CLI smoke against the real generated PPTX produced `pptx valid zip: true`, `slide xml count: 3`, `deck generated: true`, `ranking ready: false`; independent reviewer verdict: `PASS`.
   - Limitation: no visual QA yet because `soffice` and Python `markitdown` were unavailable in the environment; Phase 21B proves native PPTX generation only, not design quality or ranking readiness.
+  - Pushed to `origin/main` after user approval.
+- `2026-05-18`: Built Phase 22A no-sudo PPTX candidate ingestion and static layout gate.
+  - Commit: `c3879ec feat: add Phase 22A PPTX static gate`.
+  - Command added: `inspect-pptx-candidate`.
+  - Purpose: ingest an existing `codex-presentation-pptx` PPTX by path, validate the Phase 21B smoke result, inspect PPTX zip/XML/text, and run python-pptx static geometry heuristics without rendering, copying PPTX artifacts, installing packages, invoking providers, or mutating global config.
+  - Real smoke: inspected `/tmp/hermes-slide-director-phase21b.kr8k6Z/outputs/codex-presentation-pptx-smoke.pptx` with the recorded Phase 21B smoke result; verdict `PASS_WITH_LIMITATIONS`, `slide_xml_count=3`, `static_layout_inspection_performed=true`, `visual_inspection_performed=false`, `render_performed=false`, `ranking_ready=false`, and no static issues.
+  - Verification: `tests/test_phase22.py` -> `6 passed`; full suite -> `161 passed in 4.43s`; `git diff --check` clean; independent reviewer verdict: `PASS`.
+  - Limitation: Phase 22A is static-only and does not prove rendered visual quality, clipping/overflow absence, or ranking readiness. Phase 22B still needs real render/visual/reviewer gates.
   - Local repo status after commit: `main...origin/main [ahead 1]`.
 
 ## Next steps
 
-1. Push the Phase 21B `hermes-slide-director` commit only after explicit user approval.
-2. Phase 22 should add candidate ingestion plus visual/reviewer gate for PPTX artifacts. This likely needs LibreOffice/`soffice`, Poppler, or another approved PPTX-to-image/PDF route; sudo/system package installation must be explicitly approved if required.
+1. Push the Phase 22A `hermes-slide-director` commit only after explicit user approval.
+2. Phase 22B should add a true PPTX render/visual gate. This likely needs LibreOffice/`soffice`, Poppler, or another approved PPTX-to-image/PDF route; sudo/system package installation must be explicitly approved if required.
 3. Keep hosted Claude Design as a separate design quality benchmark only, not an automation path.
 4. Keep dashboard work deferred until the conversation-first flow and Producer/Reviewer generation loop are stronger.
 5. Update JARVIS registry/status hygiene for the completed legacy `slide-harness` when convenient.
