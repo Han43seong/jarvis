@@ -273,12 +273,22 @@ Hermes then:
   - Real smoke: inspected `/tmp/hermes-slide-director-phase21b.kr8k6Z/outputs/codex-presentation-pptx-smoke.pptx` with the recorded Phase 21B smoke result; verdict `PASS_WITH_LIMITATIONS`, `slide_xml_count=3`, `static_layout_inspection_performed=true`, `visual_inspection_performed=false`, `render_performed=false`, `ranking_ready=false`, and no static issues.
   - Verification: `tests/test_phase22.py` -> `6 passed`; full suite -> `161 passed in 4.43s`; `git diff --check` clean; independent reviewer verdict: `PASS`.
   - Limitation: Phase 22A is static-only and does not prove rendered visual quality, clipping/overflow absence, or ranking readiness. Phase 22B still needs real render/visual/reviewer gates.
+  - Pushed to `origin/main` after user approval.
+- `2026-05-18`: Built Phase 22B PPTX render/visual gate evidence recorder.
+  - Commit: `443cdc8 feat: add Phase 22B PPTX render gate recorder`.
+  - User approval: installing needed dependencies while proceeding was allowed; sudo/system installs remain user-run only.
+  - Manual render smoke: installed `pptx-glimpse` only in isolated temp workspace `/tmp/hermes-slide-director-phase22b.PfLDCt`; rendered the Phase 21B native PPTX to 3 PNG and 3 SVG files at 1280x720 without LibreOffice/sudo.
+  - Visual QA: Hermes vision inspection of all 3 rendered PNGs found no blocking clipping, overflow, text overlap, missing content, or obvious rendering defects. Non-blocking warnings remain: small/low-contrast detail text, sparse spacing, one awkward title wrap, and a bullet punctuation issue.
+  - Command added: `record-pptx-render-gate` to record existing rendered PNG/SVG evidence and optional visual-review JSON. The command validates image inventory, render-report counts, visual-review blockers/warnings, and emits `PASS`, `PASS_WITH_WARNINGS`, `NEEDS_VISUAL_REVIEW`, or `REQUEST_CHANGES` without installing, rendering, invoking providers, generating decks, or copying temp images/PPTX into the repo.
+  - Real smoke: CLI against `/tmp/hermes-slide-director-phase22b.PfLDCt/rendered`, `render-report.json`, and `visual-review.json` produced `PASS_WITH_WARNINGS`, `png_count=3`, `svg_count=3`, `visual_inspection_performed=true`, `render_performed=true`, `ranking_ready=true`, and no blocking issues.
+  - Verification: `tests/test_phase22.py` -> `11 passed`; full suite -> `166 passed in 4.39s`; `git diff --check` clean; independent reviewer verdict: `PASS`.
+  - Limitation: Phase 22B proves render/visual evidence for the smoke deck only. Next phases should connect this gate into candidate bakeoff/ranking and test additional content/styling cases.
   - Local repo status after commit: `main...origin/main [ahead 1]`.
 
 ## Next steps
 
-1. Push the Phase 22A `hermes-slide-director` commit only after explicit user approval.
-2. Phase 22B should add a true PPTX render/visual gate. This likely needs LibreOffice/`soffice`, Poppler, or another approved PPTX-to-image/PDF route; sudo/system package installation must be explicitly approved if required.
+1. Push the Phase 22B `hermes-slide-director` commit after verification.
+2. Phase 23 should connect `codex-presentation-pptx` into the actual candidate bakeoff/ranking path using Phase 21B/22A/22B gates as hard evidence.
 3. Keep hosted Claude Design as a separate design quality benchmark only, not an automation path.
 4. Keep dashboard work deferred until the conversation-first flow and Producer/Reviewer generation loop are stronger.
 5. Update JARVIS registry/status hygiene for the completed legacy `slide-harness` when convenient.
