@@ -256,12 +256,21 @@ Hermes then:
   - Real local source smoke: read-only inspection against `/home/hskim/jarvis/research_codex_omx/ext/appautomaton__presentation` found `pptxgenjs`, `playwright-core`, `sharp`, 21 pattern JS files, and 21 slot markdown files.
   - Reviewer loop: first review returned `REQUEST_CHANGES` because `--run-dir` could be equal to or nested inside `--source-dir`; Hermes added resolved-path validation and tests to preserve source-tree read-only guarantees. Re-review verdict: `PASS`.
   - Verification: `tests/test_phase21.py` -> `7 passed`; full suite -> `148 passed in 0.51s`; `git diff --check` clean; CLI smoke emitted `source inspected: true`, `candidate execution: not_run`, and `external call made: false`.
+  - Pushed to `origin/main` after user approval.
+- `2026-05-18`: Ran and recorded Phase 21B isolated `codex-presentation-pptx` native PPTX smoke.
+  - Commit: `1640150 feat: record Phase 21B PPTX smoke evidence`.
+  - User approval: npm install was explicitly allowed if needed.
+  - Manual smoke: copied `appautomaton/presentation` into `/tmp/hermes-slide-director-phase21b.kr8k6Z`, ran `npm install` only inside the temp `deck-design-ppt` copy (`33 packages`, `0 vulnerabilities`), then generated `/tmp/hermes-slide-director-phase21b.kr8k6Z/outputs/codex-presentation-pptx-smoke.pptx`.
+  - Smoke result: native PPTX generated successfully (`92916` bytes, 3 slide XML files) using `consulting-mckinsey` palette and patterns `p01-cover`, `p04-scorecard`, `p08-closer`; zip/text extraction confirmed expected cover and closer text.
+  - Command added: `record-codex-presentation-pptx-smoke` to record existing PPTX smoke evidence without running npm, generating decks, invoking Codex/OMX/Claude/provider/browser/LibreOffice, copying the temp PPTX, or mutating global config.
+  - Verification: `tests/test_phase21.py` -> `14 passed`; full suite -> `155 passed in 0.53s`; CLI smoke against the real generated PPTX produced `pptx valid zip: true`, `slide xml count: 3`, `deck generated: true`, `ranking ready: false`; independent reviewer verdict: `PASS`.
+  - Limitation: no visual QA yet because `soffice` and Python `markitdown` were unavailable in the environment; Phase 21B proves native PPTX generation only, not design quality or ranking readiness.
   - Local repo status after commit: `main...origin/main [ahead 1]`.
 
 ## Next steps
 
-1. Push the Phase 21A `hermes-slide-director` commit only after explicit user approval.
-2. Phase 21B can perform an isolated real smoke for `codex-presentation-pptx`, but only after explicit approval for any npm install/network/Codex or OMX producer execution/browser/PPTX inspection; keep it in a temp/project-local workspace with no `~/.codex` or `~/.claude` mutation.
+1. Push the Phase 21B `hermes-slide-director` commit only after explicit user approval.
+2. Phase 22 should add candidate ingestion plus visual/reviewer gate for PPTX artifacts. This likely needs LibreOffice/`soffice`, Poppler, or another approved PPTX-to-image/PDF route; sudo/system package installation must be explicitly approved if required.
 3. Keep hosted Claude Design as a separate design quality benchmark only, not an automation path.
 4. Keep dashboard work deferred until the conversation-first flow and Producer/Reviewer generation loop are stronger.
 5. Update JARVIS registry/status hygiene for the completed legacy `slide-harness` when convenient.
