@@ -410,12 +410,31 @@ Hermes then:
   - Semantics: `codex-reveal-playwright` is now capability-comparison ready, not a final winner, not final design/product acceptance, and not native PPTX/PPTX-editability validation.
   - Push: `9d5b661` pushed to `origin/main`; local/remote ahead-behind `0 0`.
 
+- `2026-05-18`: Built Phase 31 recommended-candidate install/real-generation readiness gap report.
+  - Commit: `91fe8c6 feat: add Phase 31 candidate generation gap report`.
+  - CLI added: `prepare-candidate-generation-gap-report`.
+  - Artifacts written by recorder:
+    - `generation/candidate-generation-gap-report.json`.
+    - `generation/candidate-generation-gap-report.md`.
+  - Report scope: four Phase 20 primary candidates: `codex-presentation-pptx`, `codex-guizang-html`, `codex-reveal-playwright`, `codex-editable-html-slides`.
+  - Result: all primary candidates have capability-smoke evidence `true`; all primary candidates have real-generation smoke `false`.
+  - Candidate gap summary:
+    - `codex-presentation-pptx`: real-generation smoke done and used as baseline.
+    - `codex-guizang-html`: ranking-ready from source/template/browser evidence, but still needs real Codex/OMX same-content generation smoke.
+    - `codex-editable-html-slides`: ranking-ready from static/browser/editability evidence, but still needs real Codex/OMX new-deck generation smoke.
+    - `codex-reveal-playwright`: temp-local install/render/export capability smoke done, but still needs real Codex/OMX same-content generation smoke.
+  - Real smoke: Phase 31 in `/tmp/hermes-phase31-verify.wUKw5N`; status `candidate_generation_gap_report_prepared`, candidates `4`, all capability smoke evidence `true`, all real generation smoke `false`.
+  - Verification: `tests/test_phase31.py` -> `4 passed`; full suite -> `340 passed`; `git diff --check` clean; independent reviewer verdict: `PASS`.
+  - Safety: Phase 31 is deterministic reporting only. It does not install, clone, launch browsers, render/export, run Codex/OMX producers, generate decks, copy temp outputs, declare final winner, or declare final acceptance.
+  - Push: `91fe8c6` pushed to `origin/main`; local/remote ahead-behind `0 0`.
+
 ## Next steps
 
-1. Prepare an install/real-generation readiness gap report for all recommended candidates, separating already-installed smoke evidence from remaining true generation smoke gaps.
-2. For candidates with only static/manual HTML evidence (`codex-guizang-html`, `codex-editable-html-slides`), run user-approved real Codex/OMX generation smokes in isolated temp workspaces before final bakeoff.
-3. Integrate comparable HTML/PPTX/reveal candidate evidence in a cross-candidate readiness report without declaring a final bakeoff winner.
-4. After enough candidates pass real-generation capability gates, create a true content-locked bakeoff using identical Hermes-authored content plan plus common design reference/template direction and shared QA criteria.
-5. Keep hosted Claude Design as a separate design quality benchmark only, not an automation path.
-6. Keep dashboard work deferred until the conversation-first flow and Producer/Reviewer generation loop are stronger.
-7. Update JARVIS registry/status hygiene for the completed legacy `slide-harness` when convenient.
+1. Run `codex-guizang-html` real Codex/OMX same-content generation smoke in an isolated temp workspace and record generated-deck/browser/visual metadata.
+2. Run `codex-editable-html-slides` real Codex/OMX new-deck generation smoke in an isolated temp workspace and record generated-deck interaction/editability/browser/visual metadata.
+3. Run `codex-reveal-playwright` real Codex/OMX same-content generation smoke using the installed/reinstallable temp stack and record screenshot/PDF/visual metadata.
+4. Integrate comparable HTML/PPTX/reveal candidate evidence in a cross-candidate readiness report without declaring a final bakeoff winner.
+5. After enough candidates pass real-generation capability gates, create a true content-locked bakeoff using identical Hermes-authored content plan plus common design reference/template direction and shared QA criteria.
+6. Keep hosted Claude Design as a separate design quality benchmark only, not an automation path.
+7. Keep dashboard work deferred until the conversation-first flow and Producer/Reviewer generation loop are stronger.
+8. Update JARVIS registry/status hygiene for the completed legacy `slide-harness` when convenient.
