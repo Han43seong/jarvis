@@ -221,10 +221,30 @@ Hermes then:
   - Verification: Phase 16 tests -> `7 passed`; full suite -> `105 passed`; doctor OK; Hermes smoke under `/tmp/hermes-phase16-hermes-verify.Ge4ImX/run` created all three handoff artifacts and verified the safety booleans/path.
   - Note: Hermes smoke initially checked the wrong key name `expected_output_dir`; actual JSON key is `expected_output_directory`, and verification was rerun successfully before commit.
   - Commit pushed: `f09b437 feat: add dry-run producer handoff preparation`; GitHub repo remains `https://github.com/Han43seong/hermes-slide-director`.
+- `2026-05-15`: Built Phase 17 Producer path quality bake-off preparation.
+  - Commit: `3b49eb7 feat: add producer quality bakeoff harness`.
+  - Command added: `prepare-bakeoff`.
+  - Purpose: prepare equal-budget, quality-first Producer candidate packages and a weighted ranking rubric without executing candidates.
+  - Scope remains local/preparation-only; candidate execution, provider calls, browser, network, and paid services remain gated.
+- `2026-05-15`: Built Phase 18 content-locked design bake-off preparation.
+  - Commits: `1210b28 feat: add content-locked design bakeoff harness`, `046b17b feat: require browser layout gate before design ranking`, `8e8e447 feat: require fresh companion artifacts for final ranking`.
+  - Command added: `prepare-content-locked-bakeoff`.
+  - Purpose: Hermes locks slide content so Producer comparison ranks design execution only after content compliance passes.
+  - Artifacts include `generation/locked-content-plan.*`, `generation/design-only-rubric.*`, `generation/content-compliance-gate.*`, `generation/browser-layout-gate.*`, `generation/companion-artifact-freshness-gate.*`, candidate content-locked prompts, and `reviews/design-only-ranking-template.md`.
+  - Hard gates now block ranking on browser layout defects such as clipping, overflow, and overlap, and on stale companion artifacts such as manifests/reports/self-checks that do not describe the current deck.
+  - Verification: `PYTHONPATH=src python -m pytest -q` -> `122 passed in 0.56s`; local repo clean and `main...origin/main [ahead 4]`.
+- `2026-05-18`: Built Phase 19 candidate execution adapter.
+  - Commits: `33630da docs: plan Phase 19 candidate execution adapter`, `4407953 feat: add Phase 19 candidate execution adapter`.
+  - Commands added: `run-candidate` and `inspect-candidate`.
+  - Purpose: record dry-run execution metadata for a Phase 18 candidate and inspect candidate outputs plus browser-layout/freshness gate evidence before ranking.
+  - Safety behavior: Phase 19 remains dry-run/inspection only; it does not execute Producers, call Claude/OMC/Codex/provider/network/paid services, install browsers/tools, or push.
+  - Reviewer loop: independent reviewer first returned `REQUEST_CHANGES` because a companion freshness override could pass without a deduction; Hermes added a regression test and fixed `_override_recorded` to require an override marker/status plus a deduction field. Re-review verdict: `PASS`.
+  - Verification: `tests/test_phase19.py` -> `13 passed`; full suite -> `135 passed in 0.49s`; CLI smoke for `run-candidate` and `inspect-candidate` emitted stable JSON and returned `ranking_ready=true` only after required outputs plus PASS gate artifacts existed; staged diff hygiene/security scans were clean.
+  - Local repo status after commit: `main...origin/main [ahead 6]`.
 
 ## Next steps
 
-1. Next likely phase: real Producer adapter design/launch gate that consumes `generation/producer-handoff.json`.
-   - Gate required before provider, secrets, cost, or actual external generation.
-2. Keep dashboard work deferred until the conversation-first flow and Producer/Reviewer generation loop are stronger.
-3. Background executor hygiene cleanup is already completed and recorded in the JARVIS wiki/status history.
+1. Push the six local `hermes-slide-director` commits only after explicit user approval.
+2. Keep Phase 20 focused on real Producer launch gating or stricter gate schemas; do not auto-call external providers without a separate approval gate.
+3. Keep dashboard work deferred until the conversation-first flow and Producer/Reviewer generation loop are stronger.
+4. Update JARVIS registry/status hygiene for the completed legacy `slide-harness` when convenient.
