@@ -374,13 +374,28 @@ Hermes then:
   - Verification: `tests/test_phase28.py` -> `35 passed`; full suite -> `277 passed`; `git diff --check` clean; independent reviewer verdict: `PASS` after two requested hardening rounds.
   - Safety/hardening: Phase 28 requires linked Phase 27 static smoke evidence and source inventory, validates browser/visual evidence flags, rejects blockers/placeholders/horizontal overflow, rejects content/path/screenshot smuggling including negative screenshot counts, and persists metadata only. It does not run browser/render/validators/deck generation/providers/producers and does not copy HTML/source/screenshot contents.
   - Semantics: `codex-editable-html-slides` is now `ranking_ready=true` for candidate comparison, but this remains capability smoke evidence only, not final design/product acceptance and not native PPTX validation.
+  - Push: `3e07e19` pushed to `origin/main`; local/remote ahead-behind `0 0`.
+
+- `2026-05-18`: Built Phase 29 `codex-editable-html-slides` ranking/readiness integration.
+  - Commit: `b1f3576 feat: integrate Phase 29 editable HTML ranking readiness`.
+  - Inputs: existing Phase 27 static/source smoke artifacts, Phase 27 source inventory, Phase 28 browser gate, and Phase 28 visual review evidence only.
+  - CLI added: `integrate-editable-html-candidate-ranking`.
+  - Artifacts written by recorder:
+    - `generation/codex-editable-html-ranking-integration.json`.
+    - `generation/codex-editable-html-ranking-integration.md`.
+    - `reviews/codex-editable-html-ranking-evidence.json`.
+    - `reviews/codex-editable-html-ranking-evidence.md`.
+  - Real smoke: Phase 27 replay + Phase 28 replay + Phase 29 in `/tmp/hermes-phase29-verify.aVNAg0`; status `editable_html_ranking_ready`, `ranking_ready=true`, `ranking_score=0.6`, `ranking_penalty=0.4`, `native_pptx_candidate=false`, persisted result contains no `/tmp`, `/home`, or Windows absolute path leakage, warnings carried forward `15`.
+  - Verification: `tests/test_phase29.py` -> `23 passed`; full suite -> `300 passed`; `git diff --check` clean; independent reviewer verdict: `PASS`.
+  - Safety/hardening: Phase 29 validates Phase 27/28 linkage and source metadata, requires Phase 27 pre-browser `ranking_ready=false`, requires Phase 28 browser/visual gates passed with no blockers/placeholders/horizontal overflow, rejects content/path/screenshot leakage, and persists relative metadata only. It does not install, use network, launch browser, render, run validators, generate decks, call providers/producers, or copy HTML/source/screenshot contents.
+  - Semantics: `codex-editable-html-slides` is now ranking-integration-ready for comparison, not a final winner, not final design/product acceptance, and not native PPTX/PPTX-editability validation.
   - Local repo status after commit: `main...origin/main [ahead 1]`.
 
 ## Next steps
 
-1. Push the Phase 28 `hermes-slide-director` commit after verification.
+1. Push the Phase 29 `hermes-slide-director` commit after verification.
 2. Continue remaining candidate capability smokes such as `codex-reveal-playwright` if source/evidence is available without prohibited setup; request approval before any install/execution that needs dependencies.
-3. Integrate/rank `codex-editable-html-slides` evidence against prior candidates in a follow-up phase, without declaring a final bakeoff winner.
+3. Integrate comparable HTML/PPTX candidate evidence in a cross-candidate readiness report without declaring a final bakeoff winner.
 4. After enough candidates pass capability gates, create a true content-locked bakeoff using identical Hermes-authored content plan plus common design reference/template direction and shared QA criteria.
 5. Keep hosted Claude Design as a separate design quality benchmark only, not an automation path.
 6. Keep dashboard work deferred until the conversation-first flow and Producer/Reviewer generation loop are stronger.
