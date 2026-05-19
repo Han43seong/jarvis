@@ -600,10 +600,25 @@ Hermes then:
   - Reviewer verdict: `PASS`.
   - Push: `577b9f6` pushed to `origin/main`; local/remote ahead-behind `0 0`.
 
+- `2026-05-19`: Ran Phase 41 native PPTX Korean font-fix path and recorded sanitized evidence.
+  - Commit: `6e4ad57 feat: record Phase 41 PPTX font fix evidence`.
+  - User selected option A: keep the native PPTX candidate in competition by resolving Korean font rendering rather than ranking HTML candidates first.
+  - No new install, sudo, global install, or system package install was performed. Hermes reused the previously approved temp-local `pptx-glimpse` install under `/tmp/hermes-slide-director-phase22b.PfLDCt` and used Windows Korean fonts available to WSL.
+  - Root cause found: `pptx-glimpse` CJK script detection did not include Hangul ranges, so Hangul was routed through Latin font resolution and rendered as missing-glyph/tofu boxes even when Korean fonts were available.
+  - Evidence toolchain fix: temporary renderer patch added Hangul Jamo, Hangul Compatibility Jamo, and Hangul Syllables ranges to script detection for evidence rendering.
+  - PPTX artifact fix: the Phase 39 `codex-presentation-pptx` output deck was rewritten so DrawingML theme/typeface references use `Malgun Gothic` instead of Arial/Yu Gothic/theme placeholders.
+  - Render evidence: produced `12` PNG and `12` SVG outputs from the fixed PPTX; first PNG `1280x886`; used font `Malgun Gothic`; PPTX zip valid; slide XML count `12`; Korean text present.
+  - Sampled visual reviews: slides `1`, `5`, `7`, and `12` now have readable Korean glyphs, no missing-glyph boxes, and no major clipping/overlap. Overall PPTX visual verdict improved from `REQUEST_CHANGES` to `PASS_WITH_WARNINGS`.
+  - Remaining warnings: small Korean body/footer/table text may be difficult at reduced zoom or room-scale projection; slide 5 caution box text is close to the lower border. These are quality warnings, not font blockers.
+  - CLI added: `record-phase41-pptx-fontfix-evidence`; it consumes external Phase 41 evidence JSON and writes sanitized reports under `bakeoff/phase41/` without copying PPTX/PNG/SVG artifacts, running producers, installing dependencies, launching browsers/renderers, exporting, ranking, or declaring final acceptance.
+  - Reviewer loop: first reviewers found raw PNG/PPTX base64/data URI leak edge cases; fixes added raw-content rejection for `data:image/*;base64`, PNG base64, PPTX/ZIP base64, SVG/XML/HTML/contenteditable payloads, and regression tests. Final reviewer verdict: `PASS`.
+  - Verification: `tests/test_phase41.py` -> `10 passed`; full suite -> `563 passed`; `git diff --check` clean; real CLI smoke passed with no `/tmp`, `/home`, `/mnt/c`, `file://`, `data:image/*`, `iVBORw0KGgo`, or `UEsDB` leaks and no final winner/acceptance flags.
+  - Push: `6e4ad57` pushed to `origin/main`; local/remote ahead-behind `0 0`.
+
 ## Next steps
 
-1. Resolve PPTX Korean font rendering if native PPTX should stay in the final visual ranking: install/configure a Korean-capable font/render path or embed/use compatible fonts in the PPTX candidate.
-2. After PPTX font/render decision, run the ranking/selection report across the revised candidates; do not declare a final winner until Reviewer gates pass.
+1. Run Phase 42 ranking/selection-prep across all four revised candidates using Phase 39-41 evidence; do not declare final acceptance until Reviewer gates pass.
+2. Consider one quality revision pass for native PPTX small-text/padding warnings if PPTX becomes the preferred delivery path.
 3. Keep hosted Claude Design as a separate design quality benchmark only, not an automation path.
 4. Keep dashboard work deferred until the conversation-first flow and Producer/Reviewer generation loop are stronger.
 5. Update JARVIS registry/status hygiene for the completed legacy `slide-harness` when convenient.
