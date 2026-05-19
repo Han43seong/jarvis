@@ -571,15 +571,29 @@ Hermes then:
   - Summary: 12-slide locked plan for on-premises LLM/RAG infrastructure strategy; candidate count `4`; final winner `false`; final acceptance `false`; input-package only.
   - Safety: no candidate deck generation, no producer/provider invocation, no dependency install, no browser/render/export, no external source copying, and no private absolute path leakage in generated package artifacts.
   - Verification: `tests/test_phase38.py` -> `7 passed`; full suite -> `540 passed`; `git diff --check` clean.
-  - Real smoke: `/tmp/hermes-phase38-template-swap.7Ypg9d`, template label `user_design_template_pptx_function_analysis_meeting_style`, template slides `9`, topic title `온프레미스 LLM 및 RAG 기반 데이터 분석 인프라 구축 전략 보고서`, forbidden DTC content tokens `[]`, path leaks `[]`.
+  - Verification: Phase 38 tests -> `7 passed`; full suite -> `540 passed`; `git diff --check` clean; real CLI smoke confirmed template label `user_design_template_pptx_function_analysis_meeting_style`, 12 content slides, no forbidden DTC content tokens, and no private path leaks.
   - Reviewer verdict: `PASS`.
   - Push: `255151d` pushed to `origin/main`; local/remote ahead-behind `0 0`.
 
+- `2026-05-19`: Ran Phase 39 true four-candidate bakeoff and recorded first-pass evidence snapshot.
+  - Commit: `06b53d1 feat: record Phase 39 true bakeoff evidence`.
+  - Same Phase 38 input package used for all four producers: content-locked on-prem LLM/RAG plan, current research-update brief, shared QA rubric, and the 9-slide function-analysis PPTX as visual style reference.
+  - Candidates produced artifacts under `/tmp/hermes-slide-director-phase39-true-bakeoff`:
+    - `codex-presentation-pptx`: `deck.pptx`, 12 slides, static PPTX validation only, `PASS_WITH_LIMITATIONS` because no LibreOffice/soffice/pdftoppm render tooling was installed.
+    - `codex-guizang-html`: `deck.html`, 12 slides, browser loaded, no external refs, no overflow, visual `PASS_WITH_WARNINGS`.
+    - `codex-editable-html-slides`: `deck.html`, 12 slides, browser loaded, editable elements present, no external refs, no overflow, visual `PASS_WITH_WARNINGS`; revision required because edit outlines/toolbar should be hidden for final meeting/export mode.
+    - `codex-reveal-playwright`: `deck.html`, 12 slides, browser loaded, no external refs, no overflow, visual `PASS_WITH_WARNINGS`; revision required because the captured view appeared vertically stacked rather than clean single-slide Reveal presentation mode.
+  - CLI added: `record-true-bakeoff-evidence`; it consumes already-produced external evidence and writes sanitized first-pass reports under `bakeoff/phase39/` without copying decks, running producers, installing dependencies, launching browsers, rendering/exporting, or declaring a winner.
+  - Recorder status/counts from real smoke: `bakeoff_evidence_recorded`, candidate count `4`, generated artifact count `4`, browser visual gate count `3`, PPTX static-only count `1`, `PASS_WITH_WARNINGS` count `3`, `PASS_WITH_LIMITATIONS` count `1`, revision-required count `2`.
+  - Reviewer loop: first reviewer requested stronger path-leak and PPTX URL allowlist validation; second reviewer found substring allowlist bypass; fixes added exact URL parsing/allowlist validation, `/mnt/c` path-leak blocking, and regression tests. Final reviewer verdict: `PASS`.
+  - Verification: `tests/test_phase39.py` -> `7 passed`; full suite -> `547 passed`; `git diff --check` clean; real CLI smoke passed with no `/tmp`, `/home`, `/mnt/c`, or `file://` leaks and no final winner/acceptance flags.
+  - Push: `06b53d1` pushed to `origin/main`; local/remote ahead-behind `0 0`.
+
 ## Next steps
 
-1. Start the true four-candidate bakeoff from the Phase 38 input package: run each producer with the same content-locked plan, design brief, research-update brief, QA rubric, and evidence schema.
-2. Collect candidate evidence without declaring a final winner until Reviewer gates complete.
-3. Preserve the new topic/template separation: on-prem LLM/RAG is the content topic; the 9-slide function-analysis PPTX is the visual style reference only.
+1. Plan Phase 40 revision loop for the two revision-required candidates: hide editable deck authoring controls for final presentation/export mode and fix reveal/playwright single-slide presentation/export behavior.
+2. Decide whether to install or approve a PPTX visual-render toolchain if native PPTX needs image-based visual parity before final ranking.
+3. After revisions and optional PPTX visual tooling decision, run a ranking/selection report; do not declare final winner until Reviewer gates pass.
 4. Keep hosted Claude Design as a separate design quality benchmark only, not an automation path.
 5. Keep dashboard work deferred until the conversation-first flow and Producer/Reviewer generation loop are stronger.
 6. Update JARVIS registry/status hygiene for the completed legacy `slide-harness` when convenient.
