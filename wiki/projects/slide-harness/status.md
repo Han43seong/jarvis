@@ -1,10 +1,10 @@
 ---
 title: Slide Harness Project Status
 created: 2026-05-12
-updated: 2026-05-13
+updated: 2026-05-20
 type: project-status
 project: slide-harness
-status: active
+status: legacy-reference
 tags: [jarvis, slides, html, pdf, claude-design, qa-loop, dashboard]
 sources: [wiki/concepts/slide-generation-harness.md]
 confidence: high
@@ -14,7 +14,9 @@ confidence: high
 
 ## Summary
 
-`slide-harness` is an HTML-first presentation/deck generation harness under `/home/hskim/projects/slide-harness` and published as a private GitHub repository at `https://github.com/Han43seong/slide-harness`.
+`slide-harness` is a completed/legacy HTML-first presentation/deck generation harness under `/home/hskim/projects/slide-harness` and published as a private GitHub repository at `https://github.com/Han43seong/slide-harness`.
+
+It is no longer the active slide-production direction. The active path is now `hermes-slide-director`, which keeps Hermes/JARVIS conversation-first as the primary operator interface and uses Producer/Reviewer gates for high-fidelity deck generation. `slide-harness` is preserved as a reference implementation for CLI/dashboard ideas, Guided Brief UX, run artifacts, requirement gates, and local QA patterns.
 
 It preserves a CLI-first core while adding an optional FastAPI backend and local Next.js operator dashboard. The filesystem run directory remains the source of truth: `run.json`, `events.jsonl`, generated artifacts, QA reports, review state, revision lineage, effective style/theme metadata, requirement override/effective checklist artifacts, Hermes/JARVIS-friendly summary JSON with optional backend artifact URLs, structured content-plan inputs, and run comparison summaries.
 
@@ -154,20 +156,17 @@ cc63eda feat: improve dashboard artifact previews
 ```
 
 
-## Active Operating Model
+## Legacy Operating Model
 
-- Hermes/JARVIS scopes phases, launches OMX for implementation, verifies results, commits locally, and updates this status note.
-- OMX handles repo-local implementation and test/fix loops inside `/home/hskim/projects/slide-harness`.
-- `slide-harness` now has a private GitHub remote, Korean-default templates, and Korean-localized dashboard UI pushed to `origin/main`.
-- Long verification should run in background so the main chat remains responsive.
-- GStack adoption is intentionally deferred until active slide-harness work is complete, to avoid changing the workflow pipeline mid-project.
+- `slide-harness` is kept as a reference/legacy project, not the default target for new slide-production work.
+- New slide-generation architecture, candidate bakeoffs, and real generation loops should route to `/home/hskim/projects/hermes-slide-director` unless the user explicitly asks to maintain or inspect this legacy repo.
+- If maintenance is needed here, keep it narrow: bug fixes, read-only reference checks, or targeted documentation updates. Avoid broad new feature work unless the user reactivates the project.
+- The latest verified project repo state is clean and synchronized with `origin/main`, with latest commit `018df35 docs: mark slide harness complete`.
 
-## Next Work
+## Reference-only Follow-ups
 
-Recommended next phases:
+Only do these if explicitly useful for reference or maintenance:
 
-1. Exercise the Guided Brief form with a real RFP/proposal topic and tune the deterministic requirement proposal/critic wording based on operator review.
-2. Add editable Proposed requirements before approval: edit/add/delete/disable requirement rows, then rerun critic before generating.
-3. Add a stronger requirements-compliance critic loop after generation: compare approved requirements against generated content and create bounded revisions until pass or max-iteration/user gate.
-4. Add richer dashboard editing for individual content-plan slides if operator UX needs it.
-5. Add PPTX renderer/export adapter only if editable PowerPoint output is required.
+1. Mine useful Guided Brief/dashboard/run-artifact patterns into `hermes-slide-director` docs when they become relevant.
+2. Inspect or demo the legacy dashboard only when a reference comparison is needed.
+3. Keep the repo clean/synced, but do not route new slide-production phases here by default.

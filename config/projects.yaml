@@ -33,13 +33,13 @@ projects:
 
   slide-harness:
     name: slide-harness
-    type: presentation-harness
+    type: presentation-harness-legacy
     path: /home/hskim/projects/slide-harness
     repo: /home/hskim/projects/slide-harness
     wiki: /home/hskim/jarvis/wiki/projects/slide-harness
-    default_executor: omx-ralph
-    status: active
-    notes: HTML-first slide generation harness with Claude Design-style renderer, requirements gate, PDF export, and QA loop.
+    default_executor: hermes-direct
+    status: legacy-reference
+    notes: Completed/legacy HTML-first slide generation harness and dashboard experiment; preserved as reference while hermes-slide-director is the active slide-production direction.
 
   hermes-slide-director:
     name: hermes-slide-director
