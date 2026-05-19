@@ -589,11 +589,21 @@ Hermes then:
   - Verification: `tests/test_phase39.py` -> `7 passed`; full suite -> `547 passed`; `git diff --check` clean; real CLI smoke passed with no `/tmp`, `/home`, `/mnt/c`, or `file://` leaks and no final winner/acceptance flags.
   - Push: `06b53d1` pushed to `origin/main`; local/remote ahead-behind `0 0`.
 
+- `2026-05-19`: Ran Phase 40 revision loop and recorded sanitized revision evidence.
+  - Commit: `577b9f6 feat: record Phase 40 revision evidence`.
+  - User approved continuing and installation if needed. No new install or sudo was performed; Hermes reused the previously approved temp-local `pptx-glimpse` install under `/tmp/hermes-slide-director-phase22b.PfLDCt` for PPTX rendering.
+  - Editable HTML revision: resolved. Default view now hides toolbar/editor UI, has `contenteditable=true` count `0`, no visible toolbar/outline, no external refs, no overflow, browser visual `PASS_WITH_WARNINGS`.
+  - Reveal/Playwright revision: resolved. Default view now shows one slide-like section instead of a vertical stack, no external refs, no overflow, browser visual `PASS_WITH_WARNINGS`.
+  - PPTX visual render: attempted with `pptx-glimpse`; produced `12` PNG and `12` SVG outputs, but rendered Korean text appears as missing-glyph/tofu boxes. PPTX visual verdict remains `REQUEST_CHANGES`; no final visual parity pass.
+  - CLI added: `record-phase40-revision-evidence`; it consumes external Phase 40 evidence JSON and writes sanitized reports under `bakeoff/phase40/` without copying decks/screenshots, running producers, installing dependencies, launching browsers/renderers, exporting, ranking, or declaring final acceptance.
+  - Verification: `tests/test_phase40.py` -> `6 passed`; full suite -> `553 passed`; `git diff --check` clean; real CLI smoke passed with no `/tmp`, `/home`, `/mnt/c`, or `file://` leaks and no final winner/acceptance flags.
+  - Reviewer verdict: `PASS`.
+  - Push: `577b9f6` pushed to `origin/main`; local/remote ahead-behind `0 0`.
+
 ## Next steps
 
-1. Plan Phase 40 revision loop for the two revision-required candidates: hide editable deck authoring controls for final presentation/export mode and fix reveal/playwright single-slide presentation/export behavior.
-2. Decide whether to install or approve a PPTX visual-render toolchain if native PPTX needs image-based visual parity before final ranking.
-3. After revisions and optional PPTX visual tooling decision, run a ranking/selection report; do not declare final winner until Reviewer gates pass.
-4. Keep hosted Claude Design as a separate design quality benchmark only, not an automation path.
-5. Keep dashboard work deferred until the conversation-first flow and Producer/Reviewer generation loop are stronger.
-6. Update JARVIS registry/status hygiene for the completed legacy `slide-harness` when convenient.
+1. Resolve PPTX Korean font rendering if native PPTX should stay in the final visual ranking: install/configure a Korean-capable font/render path or embed/use compatible fonts in the PPTX candidate.
+2. After PPTX font/render decision, run the ranking/selection report across the revised candidates; do not declare a final winner until Reviewer gates pass.
+3. Keep hosted Claude Design as a separate design quality benchmark only, not an automation path.
+4. Keep dashboard work deferred until the conversation-first flow and Producer/Reviewer generation loop are stronger.
+5. Update JARVIS registry/status hygiene for the completed legacy `slide-harness` when convenient.
