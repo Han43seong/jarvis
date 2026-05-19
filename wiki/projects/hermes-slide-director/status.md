@@ -554,10 +554,32 @@ Hermes then:
   - Reviewer verdict: `PASS`.
   - Push: `5b94df7` pushed to `origin/main`; local/remote ahead-behind `0 0`.
 
+- `2026-05-19`: Built Phase 38 true four-candidate bakeoff input package.
+  - Commit: `255151d feat: add Phase 38 true bakeoff input package`.
+  - User-provided topic source: PDF “온프레미스 LLM 구축 세부 전략 보고서”. The package uses this as the content topic, with current 2025-2026 public-research updates for on-prem/air-gapped LLM+RAG, Korean/HWP document processing, serving stacks, hardware sizing, RAG quality, and supply-chain security.
+  - User-selected design template: PPTX “군용차량 DTC App 개발_기능분석개발방안_v2.0_260311_회의자료.pptx”. The package treats it only as a 9-slide function-analysis/development-plan meeting-material visual style reference, not as the content topic.
+  - Previous data-communication PPTX template was superseded for Phase 38.
+  - CLI added: `prepare-true-bakeoff-input-package`.
+  - Package artifacts generated under `bakeoff/phase38/` in each run:
+    - `content-locked-plan.json` and `.md`.
+    - `design-reference-brief.md`.
+    - `research-update-brief.md`.
+    - `shared-qa-rubric.json` and `.md`.
+    - `evidence-schema.json`.
+    - four producer contracts for `codex-presentation-pptx`, `codex-guizang-html`, `codex-editable-html-slides`, and `codex-reveal-playwright`.
+    - `package-manifest.json`.
+  - Summary: 12-slide locked plan for on-premises LLM/RAG infrastructure strategy; candidate count `4`; final winner `false`; final acceptance `false`; input-package only.
+  - Safety: no candidate deck generation, no producer/provider invocation, no dependency install, no browser/render/export, no external source copying, and no private absolute path leakage in generated package artifacts.
+  - Verification: `tests/test_phase38.py` -> `7 passed`; full suite -> `540 passed`; `git diff --check` clean.
+  - Real smoke: `/tmp/hermes-phase38-template-swap.7Ypg9d`, template label `user_design_template_pptx_function_analysis_meeting_style`, template slides `9`, topic title `온프레미스 LLM 및 RAG 기반 데이터 분석 인프라 구축 전략 보고서`, forbidden DTC content tokens `[]`, path leaks `[]`.
+  - Reviewer verdict: `PASS`.
+  - Push: `255151d` pushed to `origin/main`; local/remote ahead-behind `0 0`.
+
 ## Next steps
 
-1. Create the true content-locked four-candidate bakeoff using identical Hermes-authored content plan, common design reference/template direction, shared QA criteria, and explicit PPTX visual-render tooling limitation.
-2. Run the four producers under the same contract and collect evidence without declaring a final winner until Reviewer gates complete.
-3. Keep hosted Claude Design as a separate design quality benchmark only, not an automation path.
-4. Keep dashboard work deferred until the conversation-first flow and Producer/Reviewer generation loop are stronger.
-5. Update JARVIS registry/status hygiene for the completed legacy `slide-harness` when convenient.
+1. Start the true four-candidate bakeoff from the Phase 38 input package: run each producer with the same content-locked plan, design brief, research-update brief, QA rubric, and evidence schema.
+2. Collect candidate evidence without declaring a final winner until Reviewer gates complete.
+3. Preserve the new topic/template separation: on-prem LLM/RAG is the content topic; the 9-slide function-analysis PPTX is the visual style reference only.
+4. Keep hosted Claude Design as a separate design quality benchmark only, not an automation path.
+5. Keep dashboard work deferred until the conversation-first flow and Producer/Reviewer generation loop are stronger.
+6. Update JARVIS registry/status hygiene for the completed legacy `slide-harness` when convenient.
