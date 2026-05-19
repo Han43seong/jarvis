@@ -537,10 +537,27 @@ Hermes then:
   - Semantics: `codex-presentation-pptx` now has real-generation parity evidence, but this is not final design/product acceptance or a final winner.
   - Push: `7a09f10` pushed to `origin/main`; local/remote ahead-behind `0 0`.
 
+- `2026-05-19`: Built Phase 37 cross-candidate readiness refresh after PPTX parity.
+  - Commit: `5b94df7 feat: refresh Phase 37 bakeoff readiness`.
+  - Purpose: close the Phase 35 PPTX parity gap after Phase 36 so all four primary candidates can enter the next true content-locked bakeoff gate.
+  - CLI added: `prepare-cross-candidate-readiness-refresh-after-pptx-parity`.
+  - Report-only/static comparison: no temp evidence reads, installs, render/export, browser launch, producer/provider calls, deck generation, repo clone, external artifact copying, winner declaration, or final acceptance.
+  - Candidates included: `codex-presentation-pptx`, `codex-guizang-html`, `codex-editable-html-slides`, `codex-reveal-playwright`.
+  - Summary facts: candidate count `4`, ready-for-true-bakeoff count `4`, PPTX parity gap count `0`, true bakeoff ready `true`, final winner `false`, final acceptance `false`.
+  - PPTX row: latest phase `Phase 36`, commit `7a09f10`, readiness `ready_with_limitations`, verdict `PASS_WITH_LIMITATIONS`, native PPTX `true`, explicit visual render tooling limitation preserved.
+  - HTML/reveal rows: Phase 32/33/34 remain `PASS_WITH_WARNINGS` and ready for the same next gate; no final design/product acceptance implied.
+  - Artifacts written by the CLI:
+    - `generation/cross-candidate-readiness-after-pptx-parity.json`.
+    - `generation/cross-candidate-readiness-after-pptx-parity.md`.
+  - Verification: `tests/test_phase37.py` -> `5 passed`; full suite -> `533 passed`; `git diff --check` clean.
+  - Real smoke: `/tmp/hermes-phase37-verify.KMFGWd`, status `cross_candidate_readiness_after_pptx_parity_prepared`, candidate count `4`, ready count `4`, PPTX gap `0`, sanitized output contains no `/tmp`, `/home`, `file://`, `.pptx`, `.html`, `.png`, or `.pdf`.
+  - Reviewer verdict: `PASS`.
+  - Push: `5b94df7` pushed to `origin/main`; local/remote ahead-behind `0 0`.
+
 ## Next steps
 
-1. Refresh the cross-candidate readiness report so Phase 35’s PPTX parity gap is closed and all four primary candidates can enter the next gate.
-2. Create a true content-locked bakeoff using identical Hermes-authored content plan plus common design reference/template direction and shared QA criteria.
+1. Create the true content-locked four-candidate bakeoff using identical Hermes-authored content plan, common design reference/template direction, shared QA criteria, and explicit PPTX visual-render tooling limitation.
+2. Run the four producers under the same contract and collect evidence without declaring a final winner until Reviewer gates complete.
 3. Keep hosted Claude Design as a separate design quality benchmark only, not an automation path.
 4. Keep dashboard work deferred until the conversation-first flow and Producer/Reviewer generation loop are stronger.
 5. Update JARVIS registry/status hygiene for the completed legacy `slide-harness` when convenient.
