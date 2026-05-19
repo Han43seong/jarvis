@@ -515,9 +515,31 @@ Hermes then:
   - Real smoke: `/tmp/hermes-phase35-verify.8am0XA`, status `cross_candidate_real_generation_readiness_report_prepared`, candidate count `4`, ready count `3`, PPTX parity gap `1`, sanitized output contains no `/tmp`, `/home`, `file://`, `.html`, `.png`, or `.pdf`.
   - Push: `a414dfd` pushed to `origin/main`; local/remote ahead-behind `0 0`.
 
+- `2026-05-19`: Ran and recorded Phase 36 `codex-presentation-pptx` real-generation parity smoke.
+  - Decision: user chose PPTX parity first because the task is not urgent and native PPTX parity is useful before true bakeoff.
+  - Commit: `7a09f10 feat: record Phase 36 PPTX parity smoke`.
+  - Runtime/source reference: existing approved Phase 21B temp source `/tmp/hermes-slide-director-phase21b.kr8k6Z/appautomaton__presentation`; no new install.
+  - Temp workspace: `/tmp/hermes-slide-director-phase36-pptx-realgen.O8fJLR`.
+  - Producer: `omx exec` constrained to the temp workspace; no repo writes, no install, no network, no sudo, no global install.
+  - Generated temp artifacts: `output/deck.pptx` and `output/producer-report.json`.
+  - Initial generation had a literal `PLACEHOLDER` label from the locked plan; the plan was corrected to Korean `금지 토큰`, deck regenerated, and validation confirmed forbidden placeholder hits `[]`.
+  - Static/PPTX facts: PPTX zip valid, slide count `4`, text slide count `4`, Korean chars `true`, title present `true`, output bytes `115120`, theme `consulting-mckinsey`, patterns `p01-cover`, `p04-scorecard`, `p04-scorecard`, `p08-closer`.
+  - Render/visual limitation: no image-based visual rendering because local `soffice`/LibreOffice/`pdftoppm` tooling is unavailable. The recorder requires `PASS_WITH_LIMITATIONS`, explicit `visual_render=not_available_tooling_gap`, and warnings that mention render/visual tooling gap; it rejects plain `PASS`/`PASS_WITH_WARNINGS` without render evidence.
+  - CLI added: `record-pptx-real-generation-parity-smoke`.
+  - Artifacts written by recorder:
+    - `candidates/codex-presentation-pptx/phase36-pptx-real-generation-parity-smoke.json`.
+    - `candidates/codex-presentation-pptx/phase36-pptx-real-generation-parity-smoke.md`.
+    - `reviews/codex-presentation-pptx-phase36-structure-review.json`.
+    - `reviews/codex-presentation-pptx-phase36-structure-review.md`.
+  - Verification: `tests/test_phase36.py` -> `42 passed`; full suite -> `528 passed`; `git diff --check` clean.
+  - Reviewer loop: first reviewer requested stronger no-false-PASS semantics for missing visual/render tooling; second reviewer requested stricter `visual_render` and warning checks; final reviewer verdict `PASS`.
+  - Real smoke: `/tmp/hermes-phase36-verify2.b1amU2`, status `pptx_real_generation_parity_smoke_recorded`, ranking-ready `true`, structure verdict `PASS_WITH_LIMITATIONS`, native PPTX candidate `true`, final winner/acceptance `false`, persisted output contains no `/tmp`, `/home`, `file://`, `.pptx`, `deck_path`, `temp_workspace`, or `producer_report_path` leakage.
+  - Semantics: `codex-presentation-pptx` now has real-generation parity evidence, but this is not final design/product acceptance or a final winner.
+  - Push: `7a09f10` pushed to `origin/main`; local/remote ahead-behind `0 0`.
+
 ## Next steps
 
-1. Decide whether native PPTX output is mandatory for the first true bakeoff. If yes, run a PPTX real-generation parity gate before bakeoff; if no, proceed with the three real-generation-ready HTML/reveal candidates.
+1. Refresh the cross-candidate readiness report so Phase 35’s PPTX parity gap is closed and all four primary candidates can enter the next gate.
 2. Create a true content-locked bakeoff using identical Hermes-authored content plan plus common design reference/template direction and shared QA criteria.
 3. Keep hosted Claude Design as a separate design quality benchmark only, not an automation path.
 4. Keep dashboard work deferred until the conversation-first flow and Producer/Reviewer generation loop are stronger.
