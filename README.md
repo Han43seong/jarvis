@@ -16,7 +16,7 @@ Plan work, route it to the right executor, verify results, and preserve durable 
 
 <br />
 
-[Overview](#overview) · [Why](#why-this-exists) · [Methodology](#methodology) · [Architecture](#architecture) · [History](#build-history-and-lessons-learned) · [Korean](#jarvis-컨트롤-플레인)
+[Overview](#overview) · [Why](#why-this-exists) · [Methodology](#methodology) · [Architecture](#architecture) · [Harnesses](#harness-taxonomy) · [History](#build-history-and-lessons-learned) · [Korean](#jarvis-컨트롤-플레인)
 
 </div>
 
@@ -84,6 +84,103 @@ Hermes / JARVIS control plane
         ├─ Hermes direct tools      quick edits, docs, checks, wiki maintenance
         ├─ background workers       research, comparison, long inspections
         └─ cron / kanban            recurring or durable multi-step work
+```
+
+
+## Harness taxonomy
+
+JARVIS is best understood as a **top-level operating harness** rather than a single executor, plugin, or project tool. Its job is to decide what work should happen, where it should happen, who should do it, how it should be verified, and where durable knowledge should be recorded.
+
+```text
+JARVIS Operating Harness
+├─ Project Registry Harness
+│  └─ config/projects.yaml
+├─ Routing Harness
+│  ├─ AGENTS.md
+│  ├─ config/routing.yaml
+│  └─ jarvis-executor-router skill
+├─ Skill Harness
+│  └─ reusable operating manuals loaded by Hermes
+├─ Wiki / Status Harness
+│  └─ wiki/projects/<project>/status.md
+├─ External Executor Workflow Harness
+│  ├─ Hermes-native direct work
+│  ├─ Codex-family: codex direct + OMX wrapper
+│  └─ Claude-family: Claude Code + OMC wrapper
+├─ Producer / Reviewer Quality Harness
+│  └─ maker/checker loop applied where quality warrants it
+├─ Background / Cron / Kanban Harnesses
+│  └─ long-running, recurring, or durable multi-worker work
+└─ Project-specific Harnesses
+   └─ executable repos under /home/hskim/projects/<project>
+```
+
+### Harness layers
+
+| Harness | What it decides or does | Typical location |
+| --- | --- | --- |
+| **JARVIS operating harness** | Top-level control plane: interpret the request, choose target/project, route work, enforce safety gates, verify, and record. | `/home/hskim/jarvis`, `AGENTS.md` |
+| **Project registry harness** | Knows which projects exist, where they live, whether they are active/legacy, and their default executor. | `config/projects.yaml` |
+| **Routing harness** | Dispatches work by target, task type, risk, executor/workflow, quality gate, and recording location. It is a dispatcher, not an artifact producer. | `config/routing.yaml`, `AGENTS.md`, `jarvis-executor-router` skill |
+| **External executor workflow harness** | Delegates bounded work to executor processes, collects artifact/evidence/logs, then returns control to Hermes/JARVIS for verification. | `harnesses/`, `jarvis-codex-omx-executor` skill, project run scripts |
+| **Producer/Reviewer quality harness** | Separates maker and checker. It can be applied at the JARVIS level, inside external-executor delegation, inside a project harness, or nested across those layers. | `harnesses/producer-reviewer-rejection-loop.md` plus project-specific gates |
+| **Project-specific harness** | Executable project repo with CLI, runners, validators, tests, artifacts, and evidence handling. | `/home/hskim/projects/<project>` |
+| **Skill harness** | Operating manual that tells Hermes/JARVIS when and how to use a workflow or project harness. It should not replace executable project code. | `~/.hermes/skills/...` |
+| **Wiki/status harness** | Durable human-readable project decisions, status, phase results, and next steps. | `wiki/` |
+
+### Executor families
+
+JARVIS distinguishes executor paths by **operating mode**, not only by model family. In particular, OMX is not a separate model family competing with Codex; it is an oh-my-codex wrapper/orchestration layer on top of the Codex CLI line.
+
+```text
+Executor families
+├─ Hermes-native
+│  └─ direct tools, browser, terminal, verification
+├─ Codex-family
+│  ├─ codex direct
+│  │  └─ codex exec
+│  └─ OMX wrapper
+│     ├─ omx exec
+│     ├─ omx ralph
+│     └─ omx team
+└─ Claude-family
+   ├─ Claude Code
+   └─ OMC wrapper
+```
+
+Use `codex exec` for clear, bounded, direct Codex-family tasks. Use `omx ralph` or related OMX modes when the work benefits from a higher-level, goal-oriented Codex-family workflow such as multi-file implementation or test/fix loops. Use Claude-family tools where their planning, critique, design, or independent review strengths fit the task.
+
+### Producer/Reviewer is a pattern, not one fixed layer
+
+The Producer/Reviewer harness is not a single standalone executor. It is a reusable quality pattern:
+
+```text
+Director: Hermes / JARVIS
+  -> Producer: creates code, documents, decks, reports, or other artifacts
+  -> Hermes verifier: checks git status, diff, tests, scope, secrets, and artifacts
+  -> Reviewer: independently returns PASS / REQUEST_CHANGES / ESCALATE_TO_USER / ABORT
+  -> JARVIS: accepts, revises, escalates, or aborts
+```
+
+It can be used:
+
+- at the JARVIS level when an executor implements project code,
+- inside the External executor workflow when Codex/OMX/Claude are assigned Producer and Reviewer roles,
+- inside a project-specific harness when that project generates and compares artifacts,
+- or nested across levels, for example when JARVIS uses OMX to implement a slide-director phase that itself runs slide Producers and Reviewers.
+
+### Project harness versus skill
+
+A project-specific harness should stay executable. A skill should capture the operating knowledge for selecting and using that harness.
+
+For example, `hermes-slide-director` should remain a repo/CLI/tooling harness under `/home/hskim/projects/hermes-slide-director`, with runners, validators, tests, and evidence handling. After validation, its stabilized routing and operating policy should be extracted into a skill so Hermes/JARVIS knows when and how to use it.
+
+```text
+hermes-slide-director repo
+= executable project-specific harness
+
+hermes-slide-director skill
+= operating manual for routing, candidate selection, QA gates, and evidence expectations
 ```
 
 ## Executor matrix
@@ -276,6 +373,103 @@ Hermes / JARVIS 컨트롤 플레인
         ├─ Hermes direct tools      빠른 수정, 문서, 점검, 위키 관리
         ├─ background workers       조사, 비교, 장시간 분석
         └─ cron / kanban            반복 모니터링 또는 지속형 작업
+```
+
+
+## 하네스 체계
+
+JARVIS는 단일 executor나 플러그인이 아니라 **최상위 운영 하네스**로 보는 것이 가장 정확합니다. JARVIS의 역할은 어떤 작업을, 어느 프로젝트에서, 누구에게 맡기고, 어떤 기준으로 검증하며, 결과를 어디에 기록할지 결정하는 것입니다.
+
+```text
+JARVIS 운영 하네스
+├─ Project Registry Harness
+│  └─ config/projects.yaml
+├─ Routing Harness
+│  ├─ AGENTS.md
+│  ├─ config/routing.yaml
+│  └─ jarvis-executor-router skill
+├─ Skill Harness
+│  └─ Hermes가 로드하는 재사용 운영 매뉴얼
+├─ Wiki / Status Harness
+│  └─ wiki/projects/<project>/status.md
+├─ External Executor Workflow Harness
+│  ├─ Hermes-native 직접 작업
+│  ├─ Codex-family: codex direct + OMX wrapper
+│  └─ Claude-family: Claude Code + OMC wrapper
+├─ Producer / Reviewer Quality Harness
+│  └─ 품질 민감 작업에 적용하는 제작자/검수자 분리 패턴
+├─ Background / Cron / Kanban Harnesses
+│  └─ 장시간, 반복, 지속형 다중 작업
+└─ Project-specific Harnesses
+   └─ /home/hskim/projects/<project> 아래의 실행 가능한 프로젝트 repo
+```
+
+### 하네스 계층
+
+| 하네스 | 역할 | 대표 위치 |
+| --- | --- | --- |
+| **JARVIS 운영 하네스** | 요청 해석, 대상 프로젝트 선택, 라우팅, 안전 게이트, 검증, 기록을 총괄합니다. | `/home/hskim/jarvis`, `AGENTS.md` |
+| **Project registry 하네스** | 프로젝트 목록, path, active/legacy 상태, default executor를 관리합니다. | `config/projects.yaml` |
+| **Routing 하네스** | 대상, 작업 유형, 위험도, executor/workflow, quality gate, 기록 위치를 결정하는 배차 하네스입니다. 직접 산출물을 만들지는 않습니다. | `config/routing.yaml`, `AGENTS.md`, `jarvis-executor-router` skill |
+| **External executor workflow 하네스** | Codex-family, Claude-family 등 외부 실행자에게 제한된 작업을 위임하고 artifact/evidence/log를 수집합니다. 최종 검증은 Hermes/JARVIS가 수행합니다. | `harnesses/`, `jarvis-codex-omx-executor` skill, project run scripts |
+| **Producer/Reviewer 품질 하네스** | 제작자와 검수자를 분리합니다. JARVIS 상위 레벨, external executor workflow 내부, project-specific harness 내부, 또는 중첩 구조에서 모두 적용될 수 있습니다. | `harnesses/producer-reviewer-rejection-loop.md` 및 프로젝트별 gate |
+| **Project-specific 하네스** | CLI, runner, validator, test, artifact, evidence 처리를 포함한 실행 가능한 프로젝트 repo입니다. | `/home/hskim/projects/<project>` |
+| **Skill 하네스** | Hermes/JARVIS가 특정 workflow나 project harness를 언제/어떻게 쓸지 알려주는 운영 매뉴얼입니다. 실행 코드를 대체하지 않습니다. | `~/.hermes/skills/...` |
+| **Wiki/status 하네스** | 프로젝트 결정, 상태, phase 결과, 다음 작업을 장기 기록합니다. | `wiki/` |
+
+### Executor family 구분
+
+JARVIS는 executor를 “완전히 다른 모델인가”보다 “어떤 운영 모드로 실행하는가” 기준으로 구분합니다. 특히 OMX는 Codex와 경쟁하는 별도 모델 계열이라기보다, Codex CLI 위에 붙는 oh-my-codex wrapper/orchestration layer로 이해하는 것이 정확합니다.
+
+```text
+Executor families
+├─ Hermes-native
+│  └─ 직접 tool, browser, terminal, verification
+├─ Codex-family
+│  ├─ codex direct
+│  │  └─ codex exec
+│  └─ OMX wrapper
+│     ├─ omx exec
+│     ├─ omx ralph
+│     └─ omx team
+└─ Claude-family
+   ├─ Claude Code
+   └─ OMC wrapper
+```
+
+작고 명확한 단발 작업은 `codex exec`가 적합하고, 여러 파일 구현이나 test/fix loop처럼 목표지향 흐름이 필요한 Codex-family 작업은 `omx ralph` 같은 OMX 모드가 적합합니다. Claude-family는 계획, 비평, 디자인, 독립 review 강점이 필요한 곳에 배치합니다.
+
+### Producer/Reviewer는 고정 위치가 아니라 패턴
+
+Producer/Reviewer는 특정 executor 하나가 아니라, 제작자와 검수자를 분리하는 품질관리 패턴입니다.
+
+```text
+Director: Hermes / JARVIS
+  -> Producer: 코드, 문서, deck, report 등 산출물 제작
+  -> Hermes verifier: git status, diff, tests, scope, secrets, artifacts 확인
+  -> Reviewer: PASS / REQUEST_CHANGES / ESCALATE_TO_USER / ABORT 판정
+  -> JARVIS: 승인, 수정 지시, 사용자 에스컬레이션, 중단 결정
+```
+
+이 패턴은 다음 위치에 모두 붙을 수 있습니다.
+
+- JARVIS 상위 레벨에서 executor가 프로젝트 코드를 구현할 때,
+- External executor workflow 안에서 Codex/OMX/Claude가 Producer와 Reviewer 역할을 맡을 때,
+- Project-specific harness 내부에서 산출물 후보를 만들고 비교할 때,
+- 또는 JARVIS가 어떤 project harness를 구현하고, 그 project harness 내부에서 다시 산출물 Producer/Reviewer를 돌리는 중첩 구조에서.
+
+### Project harness와 skill의 관계
+
+Project-specific harness는 실행 가능한 repo/CLI/tooling으로 남아야 하고, skill은 그 하네스를 선택하고 사용하는 운영 지식을 담아야 합니다.
+
+예를 들어 `hermes-slide-director`는 `/home/hskim/projects/hermes-slide-director` 아래의 실행 가능한 project-specific harness로 유지하는 것이 맞습니다. CLI, runner, validator, tests, evidence handling은 repo에 남기고, 테스트 후 안정화된 routing/운영/QA 정책은 skill로 추출해 Hermes/JARVIS가 언제 어떻게 사용할지 알게 하는 구조가 좋습니다.
+
+```text
+hermes-slide-director repo
+= 실행 가능한 project-specific harness
+
+hermes-slide-director skill
+= routing, 후보 선택, QA gate, evidence 기대치를 담은 운영 매뉴얼
 ```
 
 ## 실행자 매트릭스
