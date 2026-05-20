@@ -83,6 +83,7 @@ af85dab feat: support structured slide content
 841c99f feat: add ComfyUI asset placeholder seam
 5fd4cac feat: add PPTX delivery gate contract
 3d113d8 feat: add chart and comparison slide schemas
+1cb4c27 feat: add Playwright screenshot runner
 ```
 
 Implemented primitives:
@@ -96,24 +97,27 @@ Implemented primitives:
 - `slideforge.guizang_html_composer` — deterministic 16:9 HTML presentation shell with keyboard navigation, counter, progress bar, print CSS, escaped user content, archetype-specific visual-band/timeline/table/chart/comparison-matrix sections, structured `VisualChip`/`TimelineStep`/`MetricRow`/`ChartDatum`/`ComparisonColumn`/`ComparisonRow` content, and placeholder-only ComfyUI `AssetPlaceholder` cards for visual archetypes.
 - `slideforge.smoke_run` — end-to-end compose-html smoke run writer that emits `deck.json`, `deck.html`, `browser-regression-plan.json`, `manifest.json`, and `evidence-index.md`.
 - `slideforge.browser_regression` — dependency-free browser regression checklist/plan contract with expected slide count, slide ids, archetypes, and explicit `not_captured` screenshot status.
+- `slideforge.browser_capture` — optional Playwright Chromium screenshot runner that captures per-slide PNGs and writes `browser-regression-report.json` with detected slide count, screenshots, viewport, browser name, console errors, and capture status.
 - `slideforge.pptx_delivery_gate` — dependency-free PPTX delivery/render strategy contract with local tool availability, static/visual check plans, blockers, and explicit no-export/no-render validation claim.
 - `slideforge.fidelity_scorer` — 100-point template-fidelity scoring.
 - `slideforge.fidelity_report` — markdown report renderer with PASS/PASS_WITH_WARNINGS/WEAK_PASS/FAIL verdicts.
-- `slideforge.cli` — `build-spec`, `generate-asset-briefs`, `compose-html`, `smoke-html`, `pptx-delivery-gate`, and `score-fidelity --markdown-output` artifact commands.
+- `slideforge.cli` — `build-spec`, `generate-asset-briefs`, `compose-html`, `smoke-html`, `capture-screenshots`, `pptx-delivery-gate`, and `score-fidelity --markdown-output` artifact commands.
 
 Validation:
 
 ```text
 PYTHONPATH=src python -m pytest -q
-# 40 passed
+# 44 passed
 
 PYTHONPATH=src python -m slideforge.cli --help
-# build-spec, generate-asset-briefs, compose-html, smoke-html, pptx-delivery-gate, score-fidelity
+# build-spec, generate-asset-briefs, compose-html, smoke-html, capture-screenshots, pptx-delivery-gate, score-fidelity
+
+PYTHONPATH=src python -m slideforge.cli capture-screenshots --deck-html runs/jarvis-browser-runner-smoke/deck.html --output-dir runs/jarvis-browser-runner-smoke/browser-capture --expected-slide-count 2
+# wrote browser-regression-report.json and slide-01.png/slide-02.png with screenshot_capture.status=captured
 ```
 
 ## Next work
 
-1. Add optional real screenshot runner once browser automation dependencies are explicitly approved.
-2. Add real ComfyUI output handoff once ComfyUI/provider execution is explicitly approved.
-3. Add real PPTX export/render integration once a renderer path such as LibreOffice or pptx-glimpse is explicitly approved.
-4. Extract/normalize richer content schemas into a dedicated schema module if composer growth becomes a maintenance issue.
+1. Add real ComfyUI output handoff once ComfyUI/provider execution is explicitly approved.
+2. Add real PPTX export/render integration once a renderer path such as LibreOffice or pptx-glimpse is explicitly approved.
+3. Extract/normalize richer content schemas into a dedicated schema module if composer growth becomes a maintenance issue.
