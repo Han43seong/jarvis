@@ -78,6 +78,7 @@ a762242 feat: add run evidence manifest writer
 0706bf0 feat: add HTML smoke run artifact writer
 37f92cc feat: add fidelity markdown report
 dbe924b feat: render archetype-specific HTML sections
+af85dab feat: support structured slide content
 ```
 
 Implemented primitives:
@@ -88,7 +89,7 @@ Implemented primitives:
 - `slideforge.asset_brief` — text-free ComfyUI asset brief schema.
 - `slideforge.asset_brief_generator` — design spec + mappings to ComfyUI-ready briefs.
 - `slideforge.run_manifest` — run/evidence manifest and markdown evidence index writer.
-- `slideforge.guizang_html_composer` — deterministic 16:9 HTML presentation shell with keyboard navigation, counter, progress bar, print CSS, escaped user content, and archetype-specific visual-band/timeline/table sections.
+- `slideforge.guizang_html_composer` — deterministic 16:9 HTML presentation shell with keyboard navigation, counter, progress bar, print CSS, escaped user content, archetype-specific visual-band/timeline/table sections, and structured `VisualChip`/`TimelineStep`/`MetricRow` content.
 - `slideforge.smoke_run` — end-to-end compose-html smoke run writer that emits `deck.json`, `deck.html`, `manifest.json`, and `evidence-index.md`.
 - `slideforge.fidelity_scorer` — 100-point template-fidelity scoring.
 - `slideforge.fidelity_report` — markdown report renderer with PASS/PASS_WITH_WARNINGS/WEAK_PASS/FAIL verdicts.
@@ -98,7 +99,7 @@ Validation:
 
 ```text
 PYTHONPATH=src python -m pytest -q
-# 27 passed
+# 28 passed
 
 PYTHONPATH=src python -m slideforge.cli --help
 # build-spec, generate-asset-briefs, compose-html, smoke-html, score-fidelity
@@ -106,7 +107,7 @@ PYTHONPATH=src python -m slideforge.cli --help
 
 ## Next work
 
-1. Add PPTX delivery gate and visual-render strategy.
-2. Add richer data/table/timeline content schema instead of overloading bullet strings.
-3. Add browser-based HTML screenshot regression checks.
-4. Wire ComfyUI asset placeholders into visual-band layouts.
+1. Add browser-based HTML screenshot regression checks.
+2. Wire ComfyUI asset placeholders into visual-band layouts.
+3. Add PPTX delivery gate and visual-render strategy.
+4. Extend content schema for charts and comparison matrices.
