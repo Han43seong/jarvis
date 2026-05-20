@@ -86,6 +86,7 @@ af85dab feat: support structured slide content
 1cb4c27 feat: add Playwright screenshot runner
 3f50fbd feat: add ComfyUI handoff report
 6f32791 feat: add PPTX export seam
+279d2e6 refactor: extract slide schemas
 ```
 
 Implemented primitives:
@@ -97,7 +98,8 @@ Implemented primitives:
 - `slideforge.asset_brief_generator` — design spec + mappings to ComfyUI-ready briefs.
 - `slideforge.comfyui_handoff` — evidence-first ComfyUI handoff/report seam for generated asset briefs; checks an already-running endpoint, records blockers/status, optionally submits workflow API prompts, and never claims generated assets unless output files exist.
 - `slideforge.run_manifest` — run/evidence manifest and markdown evidence index writer.
-- `slideforge.guizang_html_composer` — deterministic 16:9 HTML presentation shell with keyboard navigation, counter, progress bar, print CSS, escaped user content, archetype-specific visual-band/timeline/table/chart/comparison-matrix sections, structured `VisualChip`/`TimelineStep`/`MetricRow`/`ChartDatum`/`ComparisonColumn`/`ComparisonRow` content, and placeholder-only ComfyUI `AssetPlaceholder` cards for visual archetypes.
+- `slideforge.schemas` — reusable deck/slide content dataclasses and validation (`HtmlDeck`, `HtmlSlide`, `VisualChip`, `AssetPlaceholder`, `TimelineStep`, `MetricRow`, `ChartDatum`, `ComparisonColumn`, `ComparisonRow`); legacy imports remain re-exported from `guizang_html_composer`.
+- `slideforge.guizang_html_composer` — deterministic 16:9 HTML presentation shell with keyboard navigation, counter, progress bar, print CSS, escaped user content, archetype-specific visual-band/timeline/table/chart/comparison-matrix sections, structured content, and placeholder-only ComfyUI `AssetPlaceholder` cards for visual archetypes.
 - `slideforge.smoke_run` — end-to-end compose-html smoke run writer that emits `deck.json`, `deck.html`, `browser-regression-plan.json`, `manifest.json`, and `evidence-index.md`.
 - `slideforge.browser_regression` — dependency-free browser regression checklist/plan contract with expected slide count, slide ids, archetypes, and explicit `not_captured` screenshot status.
 - `slideforge.browser_capture` — optional Playwright Chromium screenshot runner that captures per-slide PNGs and writes `browser-regression-report.json` with detected slide count, screenshots, viewport, browser name, console errors, and capture status.
@@ -111,7 +113,7 @@ Validation:
 
 ```text
 PYTHONPATH=src python -m pytest -q
-# 54 passed
+# 57 passed
 
 PYTHONPATH=src python -m slideforge.cli --help
 # build-spec, generate-asset-briefs, compose-html, comfyui-handoff, smoke-html, capture-screenshots, export-pptx, pptx-delivery-gate, score-fidelity
@@ -128,5 +130,5 @@ PYTHONPATH=src python -m slideforge.cli export-pptx --deck runs/jarvis-pptx-real
 
 ## Next work
 
-1. Extract/normalize richer content schemas into a dedicated schema module if composer growth becomes a maintenance issue.
-2. For production PPTX delivery, keep the `python-pptx` seam as first-pass static/native evidence and continue requiring renderer or manual QA before final visual acceptance; temp-local `pptx-glimpse` smoke passed for the 3-slide harness sample after Malgun Gothic font mapping.
+1. For production PPTX delivery, keep the `python-pptx` seam as first-pass static/native evidence and continue requiring renderer or manual QA before final visual acceptance; temp-local `pptx-glimpse` smoke passed for the 3-slide harness sample after Malgun Gothic font mapping.
+2. Next product phase is no longer schema extraction; choose the next operator-facing capability or production-route hardening target before proceeding.
