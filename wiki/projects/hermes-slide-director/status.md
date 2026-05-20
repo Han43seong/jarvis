@@ -2,6 +2,13 @@
 
 ## Current state
 
+- Status: legacy-reference as of 2026-05-20.
+- Phase 42 closed this repo as a learning harness after the production-tool decision.
+- Successor active repo: `/home/hskim/projects/hermes-slide-forge` / `https://github.com/Han43seong/hermes-slide-forge.git`.
+- Production tools fixed for the successor direction: `codex-guizang-html` as primary HTML/presentation composer and `codex-presentation-pptx` as PPTX delivery route.
+- ComfyUI is planned as graphical asset forge, not the slide composer.
+- Historical context below is retained for reference.
+
 - Project created as a clean-start repository at `/home/hskim/projects/hermes-slide-director`.
 - GitHub private repo created and pushed at `https://github.com/Han43seong/hermes-slide-director`; local `origin` tracks `origin/main`.
 - Purpose: Hermes-orchestrated Claude Design loop harness for high-fidelity slide decks.

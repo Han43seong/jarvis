@@ -43,11 +43,22 @@ projects:
 
   hermes-slide-director:
     name: hermes-slide-director
-    type: presentation-agent-harness
+    type: presentation-agent-harness-legacy
     path: /home/hskim/projects/hermes-slide-director
     repo: /home/hskim/projects/hermes-slide-director
     remote: https://github.com/Han43seong/hermes-slide-director.git
     wiki: /home/hskim/jarvis/wiki/projects/hermes-slide-director
+    default_executor: hermes-direct
+    status: legacy-reference
+    notes: Phase 1-42 learning harness closed after production-tool decision; preserved as reference for hermes-slide-forge.
+
+  hermes-slide-forge:
+    name: hermes-slide-forge
+    type: presentation-asset-pipeline
+    path: /home/hskim/projects/hermes-slide-forge
+    repo: /home/hskim/projects/hermes-slide-forge
+    remote: https://github.com/Han43seong/hermes-slide-forge.git
+    wiki: /home/hskim/jarvis/wiki/projects/hermes-slide-forge
     default_executor: omx-ralph
     status: active
-    notes: Clean-start Hermes-orchestrated Claude Design loop harness for high-fidelity slide decks from research material and design references.
+    notes: Active clean-start slide pipeline using JARVIS design planning, ComfyUI asset forge, codex-guizang-html primary composition, and codex-presentation-pptx delivery.
