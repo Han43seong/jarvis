@@ -91,6 +91,7 @@ af85dab feat: support structured slide content
 0ac331b feat: add local run orchestrator
 2b9df84 feat: add deck preparation command
 b531a35 feat: add source section preparation
+9c3132a feat: add source local run command
 ```
 
 Implemented primitives:
@@ -113,18 +114,19 @@ Implemented primitives:
 - `slideforge.run_pipeline` — dependency-free local operator handoff runner exposed through `run-local`; turns an existing HtmlDeck-compatible JSON deck into a smoke run plus `run-summary.json`/`run-summary.md`, validates run ids to avoid path-like escapes, and records missing external evidence honestly.
 - `slideforge.deck_preparer` — dependency-free upstream deck preparation seam exposed through `prepare-deck`; validates structured user sections, maps intents/design-spec archetypes conservatively, and writes HtmlDeck-compatible JSON that `run-local` can consume.
 - `slideforge.section_preparer` — dependency-free extractive source-material preparation seam exposed through `prepare-sections`; converts local plain text/Markdown-like outlines into structured section JSON with conservative intent aliases, duplicate-safe ids, and no semantic/provider summarization claims.
+- `slideforge.source_pipeline` — dependency-free all-in-one source-material handoff exposed through `run-source-local`; composes `prepare-sections`, `prepare-deck`, and `run-local`, writes intermediate `sections.json`/`deck.json`, prints compact JSON, and preserves honest missing-evidence status.
 - `slideforge.fidelity_scorer` — 100-point template-fidelity scoring.
 - `slideforge.fidelity_report` — markdown report renderer with PASS/PASS_WITH_WARNINGS/WEAK_PASS/FAIL verdicts.
-- `slideforge.cli` — `prepare-sections`, `prepare-deck`, `build-spec`, `generate-asset-briefs`, `compose-html`, `comfyui-handoff`, `smoke-html`, `capture-screenshots`, `export-pptx`, `pptx-delivery-gate`, `run-local`, `summarize-run`, and `score-fidelity --markdown-output` artifact commands.
+- `slideforge.cli` — `prepare-sections`, `prepare-deck`, `build-spec`, `generate-asset-briefs`, `compose-html`, `comfyui-handoff`, `smoke-html`, `capture-screenshots`, `export-pptx`, `pptx-delivery-gate`, `run-source-local`, `run-local`, `summarize-run`, and `score-fidelity --markdown-output` artifact commands.
 
 Validation:
 
 ```text
 PYTHONPATH=src python -m pytest -q
-# 80 passed
+# 85 passed
 
 PYTHONPATH=src python -m slideforge.cli --help
-# prepare-sections, prepare-deck, build-spec, generate-asset-briefs, compose-html, comfyui-handoff, smoke-html, capture-screenshots, export-pptx, pptx-delivery-gate, run-local, summarize-run, score-fidelity
+# prepare-sections, prepare-deck, build-spec, generate-asset-briefs, compose-html, comfyui-handoff, smoke-html, capture-screenshots, export-pptx, pptx-delivery-gate, run-source-local, run-local, summarize-run, score-fidelity
 
 PYTHONPATH=src python -m slideforge.cli capture-screenshots --deck-html runs/jarvis-browser-runner-smoke/deck.html --output-dir runs/jarvis-browser-runner-smoke/browser-capture --expected-slide-count 2
 # wrote browser-regression-report.json and slide-01.png/slide-02.png with screenshot_capture.status=captured
@@ -144,12 +146,12 @@ PYTHONPATH=src python -m slideforge.cli prepare-sections --source runs/jarvis-pr
 PYTHONPATH=src python -m slideforge.cli prepare-deck --title "Hermes Prepare Sections Postfix" --sections runs/jarvis-prepare-sections-hermes-input/sections-postfix.json --output runs/jarvis-prepare-sections-hermes-input/deck-postfix.json
 # consumed prepared sections and wrote HtmlDeck-compatible deck.json
 
-PYTHONPATH=src python -m slideforge.cli run-local --deck runs/jarvis-prepare-sections-hermes-input/deck-postfix.json --runs-dir runs --run-id jarvis-prepare-sections-postfix-run
-# consumed the prepared deck and wrote deck.json, deck.html, browser-regression-plan.json, pptx-delivery-gate.json, manifest.json, evidence-index.md, run-summary.json, run-summary.md; summary_status=needs_visual_evidence; blockers=0; warnings=4; missing external evidence=[browser screenshot capture, PPTX export/render, ComfyUI generated asset, fidelity score/report]
+PYTHONPATH=src python -m slideforge.cli run-source-local --source /tmp/jarvis-runtime/slideforge/run-source-local-smoke/source.md --title "Hermes Run Source Local Post Review" --runs-dir runs --run-id jarvis-run-source-local-post-review
+# wrote compact JSON report plus sections/deck handoff at runs/jarvis-run-source-local-post-review-input/{sections.json,deck.json}; wrote run artifacts at runs/jarvis-run-source-local-post-review/; summary_status=needs_visual_evidence; blockers=0; warnings=4; missing external evidence=[browser screenshot capture, PPTX export/render, ComfyUI generated asset, fidelity score/report]
 ```
 
 ## Next work
 
 1. For production PPTX delivery, keep the `python-pptx` seam as first-pass static/native evidence and continue requiring renderer or manual QA before final visual acceptance; temp-local `pptx-glimpse` smoke passed for the 3-slide harness sample after Malgun Gothic font mapping.
-2. Use `prepare-sections` → `prepare-deck` → `run-local` → `summarize-run` as the current deterministic operator path from local source text/Markdown-like outlines to evidence run/readiness rollup; these do not replace real visual QA, PPTX render checks, or ComfyUI output validation.
-3. Next product phase should connect design-reference observation/spec preparation to this path, or add an operator-facing all-in-one local runner that executes the deterministic chain from source material through run summary while preserving evidence-first and no-provider/no-install boundaries unless explicitly approved.
+2. Use `run-source-local` for the current one-command deterministic operator path from local source text/Markdown-like outlines to section/deck handoff files, local evidence run, and readiness rollup; smoke-only runs still do not replace real visual QA, PPTX render checks, ComfyUI output validation, or fidelity scoring.
+3. Next product phase should connect design-reference observation/spec preparation to this path, or add a documented evidence pack/export manifest for sharing run outputs while preserving evidence-first and no-provider/no-install boundaries unless explicitly approved.
