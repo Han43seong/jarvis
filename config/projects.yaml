@@ -43,22 +43,22 @@ projects:
 
   hermes-slide-director:
     name: hermes-slide-director
-    type: presentation-agent-harness-legacy
+    type: presentation-agent-harness-closed
     path: /home/hskim/projects/hermes-slide-director
     repo: /home/hskim/projects/hermes-slide-director
     remote: https://github.com/Han43seong/hermes-slide-director.git
     wiki: /home/hskim/jarvis/wiki/projects/hermes-slide-director
     default_executor: hermes-direct
-    status: legacy-reference
-    notes: Phase 1-42 learning harness closed after production-tool decision; preserved as reference for hermes-slide-forge.
+    status: closed-archived
+    notes: Definitively closed after Phase 42; retained only as historical reference and learning record. Do not route new slide-production work here.
 
-  hermes-slide-forge:
-    name: hermes-slide-forge
+  oh-my-side-design:
+    name: oh-my-side-design
     type: presentation-asset-pipeline
-    path: /home/hskim/projects/hermes-slide-forge
-    repo: /home/hskim/projects/hermes-slide-forge
-    remote: https://github.com/Han43seong/hermes-slide-forge.git
-    wiki: /home/hskim/jarvis/wiki/projects/hermes-slide-forge
+    path: /home/hskim/projects/oh-my-side-design
+    repo: /home/hskim/projects/oh-my-side-design
+    remote: https://github.com/Han43seong/oh-my-side-design.git
+    wiki: /home/hskim/jarvis/wiki/projects/oh-my-side-design
     default_executor: omx-ralph
     status: active
-    notes: Active clean-start slide pipeline using JARVIS design planning, ComfyUI asset forge, codex-guizang-html primary composition, and codex-presentation-pptx delivery.
+    notes: Active clean-start slide design pipeline using JARVIS design planning, ComfyUI asset forge, codex-guizang-html primary composition, and codex-presentation-pptx delivery.

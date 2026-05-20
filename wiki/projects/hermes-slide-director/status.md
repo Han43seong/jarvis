@@ -2,9 +2,9 @@
 
 ## Current state
 
-- Status: legacy-reference as of 2026-05-20.
-- Phase 42 closed this repo as a learning harness after the production-tool decision.
-- Successor active repo: `/home/hskim/projects/hermes-slide-forge` / `https://github.com/Han43seong/hermes-slide-forge.git`.
+- Status: closed-archived as of 2026-05-20.
+- Phase 42 definitively closed this repo as a learning harness after the production-tool decision.
+- Successor active repo: `/home/hskim/projects/oh-my-side-design` / `https://github.com/Han43seong/oh-my-side-design.git`.
 - Production tools fixed for the successor direction: `codex-guizang-html` as primary HTML/presentation composer and `codex-presentation-pptx` as PPTX delivery route.
 - ComfyUI is planned as graphical asset forge, not the slide composer.
 - Historical context below is retained for reference.
@@ -15,7 +15,7 @@
 - The project intentionally centers on the Hermes conversation-first flow before implementing any dashboard.
 - Existing `slide-harness` remains as prior experiment/reference; this project is the new direction.
 
-## Active product model
+## Historical product model
 
 User supplies:
 

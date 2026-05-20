@@ -6,5 +6,5 @@ Registered projects are listed in `/home/hskim/jarvis/config/projects.yaml`.
 
 - [[jarvis/status|JARVIS]] — Hermes/Codex/OMX control-plane workspace.
 - [[slide-harness/status|slide-harness]] — completed/legacy HTML-first slide generation harness and dashboard experiment, preserved as reference.
-- [[hermes-slide-director/status|hermes-slide-director]] — Phase 1-42 learning harness, now legacy/reference after production-tool decision.
-- [[hermes-slide-forge/status|hermes-slide-forge]] — active clean-start slide pipeline: JARVIS planning, ComfyUI assets, guizang HTML composition, PPTX delivery.
+- [[hermes-slide-director/status|hermes-slide-director]] — Phase 1-42 learning harness, closed/archived after Phase 42; no new work should be routed here.
+- [[oh-my-side-design/status|oh-my-side-design]] — active clean-start slide design pipeline: JARVIS planning, ComfyUI assets, guizang HTML composition, PPTX delivery.
