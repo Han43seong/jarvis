@@ -81,6 +81,7 @@ dbe924b feat: render archetype-specific HTML sections
 af85dab feat: support structured slide content
 48e56e5 feat: add browser regression evidence plan
 841c99f feat: add ComfyUI asset placeholder seam
+5fd4cac feat: add PPTX delivery gate contract
 ```
 
 Implemented primitives:
@@ -94,23 +95,24 @@ Implemented primitives:
 - `slideforge.guizang_html_composer` — deterministic 16:9 HTML presentation shell with keyboard navigation, counter, progress bar, print CSS, escaped user content, archetype-specific visual-band/timeline/table sections, structured `VisualChip`/`TimelineStep`/`MetricRow` content, and placeholder-only ComfyUI `AssetPlaceholder` cards for visual archetypes.
 - `slideforge.smoke_run` — end-to-end compose-html smoke run writer that emits `deck.json`, `deck.html`, `browser-regression-plan.json`, `manifest.json`, and `evidence-index.md`.
 - `slideforge.browser_regression` — dependency-free browser regression checklist/plan contract with expected slide count, slide ids, archetypes, and explicit `not_captured` screenshot status.
+- `slideforge.pptx_delivery_gate` — dependency-free PPTX delivery/render strategy contract with local tool availability, static/visual check plans, blockers, and explicit no-export/no-render validation claim.
 - `slideforge.fidelity_scorer` — 100-point template-fidelity scoring.
 - `slideforge.fidelity_report` — markdown report renderer with PASS/PASS_WITH_WARNINGS/WEAK_PASS/FAIL verdicts.
-- `slideforge.cli` — `build-spec`, `generate-asset-briefs`, `compose-html`, `smoke-html`, and `score-fidelity --markdown-output` artifact commands.
+- `slideforge.cli` — `build-spec`, `generate-asset-briefs`, `compose-html`, `smoke-html`, `pptx-delivery-gate`, and `score-fidelity --markdown-output` artifact commands.
 
 Validation:
 
 ```text
 PYTHONPATH=src python -m pytest -q
-# 32 passed
+# 36 passed
 
 PYTHONPATH=src python -m slideforge.cli --help
-# build-spec, generate-asset-briefs, compose-html, smoke-html, score-fidelity
+# build-spec, generate-asset-briefs, compose-html, smoke-html, pptx-delivery-gate, score-fidelity
 ```
 
 ## Next work
 
-1. Add PPTX delivery gate and visual-render strategy.
-2. Extend content schema for charts and comparison matrices.
-3. Add optional real screenshot runner once browser automation dependencies are explicitly approved.
-4. Add real ComfyUI output handoff once ComfyUI/provider execution is explicitly approved.
+1. Extend content schema for charts and comparison matrices.
+2. Add optional real screenshot runner once browser automation dependencies are explicitly approved.
+3. Add real ComfyUI output handoff once ComfyUI/provider execution is explicitly approved.
+4. Add real PPTX export/render integration once a renderer path such as LibreOffice or pptx-glimpse is explicitly approved.
