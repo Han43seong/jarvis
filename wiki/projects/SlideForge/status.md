@@ -65,10 +65,39 @@ Supporting/fallback tools:
 - `codex-reveal-playwright` — fallback/export experiments only.
 - `codex-editable-html-slides` — excluded.
 
+## Current implementation state
+
+Local commits ahead of origin as of this update:
+
+```text
+6f0edfa feat: add design spec and fidelity pipeline primitives
+975f297 feat: add SlideForge artifact CLI
+0de907c feat: generate ComfyUI asset briefs
+```
+
+Implemented primitives:
+
+- `slideforge.design_spec` — colors, typography, slide archetypes, background layers, graphic motifs.
+- `slideforge.template_analyzer` — template observations to design spec.
+- `slideforge.archetype_mapper` — content sections to template-like slide archetype mappings.
+- `slideforge.asset_brief` — text-free ComfyUI asset brief schema.
+- `slideforge.asset_brief_generator` — design spec + mappings to ComfyUI-ready briefs.
+- `slideforge.fidelity_scorer` — 100-point template-fidelity scoring.
+- `slideforge.cli` — `build-spec`, `generate-asset-briefs`, and `score-fidelity` artifact commands.
+
+Validation:
+
+```text
+PYTHONPATH=src python -m pytest -q
+# 15 passed
+
+PYTHONPATH=src python -m slideforge.cli --help
+# build-spec, generate-asset-briefs, score-fidelity
+```
+
 ## Next work
 
-1. Build the template deep-analyzer/design-spec skeleton.
-2. Define asset-brief schema for ComfyUI text-free graphics.
-3. Implement guizang HTML composer with custom presentation mode.
-4. Add fidelity scoring rubric and evidence report format.
-5. Add PPTX delivery gate and visual-render strategy.
+1. Implement a run manifest/evidence directory writer so every analysis/generation pass leaves durable artifacts.
+2. Add a deterministic HTML presentation skeleton for the `codex-guizang-html` route.
+3. Add visual-fidelity report markdown generation from score JSON.
+4. Add PPTX delivery gate and visual-render strategy.
