@@ -67,12 +67,17 @@ Supporting/fallback tools:
 
 ## Current implementation state
 
-Local commits ahead of origin as of this update:
+Synced implementation commits include:
 
 ```text
 6f0edfa feat: add design spec and fidelity pipeline primitives
 975f297 feat: add SlideForge artifact CLI
 0de907c feat: generate ComfyUI asset briefs
+a762242 feat: add run evidence manifest writer
+3693a7e feat: add guizang HTML presentation composer
+0706bf0 feat: add HTML smoke run artifact writer
+37f92cc feat: add fidelity markdown report
+dbe924b feat: render archetype-specific HTML sections
 ```
 
 Implemented primitives:
@@ -83,32 +88,25 @@ Implemented primitives:
 - `slideforge.asset_brief` — text-free ComfyUI asset brief schema.
 - `slideforge.asset_brief_generator` — design spec + mappings to ComfyUI-ready briefs.
 - `slideforge.run_manifest` — run/evidence manifest and markdown evidence index writer.
-- `slideforge.guizang_html_composer` — deterministic 16:9 HTML presentation shell with keyboard navigation, counter, progress bar, print CSS, and escaped user content.
+- `slideforge.guizang_html_composer` — deterministic 16:9 HTML presentation shell with keyboard navigation, counter, progress bar, print CSS, escaped user content, and archetype-specific visual-band/timeline/table sections.
 - `slideforge.smoke_run` — end-to-end compose-html smoke run writer that emits `deck.json`, `deck.html`, `manifest.json`, and `evidence-index.md`.
 - `slideforge.fidelity_scorer` — 100-point template-fidelity scoring.
-- `slideforge.cli` — `build-spec`, `generate-asset-briefs`, `compose-html`, `smoke-html`, and `score-fidelity` artifact commands.
+- `slideforge.fidelity_report` — markdown report renderer with PASS/PASS_WITH_WARNINGS/WEAK_PASS/FAIL verdicts.
+- `slideforge.cli` — `build-spec`, `generate-asset-briefs`, `compose-html`, `smoke-html`, and `score-fidelity --markdown-output` artifact commands.
 
 Validation:
 
 ```text
 PYTHONPATH=src python -m pytest -q
-# 23 passed
+# 27 passed
 
 PYTHONPATH=src python -m slideforge.cli --help
 # build-spec, generate-asset-briefs, compose-html, smoke-html, score-fidelity
 ```
 
-Latest local commits:
-
-```text
-a762242 feat: add run evidence manifest writer
-3693a7e feat: add guizang HTML presentation composer
-0706bf0 feat: add HTML smoke run artifact writer
-```
-
 ## Next work
 
-1. Run `smoke-html` with a real smoke deck under `runs/` and inspect the generated HTML in browser.
-2. Add visual-fidelity report markdown generation from score JSON.
-3. Add deterministic HTML sections for visual-band/timeline/table archetypes.
-4. Add PPTX delivery gate and visual-render strategy.
+1. Add PPTX delivery gate and visual-render strategy.
+2. Add richer data/table/timeline content schema instead of overloading bullet strings.
+3. Add browser-based HTML screenshot regression checks.
+4. Wire ComfyUI asset placeholders into visual-band layouts.
