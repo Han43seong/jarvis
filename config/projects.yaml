@@ -52,13 +52,13 @@ projects:
     status: closed-archived
     notes: Definitively closed after Phase 42; retained only as historical reference and learning record. Do not route new slide-production work here.
 
-  oh-my-side-design:
-    name: oh-my-side-design
+  SlideForge:
+    name: SlideForge
     type: presentation-asset-pipeline
-    path: /home/hskim/projects/oh-my-side-design
-    repo: /home/hskim/projects/oh-my-side-design
-    remote: https://github.com/Han43seong/oh-my-side-design.git
-    wiki: /home/hskim/jarvis/wiki/projects/oh-my-side-design
+    path: /home/hskim/projects/SlideForge
+    repo: /home/hskim/projects/SlideForge
+    remote: https://github.com/Han43seong/SlideForge.git
+    wiki: /home/hskim/jarvis/wiki/projects/SlideForge
     default_executor: omx-ralph
     status: active
     notes: Active clean-start slide design pipeline using JARVIS design planning, ComfyUI asset forge, codex-guizang-html primary composition, and codex-presentation-pptx delivery.

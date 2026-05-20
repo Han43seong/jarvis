@@ -4,7 +4,7 @@
 
 - Status: closed-archived as of 2026-05-20.
 - Phase 42 definitively closed this repo as a learning harness after the production-tool decision.
-- Successor active repo: `/home/hskim/projects/oh-my-side-design` / `https://github.com/Han43seong/oh-my-side-design.git`.
+- Successor active repo: `/home/hskim/projects/SlideForge` / `https://github.com/Han43seong/SlideForge.git`.
 - Production tools fixed for the successor direction: `codex-guizang-html` as primary HTML/presentation composer and `codex-presentation-pptx` as PPTX delivery route.
 - ComfyUI is planned as graphical asset forge, not the slide composer.
 - Historical context below is retained for reference.

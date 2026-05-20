@@ -1,14 +1,14 @@
-# oh-my-side-design status
+# SlideForge status
 
 - status: active
 - updated: 2026-05-20
-- repo: `/home/hskim/projects/oh-my-side-design`
-- remote: `https://github.com/Han43seong/oh-my-side-design.git`
+- repo: `/home/hskim/projects/SlideForge`
+- remote: `https://github.com/Han43seong/SlideForge.git`
 - visibility: private
 
 ## Purpose
 
-`oh-my-side-design` is the clean-start successor direction after `hermes-slide-director` Phase 42.
+`SlideForge` is the clean-start successor direction after `hermes-slide-director` Phase 42.
 
 It narrows the production architecture to:
 
@@ -33,6 +33,7 @@ Initial commits:
 ```text
 b428a46 chore: initialize Hermes Slide Forge
 10fa069 chore: rename project to oh-my-side-design
+7865a20 chore: rename project to SlideForge
 ```
 
 Initial files:
@@ -40,8 +41,8 @@ Initial files:
 - `README.md`
 - `docs/architecture.md`
 - `pyproject.toml`
-- `src/oh_my_side_design/__init__.py`
-- `src/oh_my_side_design/toolchain.py`
+- `src/slideforge/__init__.py`
+- `src/slideforge/toolchain.py`
 - `tests/test_toolchain.py`
 
 Initial validation:
