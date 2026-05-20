@@ -82,6 +82,7 @@ af85dab feat: support structured slide content
 48e56e5 feat: add browser regression evidence plan
 841c99f feat: add ComfyUI asset placeholder seam
 5fd4cac feat: add PPTX delivery gate contract
+3d113d8 feat: add chart and comparison slide schemas
 ```
 
 Implemented primitives:
@@ -92,7 +93,7 @@ Implemented primitives:
 - `slideforge.asset_brief` — text-free ComfyUI asset brief schema.
 - `slideforge.asset_brief_generator` — design spec + mappings to ComfyUI-ready briefs.
 - `slideforge.run_manifest` — run/evidence manifest and markdown evidence index writer.
-- `slideforge.guizang_html_composer` — deterministic 16:9 HTML presentation shell with keyboard navigation, counter, progress bar, print CSS, escaped user content, archetype-specific visual-band/timeline/table sections, structured `VisualChip`/`TimelineStep`/`MetricRow` content, and placeholder-only ComfyUI `AssetPlaceholder` cards for visual archetypes.
+- `slideforge.guizang_html_composer` — deterministic 16:9 HTML presentation shell with keyboard navigation, counter, progress bar, print CSS, escaped user content, archetype-specific visual-band/timeline/table/chart/comparison-matrix sections, structured `VisualChip`/`TimelineStep`/`MetricRow`/`ChartDatum`/`ComparisonColumn`/`ComparisonRow` content, and placeholder-only ComfyUI `AssetPlaceholder` cards for visual archetypes.
 - `slideforge.smoke_run` — end-to-end compose-html smoke run writer that emits `deck.json`, `deck.html`, `browser-regression-plan.json`, `manifest.json`, and `evidence-index.md`.
 - `slideforge.browser_regression` — dependency-free browser regression checklist/plan contract with expected slide count, slide ids, archetypes, and explicit `not_captured` screenshot status.
 - `slideforge.pptx_delivery_gate` — dependency-free PPTX delivery/render strategy contract with local tool availability, static/visual check plans, blockers, and explicit no-export/no-render validation claim.
@@ -104,7 +105,7 @@ Validation:
 
 ```text
 PYTHONPATH=src python -m pytest -q
-# 36 passed
+# 40 passed
 
 PYTHONPATH=src python -m slideforge.cli --help
 # build-spec, generate-asset-briefs, compose-html, smoke-html, pptx-delivery-gate, score-fidelity
@@ -112,7 +113,7 @@ PYTHONPATH=src python -m slideforge.cli --help
 
 ## Next work
 
-1. Extend content schema for charts and comparison matrices.
-2. Add optional real screenshot runner once browser automation dependencies are explicitly approved.
-3. Add real ComfyUI output handoff once ComfyUI/provider execution is explicitly approved.
-4. Add real PPTX export/render integration once a renderer path such as LibreOffice or pptx-glimpse is explicitly approved.
+1. Add optional real screenshot runner once browser automation dependencies are explicitly approved.
+2. Add real ComfyUI output handoff once ComfyUI/provider execution is explicitly approved.
+3. Add real PPTX export/render integration once a renderer path such as LibreOffice or pptx-glimpse is explicitly approved.
+4. Extract/normalize richer content schemas into a dedicated schema module if composer growth becomes a maintenance issue.
