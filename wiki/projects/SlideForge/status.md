@@ -93,6 +93,7 @@ af85dab feat: support structured slide content
 b531a35 feat: add source section preparation
 9c3132a feat: add source local run command
 81d9746 feat: add evidence pack export
+d7ed0b2 feat: add design source local runner
 ```
 
 Implemented primitives:
@@ -116,19 +117,20 @@ Implemented primitives:
 - `slideforge.deck_preparer` — dependency-free upstream deck preparation seam exposed through `prepare-deck`; validates structured user sections, maps intents/design-spec archetypes conservatively, and writes HtmlDeck-compatible JSON that `run-local` can consume.
 - `slideforge.section_preparer` — dependency-free extractive source-material preparation seam exposed through `prepare-sections`; converts local plain text/Markdown-like outlines into structured section JSON with conservative intent aliases, duplicate-safe ids, and no semantic/provider summarization claims.
 - `slideforge.source_pipeline` — dependency-free all-in-one source-material handoff exposed through `run-source-local`; composes `prepare-sections`, `prepare-deck`, and `run-local`, writes intermediate `sections.json`/`deck.json`, prints compact JSON, and preserves honest missing-evidence status.
+- `slideforge.design_source_pipeline` — dependency-free all-in-one design-reference/source handoff exposed through `run-design-source-local`; builds `design-spec.json` from local observations, then runs the source-local path with that DesignSpec and preserves honest missing-evidence status.
 - `slideforge.evidence_pack` — dependency-free evidence-pack exporter exposed through `export-evidence-pack`; zips existing run artifacts with embedded/optional sidecar manifest, per-file SHA-256 checksums, honest summary status, symlink skipping, and output-inside-run-dir protection.
 - `slideforge.fidelity_scorer` — 100-point template-fidelity scoring.
 - `slideforge.fidelity_report` — markdown report renderer with PASS/PASS_WITH_WARNINGS/WEAK_PASS/FAIL verdicts.
-- `slideforge.cli` — `prepare-sections`, `prepare-deck`, `build-spec`, `generate-asset-briefs`, `compose-html`, `comfyui-handoff`, `smoke-html`, `capture-screenshots`, `export-pptx`, `pptx-delivery-gate`, `export-evidence-pack`, `run-source-local`, `run-local`, `summarize-run`, and `score-fidelity --markdown-output` artifact commands.
+- `slideforge.cli` — `prepare-sections`, `prepare-deck`, `build-spec`, `generate-asset-briefs`, `compose-html`, `comfyui-handoff`, `smoke-html`, `capture-screenshots`, `export-pptx`, `pptx-delivery-gate`, `export-evidence-pack`, `run-source-local`, `run-design-source-local`, `run-local`, `summarize-run`, and `score-fidelity --markdown-output` artifact commands.
 
 Validation:
 
 ```text
 PYTHONPATH=src python -m pytest -q
-# 92 passed
+# 98 passed
 
 PYTHONPATH=src python -m slideforge.cli --help
-# prepare-sections, prepare-deck, build-spec, generate-asset-briefs, compose-html, comfyui-handoff, smoke-html, capture-screenshots, export-pptx, pptx-delivery-gate, export-evidence-pack, run-source-local, run-local, summarize-run, score-fidelity
+# prepare-sections, prepare-deck, build-spec, generate-asset-briefs, compose-html, comfyui-handoff, smoke-html, capture-screenshots, export-pptx, pptx-delivery-gate, export-evidence-pack, run-source-local, run-design-source-local, run-local, summarize-run, score-fidelity
 
 PYTHONPATH=src python -m slideforge.cli capture-screenshots --deck-html runs/jarvis-browser-runner-smoke/deck.html --output-dir runs/jarvis-browser-runner-smoke/browser-capture --expected-slide-count 2
 # wrote browser-regression-report.json and slide-01.png/slide-02.png with screenshot_capture.status=captured
@@ -148,12 +150,12 @@ PYTHONPATH=src python -m slideforge.cli prepare-sections --source runs/jarvis-pr
 PYTHONPATH=src python -m slideforge.cli prepare-deck --title "Hermes Prepare Sections Postfix" --sections runs/jarvis-prepare-sections-hermes-input/sections-postfix.json --output runs/jarvis-prepare-sections-hermes-input/deck-postfix.json
 # consumed prepared sections and wrote HtmlDeck-compatible deck.json
 
-PYTHONPATH=src python -m slideforge.cli export-evidence-pack --run-dir runs/jarvis-evidence-pack-hermes-source --output runs/jarvis-evidence-pack-hermes-source-evidence-pack.zip --manifest-output runs/jarvis-evidence-pack-hermes-source-evidence-pack-manifest.json
-# wrote zip plus embedded/sidecar evidence-pack-manifest.json; artifact_count=8; all artifact sha256 values length=64; embedded manifest equals sidecar; summary_status=needs_visual_evidence; blockers=0; warnings=4; missing external evidence=[browser capture, PPTX render/export, ComfyUI generated asset, fidelity score/report]
+PYTHONPATH=src python -m slideforge.cli run-design-source-local --source /tmp/jarvis-runtime/slideforge/design-source-local-smoke/source.md --observations /tmp/jarvis-runtime/slideforge/design-source-local-smoke/observations.json --design-name "Hermes Design Source Verification" --title "Hermes Design Source Verification" --runs-dir runs --run-id jarvis-run-design-source-local-hermes
+# wrote design-spec/sections/deck handoff at runs/jarvis-run-design-source-local-hermes-input/{design-spec.json,sections.json,deck.json}; wrote run artifacts at runs/jarvis-run-design-source-local-hermes/; design_spec.name=Hermes Design Source Verification; section_count=2; deck_slides=2; first_archetype=policy_card; summary_status=needs_visual_evidence; blockers=0; warnings=4; missing external evidence=[browser screenshot capture, PPTX export/render, ComfyUI generated asset, fidelity score/report]
 ```
 
 ## Next work
 
 1. For production PPTX delivery, keep the `python-pptx` seam as first-pass static/native evidence and continue requiring renderer or manual QA before final visual acceptance; temp-local `pptx-glimpse` smoke passed for the 3-slide harness sample after Malgun Gothic font mapping.
-2. Use `run-source-local` for the current one-command deterministic operator path from local source text/Markdown-like outlines to section/deck handoff files, local evidence run, and readiness rollup; use `export-evidence-pack` to package existing run artifacts for sharing/archive without generating or claiming missing evidence.
-3. Next product phase should connect design-reference observation/spec preparation to this path or integrate real visual/PPTX/ComfyUI/fidelity evidence capture where approved, while preserving evidence-first and no-provider/no-install boundaries unless explicitly approved.
+2. Use `run-design-source-local` when local design-reference observations are available, or `run-source-local` when only source text/Markdown-like outlines are available; both preserve honest missing-evidence status, and `export-evidence-pack` packages existing run artifacts for sharing/archive without generating or claiming missing evidence.
+3. Next product phase should integrate real visual/PPTX/ComfyUI/fidelity evidence capture where approved, while preserving evidence-first and no-provider/no-install boundaries unless explicitly approved.
