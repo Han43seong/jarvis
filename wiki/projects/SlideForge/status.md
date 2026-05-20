@@ -82,22 +82,31 @@ Implemented primitives:
 - `slideforge.archetype_mapper` — content sections to template-like slide archetype mappings.
 - `slideforge.asset_brief` — text-free ComfyUI asset brief schema.
 - `slideforge.asset_brief_generator` — design spec + mappings to ComfyUI-ready briefs.
+- `slideforge.run_manifest` — run/evidence manifest and markdown evidence index writer.
+- `slideforge.guizang_html_composer` — deterministic 16:9 HTML presentation shell with keyboard navigation, counter, progress bar, print CSS, and escaped user content.
 - `slideforge.fidelity_scorer` — 100-point template-fidelity scoring.
-- `slideforge.cli` — `build-spec`, `generate-asset-briefs`, and `score-fidelity` artifact commands.
+- `slideforge.cli` — `build-spec`, `generate-asset-briefs`, `compose-html`, and `score-fidelity` artifact commands.
 
 Validation:
 
 ```text
 PYTHONPATH=src python -m pytest -q
-# 15 passed
+# 21 passed
 
 PYTHONPATH=src python -m slideforge.cli --help
-# build-spec, generate-asset-briefs, score-fidelity
+# build-spec, generate-asset-briefs, compose-html, score-fidelity
+```
+
+Latest local commits:
+
+```text
+a762242 feat: add run evidence manifest writer
+3693a7e feat: add guizang HTML presentation composer
 ```
 
 ## Next work
 
-1. Implement a run manifest/evidence directory writer so every analysis/generation pass leaves durable artifacts.
-2. Add a deterministic HTML presentation skeleton for the `codex-guizang-html` route.
-3. Add visual-fidelity report markdown generation from score JSON.
+1. Generate a smoke deck JSON and run `compose-html` into a real artifact directory.
+2. Add visual-fidelity report markdown generation from score JSON.
+3. Add deterministic HTML sections for visual-band/timeline/table archetypes.
 4. Add PPTX delivery gate and visual-render strategy.
