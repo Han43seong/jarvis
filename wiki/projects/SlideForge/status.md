@@ -126,8 +126,9 @@ Implemented primitives:
 Validation:
 
 ```text
-PYTHONPATH=src python -m pytest -q
-# 98 passed
+PYTHONPATH=src python -m pytest -q -rs
+# 97 passed, 1 skipped
+# skipped: Playwright optional dependency not installed in the current PC session
 
 PYTHONPATH=src python -m slideforge.cli --help
 # prepare-sections, prepare-deck, build-spec, generate-asset-briefs, compose-html, comfyui-handoff, smoke-html, capture-screenshots, export-pptx, pptx-delivery-gate, export-evidence-pack, run-source-local, run-design-source-local, run-local, summarize-run, score-fidelity
