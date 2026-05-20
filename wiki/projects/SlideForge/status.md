@@ -89,6 +89,7 @@ af85dab feat: support structured slide content
 279d2e6 refactor: extract slide schemas
 6153d5b feat: add run evidence summary
 0ac331b feat: add local run orchestrator
+2b9df84 feat: add deck preparation command
 ```
 
 Implemented primitives:
@@ -109,18 +110,19 @@ Implemented primitives:
 - `slideforge.pptx_export` — optional `python-pptx` PPTX generation seam exposed through `export-pptx`; imports the dependency lazily, writes an honest unavailable report when the optional extra is missing, records stale-output/generation-failure blockers, and attaches `pptx-glimpse` renderer evidence only as availability/blocker metadata unless a renderer is actually approved and present.
 - `slideforge.evidence_summary` — dependency-free operator summary over a run directory exposed through `summarize-run`; aggregates manifest/deck/browser/PPTX/ComfyUI/fidelity artifacts into honest JSON/Markdown readiness evidence with warnings, blockers, and next actions.
 - `slideforge.run_pipeline` — dependency-free local operator handoff runner exposed through `run-local`; turns an existing HtmlDeck-compatible JSON deck into a smoke run plus `run-summary.json`/`run-summary.md`, validates run ids to avoid path-like escapes, and records missing external evidence honestly.
+- `slideforge.deck_preparer` — dependency-free upstream deck preparation seam exposed through `prepare-deck`; validates structured user sections, maps intents/design-spec archetypes conservatively, and writes HtmlDeck-compatible JSON that `run-local` can consume.
 - `slideforge.fidelity_scorer` — 100-point template-fidelity scoring.
 - `slideforge.fidelity_report` — markdown report renderer with PASS/PASS_WITH_WARNINGS/WEAK_PASS/FAIL verdicts.
-- `slideforge.cli` — `build-spec`, `generate-asset-briefs`, `compose-html`, `comfyui-handoff`, `smoke-html`, `capture-screenshots`, `export-pptx`, `pptx-delivery-gate`, `run-local`, `summarize-run`, and `score-fidelity --markdown-output` artifact commands.
+- `slideforge.cli` — `prepare-deck`, `build-spec`, `generate-asset-briefs`, `compose-html`, `comfyui-handoff`, `smoke-html`, `capture-screenshots`, `export-pptx`, `pptx-delivery-gate`, `run-local`, `summarize-run`, and `score-fidelity --markdown-output` artifact commands.
 
 Validation:
 
 ```text
 PYTHONPATH=src python -m pytest -q
-# 67 passed
+# 72 passed
 
 PYTHONPATH=src python -m slideforge.cli --help
-# build-spec, generate-asset-briefs, compose-html, comfyui-handoff, smoke-html, capture-screenshots, export-pptx, pptx-delivery-gate, run-local, summarize-run, score-fidelity
+# prepare-deck, build-spec, generate-asset-briefs, compose-html, comfyui-handoff, smoke-html, capture-screenshots, export-pptx, pptx-delivery-gate, run-local, summarize-run, score-fidelity
 
 PYTHONPATH=src python -m slideforge.cli capture-screenshots --deck-html runs/jarvis-browser-runner-smoke/deck.html --output-dir runs/jarvis-browser-runner-smoke/browser-capture --expected-slide-count 2
 # wrote browser-regression-report.json and slide-01.png/slide-02.png with screenshot_capture.status=captured
@@ -134,12 +136,15 @@ PYTHONPATH=src python -m slideforge.cli export-pptx --deck runs/jarvis-pptx-real
 PYTHONPATH=src python -m slideforge.cli summarize-run --run-dir runs/jarvis-evidence-summary-smoke --output runs/jarvis-evidence-summary-smoke/hermes-verified-run-summary.json --markdown-output runs/jarvis-evidence-summary-smoke/hermes-verified-run-summary.md
 # wrote operator summary with status=ready_with_warnings, sections=[browser_capture, comfyui, fidelity, html, pptx], warnings=1, blockers=0
 
-PYTHONPATH=src python -m slideforge.cli run-local --deck runs/jarvis-run-local-smoke-input/deck.json --runs-dir runs --run-id jarvis-run-local-smoke-hermes-2
-# wrote deck.json, deck.html, browser-regression-plan.json, pptx-delivery-gate.json, manifest.json, evidence-index.md, run-summary.json, run-summary.md; summary_status=needs_visual_evidence; missing external evidence=[browser screenshot capture, PPTX export/render, ComfyUI generated asset, fidelity score/report]
+PYTHONPATH=src python -m slideforge.cli prepare-deck --title "Hermes Prepare Deck Post Review" --sections /tmp/jarvis-runtime/slideforge/hermes-prepare-deck-sections.json --output runs/jarvis-prepare-deck-post-review-input/deck.json
+# wrote HtmlDeck-compatible deck.json with 3 slides; archetypes=[text_explainer, kpi_table, timeline]; metric_rows and timeline_steps populated from supplied bullets
+
+PYTHONPATH=src python -m slideforge.cli run-local --deck runs/jarvis-prepare-deck-post-review-input/deck.json --runs-dir runs --run-id jarvis-prepare-deck-post-review-run
+# consumed the prepared deck and wrote deck.json, deck.html, browser-regression-plan.json, pptx-delivery-gate.json, manifest.json, evidence-index.md, run-summary.json, run-summary.md; summary_status=needs_visual_evidence; blockers=0; warnings=4; missing external evidence=[browser screenshot capture, PPTX export/render, ComfyUI generated asset, fidelity score/report]
 ```
 
 ## Next work
 
 1. For production PPTX delivery, keep the `python-pptx` seam as first-pass static/native evidence and continue requiring renderer or manual QA before final visual acceptance; temp-local `pptx-glimpse` smoke passed for the 3-slide harness sample after Malgun Gothic font mapping.
-2. Use `run-local` as the default deterministic handoff runner for deck-JSON based smoke/production preparation, and `summarize-run` as the operator-facing readiness rollup; these do not replace real visual QA, PPTX render checks, or ComfyUI output validation.
-3. Next product phase should harden the upstream real-user input path before `run-local`: design-reference ingestion and content/deck JSON preparation from source materials/templates.
+2. Use `prepare-deck` → `run-local` → `summarize-run` as the current deterministic operator path from structured sections to evidence run/readiness rollup; these do not replace real visual QA, PPTX render checks, or ComfyUI output validation.
+3. Next product phase should move one step further upstream: ingest/summarize source materials or design-reference observations into structured section/design-spec inputs that `prepare-deck` can consume, while preserving evidence-first and no-provider/no-install boundaries unless explicitly approved.
