@@ -80,6 +80,7 @@ a762242 feat: add run evidence manifest writer
 dbe924b feat: render archetype-specific HTML sections
 af85dab feat: support structured slide content
 48e56e5 feat: add browser regression evidence plan
+841c99f feat: add ComfyUI asset placeholder seam
 ```
 
 Implemented primitives:
@@ -90,7 +91,7 @@ Implemented primitives:
 - `slideforge.asset_brief` — text-free ComfyUI asset brief schema.
 - `slideforge.asset_brief_generator` — design spec + mappings to ComfyUI-ready briefs.
 - `slideforge.run_manifest` — run/evidence manifest and markdown evidence index writer.
-- `slideforge.guizang_html_composer` — deterministic 16:9 HTML presentation shell with keyboard navigation, counter, progress bar, print CSS, escaped user content, archetype-specific visual-band/timeline/table sections, and structured `VisualChip`/`TimelineStep`/`MetricRow` content.
+- `slideforge.guizang_html_composer` — deterministic 16:9 HTML presentation shell with keyboard navigation, counter, progress bar, print CSS, escaped user content, archetype-specific visual-band/timeline/table sections, structured `VisualChip`/`TimelineStep`/`MetricRow` content, and placeholder-only ComfyUI `AssetPlaceholder` cards for visual archetypes.
 - `slideforge.smoke_run` — end-to-end compose-html smoke run writer that emits `deck.json`, `deck.html`, `browser-regression-plan.json`, `manifest.json`, and `evidence-index.md`.
 - `slideforge.browser_regression` — dependency-free browser regression checklist/plan contract with expected slide count, slide ids, archetypes, and explicit `not_captured` screenshot status.
 - `slideforge.fidelity_scorer` — 100-point template-fidelity scoring.
@@ -101,7 +102,7 @@ Validation:
 
 ```text
 PYTHONPATH=src python -m pytest -q
-# 30 passed
+# 32 passed
 
 PYTHONPATH=src python -m slideforge.cli --help
 # build-spec, generate-asset-briefs, compose-html, smoke-html, score-fidelity
@@ -109,7 +110,7 @@ PYTHONPATH=src python -m slideforge.cli --help
 
 ## Next work
 
-1. Wire ComfyUI asset placeholders into visual-band layouts.
-2. Add PPTX delivery gate and visual-render strategy.
-3. Extend content schema for charts and comparison matrices.
-4. Add optional real screenshot runner once browser automation dependencies are explicitly approved.
+1. Add PPTX delivery gate and visual-render strategy.
+2. Extend content schema for charts and comparison matrices.
+3. Add optional real screenshot runner once browser automation dependencies are explicitly approved.
+4. Add real ComfyUI output handoff once ComfyUI/provider execution is explicitly approved.
