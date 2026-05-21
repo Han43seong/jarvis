@@ -97,6 +97,7 @@ d7ed0b2 feat: add design source local runner
 f51ff81 feat: record generated assets and PPTX render QA
 e4ef0d0 feat: embed generated assets in PPTX export
 501afdd feat: polish architecture asset rendering
+a8fdd8c feat: add visual asset approval gate
 ```
 
 Implemented primitives:
@@ -110,6 +111,7 @@ Implemented primitives:
 - `slideforge.run_manifest` — run/evidence manifest and markdown evidence index writer.
 - `slideforge.schemas` — reusable deck/slide content dataclasses and validation (`HtmlDeck`, `HtmlSlide`, `VisualChip`, `AssetPlaceholder`, `TimelineStep`, `MetricRow`, `ChartDatum`, `ComparisonColumn`, `ComparisonRow`); legacy imports remain re-exported from `guizang_html_composer`.
 - `slideforge.guizang_html_composer` — deterministic 16:9 HTML presentation shell with keyboard navigation, counter, progress bar, print CSS, escaped user content, archetype-specific visual-band/timeline/table/chart/comparison-matrix sections, structured content, placeholder-only ComfyUI `AssetPlaceholder` cards for visual archetypes, generated `asset_path` visual-band rendering without placeholder cards, and clean full-slide architecture diagram rendering when `architecture_visual` has an asset path.
+- `slideforge.asset_approval` — visual asset approval gate helpers for the ComfyUI UI / review board / Telegram hybrid flow; `approve-assets` records selected candidates into `approved-assets.json`, and `apply-approved-assets` binds only approved `asset_path` values into a new deck JSON with an application report.
 - `slideforge.smoke_run` — end-to-end compose-html smoke run writer that emits `deck.json`, `deck.html`, `browser-regression-plan.json`, `manifest.json`, and `evidence-index.md`.
 - `slideforge.browser_regression` — dependency-free browser regression checklist/plan contract with expected slide count, slide ids, archetypes, and explicit `not_captured` screenshot status.
 - `slideforge.browser_capture` — optional Playwright Chromium screenshot runner that captures per-slide PNGs and writes `browser-regression-report.json` with detected slide count, screenshots, viewport, browser name, console errors, and capture status.
@@ -130,7 +132,7 @@ Validation:
 
 ```text
 PYTHONPATH=src python -m pytest -q -rs
-# 104 passed
+# 106 passed
 # browser optional installed in current WSL Python; no Playwright skip
 
 ComfyUI local smoke:
@@ -152,7 +154,7 @@ PPTX render evidence:
 # polished run render uses full-slide architecture diagram for slide 3; no overlay title/intent placeholder; visual QA PASS
 
 PYTHONPATH=src python -m slideforge.cli --help
-# prepare-sections, prepare-deck, build-spec, generate-asset-briefs, compose-html, comfyui-handoff, smoke-html, capture-screenshots, export-pptx, pptx-delivery-gate, export-evidence-pack, run-source-local, run-design-source-local, run-local, summarize-run, score-fidelity
+# prepare-sections, prepare-deck, build-spec, generate-asset-briefs, compose-html, comfyui-handoff, smoke-html, capture-screenshots, export-pptx, pptx-delivery-gate, export-evidence-pack, approve-assets, apply-approved-assets, run-source-local, run-design-source-local, run-local, summarize-run, score-fidelity
 
 PYTHONPATH=src python -m slideforge.cli capture-screenshots --deck-html runs/jarvis-browser-runner-smoke/deck.html --output-dir runs/jarvis-browser-runner-smoke/browser-capture --expected-slide-count 2
 # wrote browser-regression-report.json and slide-01.png/slide-02.png with screenshot_capture.status=captured
@@ -198,11 +200,12 @@ Important policy:
 asset-briefs.json is primarily an internal JARVIS/ComfyUI planning artifact.
 The default user review artifact should be an asset-review-board.html / asset-review-board.md containing actual visual candidates, JARVIS recommendations, and approval choices.
 Only approved assets should be bound into deck.json for final HTML/PPTX production.
+Current implementation supports the source-of-truth step: `approve-assets` records ComfyUI UI/review board/messaging selections into `approved-assets.json`, and `apply-approved-assets` writes `deck.approved.json` plus an application report.
 ```
 
 ## Next work
 
-1. Implement first-class visual asset approval commands/artifacts: `generate-asset-candidates`, `build-asset-review-board`, `approve-assets`, and `apply-approved-assets`.
+1. Implement first-class visual candidate generation/review-board helpers: `generate-asset-candidates` and `build-asset-review-board`. The core source-of-truth approval/application commands now exist.
 2. Package/share the polished evidence run (`jarvis-e2e-polished-001`) or apply the same pipeline to a real customer/RFP deck source; current remaining issues are polish-only (slide 1 bottom chips can be larger for room-scale presentation, slide 3 arrows can receive labels if strict process-order auditability is required).
 3. Use `run-design-source-local` when local design-reference observations are available, or `run-source-local` when only source text/Markdown-like outlines are available; both preserve honest missing-evidence status, and `export-evidence-pack` packages existing run artifacts for sharing/archive without generating or claiming missing evidence.
 4. For Korean PPTX visual QA in WSL/no-sudo mode, use the approved temp-local `pptx-glimpse` route with `/mnt/c/Windows/Fonts` and explicit `Malgun Gothic` font mapping; raw `pptx-glimpse` render may show Korean tofu without that mapping.
