@@ -95,6 +95,7 @@ b531a35 feat: add source section preparation
 81d9746 feat: add evidence pack export
 d7ed0b2 feat: add design source local runner
 f51ff81 feat: record generated assets and PPTX render QA
+e4ef0d0 feat: embed generated assets in PPTX export
 ```
 
 Implemented primitives:
@@ -112,7 +113,7 @@ Implemented primitives:
 - `slideforge.browser_regression` — dependency-free browser regression checklist/plan contract with expected slide count, slide ids, archetypes, and explicit `not_captured` screenshot status.
 - `slideforge.browser_capture` — optional Playwright Chromium screenshot runner that captures per-slide PNGs and writes `browser-regression-report.json` with detected slide count, screenshots, viewport, browser name, console errors, and capture status.
 - `slideforge.pptx_delivery_gate` — dependency-free PPTX delivery/render strategy contract with local tool availability, static/visual check plans, blockers, and explicit no-export/no-render validation claim.
-- `slideforge.pptx_export` — optional `python-pptx` PPTX generation seam exposed through `export-pptx`; imports the dependency lazily, writes an honest unavailable report when the optional extra is missing, records stale-output/generation-failure blockers, and attaches `pptx-glimpse` renderer evidence only as availability/blocker metadata unless a renderer is actually approved and present.
+- `slideforge.pptx_export` — optional `python-pptx` PPTX generation seam exposed through `export-pptx`; imports the dependency lazily, writes an honest unavailable report when the optional extra is missing, records stale-output/generation-failure blockers, embeds generated `asset_path` images into native PPTX media for visual slides, and attaches `pptx-glimpse` renderer evidence only as availability/blocker metadata unless a renderer is actually approved and present.
 - `slideforge.evidence_summary` — dependency-free operator summary over a run directory exposed through `summarize-run`; aggregates manifest/deck/browser/PPTX/ComfyUI/fidelity artifacts plus supplemental `pptx-visual-render-qa.json` renderer evidence into honest JSON/Markdown readiness evidence with warnings, blockers, and next actions.
 - `slideforge.run_pipeline` — dependency-free local operator handoff runner exposed through `run-local`; turns an existing HtmlDeck-compatible JSON deck into a smoke run plus `run-summary.json`/`run-summary.md`, validates run ids to avoid path-like escapes, and records missing external evidence honestly.
 - `slideforge.deck_preparer` — dependency-free upstream deck preparation seam exposed through `prepare-deck`; validates structured user sections, maps intents/design-spec archetypes conservatively, and writes HtmlDeck-compatible JSON that `run-local` can consume.
@@ -143,7 +144,8 @@ SlideForge ComfyUI asset-integrated e2e run:
 PPTX render evidence:
 # deck.pptx generated; temp-local pptx-glimpse rendered 4 PNG + 4 SVG at 1280x720
 # initial render showed Korean tofu; rerender with /mnt/c/Windows/Fonts + Malgun Gothic mapping fixed Hangul
-# pptx-visual-render-qa.json verdict=PASS_WITH_MINOR_WARNINGS; Korean glyphs readable; no blocking clipping/overlap
+# generated ComfyUI assets embedded into PPTX package as ppt/media images for visual slides; embedded_asset_count=2, missing_asset_paths=[]
+# pptx-visual-render-qa.json verdict=PASS_WITH_MINOR_WARNINGS; Korean glyphs readable; generated images visible; placeholder overlay text removed; no blocking clipping/overlap
 
 PYTHONPATH=src python -m slideforge.cli --help
 # prepare-sections, prepare-deck, build-spec, generate-asset-briefs, compose-html, comfyui-handoff, smoke-html, capture-screenshots, export-pptx, pptx-delivery-gate, export-evidence-pack, run-source-local, run-design-source-local, run-local, summarize-run, score-fidelity
@@ -172,6 +174,6 @@ PYTHONPATH=src python -m slideforge.cli run-design-source-local --source /tmp/ja
 
 ## Next work
 
-1. Next product phase should embed real generated visual assets into the PPTX export path as actual image fills/overlays, not only the HTML route; current PPTX render QA proves Korean glyph/readability but still warns that visual slides use deterministic text/placeholder overlays.
+1. Next product phase should improve final visual polish: regenerate/reframe slide 1 character art if full-body visibility is required, and turn slide 3's atmospheric architecture asset into a more literal labeled architecture diagram if the deck must communicate concrete data flow.
 2. Use `run-design-source-local` when local design-reference observations are available, or `run-source-local` when only source text/Markdown-like outlines are available; both preserve honest missing-evidence status, and `export-evidence-pack` packages existing run artifacts for sharing/archive without generating or claiming missing evidence.
 3. For Korean PPTX visual QA in WSL/no-sudo mode, use the approved temp-local `pptx-glimpse` route with `/mnt/c/Windows/Fonts` and explicit `Malgun Gothic` font mapping; raw `pptx-glimpse` render may show Korean tofu without that mapping.
