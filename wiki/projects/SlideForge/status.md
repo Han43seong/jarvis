@@ -176,8 +176,33 @@ PYTHONPATH=src python -m slideforge.cli run-design-source-local --source /tmp/ja
 # wrote design-spec/sections/deck handoff at runs/jarvis-run-design-source-local-hermes-input/{design-spec.json,sections.json,deck.json}; wrote run artifacts at runs/jarvis-run-design-source-local-hermes/; design_spec.name=Hermes Design Source Verification; section_count=2; deck_slides=2; first_archetype=policy_card; summary_status=needs_visual_evidence; blockers=0; warnings=4; missing external evidence=[browser screenshot capture, PPTX export/render, ComfyUI generated asset, fidelity score/report]
 ```
 
+## Operating scenario
+
+Durable user-facing production flow is documented in:
+
+```text
+wiki/projects/SlideForge/production-scenario.md
+```
+
+Key approval gates:
+
+```text
+Gate 1: Slide Plan & QA Rubric approval
+Gate 2: Visual Asset approval using actual image candidates/review board, not text-only briefs
+Gate 3: Final Delivery approval with artifact + evidence pack
+```
+
+Important policy:
+
+```text
+asset-briefs.json is primarily an internal JARVIS/ComfyUI planning artifact.
+The default user review artifact should be an asset-review-board.html / asset-review-board.md containing actual visual candidates, JARVIS recommendations, and approval choices.
+Only approved assets should be bound into deck.json for final HTML/PPTX production.
+```
+
 ## Next work
 
-1. Next product phase should package/share the polished evidence run (`jarvis-e2e-polished-001`) or apply the same pipeline to a real customer/RFP deck source; current remaining issues are polish-only (slide 1 bottom chips can be larger for room-scale presentation, slide 3 arrows can receive labels if strict process-order auditability is required).
-2. Use `run-design-source-local` when local design-reference observations are available, or `run-source-local` when only source text/Markdown-like outlines are available; both preserve honest missing-evidence status, and `export-evidence-pack` packages existing run artifacts for sharing/archive without generating or claiming missing evidence.
-3. For Korean PPTX visual QA in WSL/no-sudo mode, use the approved temp-local `pptx-glimpse` route with `/mnt/c/Windows/Fonts` and explicit `Malgun Gothic` font mapping; raw `pptx-glimpse` render may show Korean tofu without that mapping.
+1. Implement first-class visual asset approval commands/artifacts: `generate-asset-candidates`, `build-asset-review-board`, `approve-assets`, and `apply-approved-assets`.
+2. Package/share the polished evidence run (`jarvis-e2e-polished-001`) or apply the same pipeline to a real customer/RFP deck source; current remaining issues are polish-only (slide 1 bottom chips can be larger for room-scale presentation, slide 3 arrows can receive labels if strict process-order auditability is required).
+3. Use `run-design-source-local` when local design-reference observations are available, or `run-source-local` when only source text/Markdown-like outlines are available; both preserve honest missing-evidence status, and `export-evidence-pack` packages existing run artifacts for sharing/archive without generating or claiming missing evidence.
+4. For Korean PPTX visual QA in WSL/no-sudo mode, use the approved temp-local `pptx-glimpse` route with `/mnt/c/Windows/Fonts` and explicit `Malgun Gothic` font mapping; raw `pptx-glimpse` render may show Korean tofu without that mapping.
