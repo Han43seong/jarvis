@@ -148,6 +148,16 @@ SlideForge ComfyUI asset-integrated e2e run:
 # pptx-visual-render-qa.json verdict=PASS; Korean glyphs readable; generated images visible; no blocking clipping/overlap
 # fidelity total=92, rating=high-fidelity candidate; run-summary status=ready_with_warnings; blockers=0; missing_external_evidence=[]
 
+SlideForge real-topic HTML-only production test:
+# run_id=pc-vr-stt-model-selection-001
+# topic=PC에서 실행되는 VR 콘텐츠용 STT 모델 선정; audience=상사 보고용; output=HTML only; language=Korean
+# Gate 1 approved: PC-VR definition, local-first hybrid posture, 10-slide outline, 100-point rubric, candidate model scope, Slidesgo style-only direction
+# Gate 2 approved: cover Candidate A; `approved-assets.json` and `deck.approved.json` recorded the approved cover visual
+# HTML artifact=`runs/pc-vr-stt-model-selection-001/deck.approved.html`; browser screenshots captured 10/10 at 1920x1080 with 0 console errors
+# slide 6 architecture diagram revised from placeholder to deterministic sidecar/engine bridge SVG; visual QA PASS
+# fidelity total=86, rating=high-fidelity candidate; html-visual-render-qa verdict=PASS_WITH_MINOR_WARNINGS; reviewer=PASS
+# evidence pack=`runs/pc-vr-stt-model-selection-001-evidence-pack.zip`; generic PPTX warnings are not blockers because the user requested HTML only
+
 PPTX render evidence:
 # deck.pptx generated; temp-local pptx-glimpse rendered 4 PNG + 4 SVG at 1280x720
 # initial render showed Korean tofu; rerender with /mnt/c/Windows/Fonts + Malgun Gothic mapping fixed Hangul
