@@ -553,16 +553,13 @@ As of 2026-05-21, SlideForge already has the core production/evidence primitives
 - evidence pack export
 ```
 
-The next implementation gap is turning candidate discovery/review-board generation into first-class commands/artifacts. The source-of-truth approval/application step is now implemented:
-
-```text
-- approve-assets
-- apply-approved-assets
-```
-
-Remaining candidate helper commands:
+The visual asset approval gate is now implemented as first-class commands/artifacts:
 
 ```text
 - generate-asset-candidates
 - build-asset-review-board
+- approve-assets
+- apply-approved-assets
 ```
+
+This completes the source-of-truth path from generated candidate files to a review board, explicit approval record, and `deck.approved.json` for downstream HTML/PPTX/evidence production.
