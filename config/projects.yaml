@@ -62,3 +62,14 @@ projects:
     default_executor: omx-ralph
     status: active
     notes: Active clean-start slide design pipeline using JARVIS design planning, ComfyUI asset forge, codex-guizang-html primary composition, and codex-presentation-pptx delivery.
+
+  S1000D-RAG:
+    name: S1000D-RAG
+    type: rag-application
+    path: /home/hskim/projects/S1000D-RAG
+    repo: /home/hskim/projects/S1000D-RAG
+    remote: https://github.com/Han43seong/S1000D-RAG.git
+    wiki: /home/hskim/jarvis/wiki/projects/S1000D-RAG
+    default_executor: omx-ralph
+    status: reference-complete
+    notes: S1000D RDF/AnswerPlan Graph RAG reference implementation; closed for new MRO-specific feature work after pivot to internal business-document chatbot.

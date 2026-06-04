@@ -2,7 +2,7 @@
 
 ## Registry
 
-- Status: active
+- Status: reference-complete
 - Local path: `/home/hskim/projects/S1000D-RAG`
 - Remote: `https://github.com/Han43seong/S1000D-RAG.git`
 - Default executor: `omx-ralph`
@@ -53,7 +53,8 @@ Transition plan: `internal-business-chatbot-transition-plan.md`.
 ## Current gate
 
 - Latest v4 RDF/AnswerPlan implementation was committed and pushed to `origin/main` as `353b64f feat: add v4 RDF graph answer planning`.
-- Commit scope excluded local untracked `uv.lock` by user request.
+- Final local closure slice adds SPARQL-endpoint failure fallback to local RDF store, plus README/wiki reference-complete status. Push is pending the next approved batch.
+- Commit scope continues to exclude local untracked `uv.lock` by user request.
 - Latest implementation verification:
   - Full test suite: `300 passed, 5 warnings`.
   - Focused v4/app/UI tests: `52 passed, 2 warnings`.
