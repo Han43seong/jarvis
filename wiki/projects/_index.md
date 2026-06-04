@@ -9,3 +9,4 @@ Registered projects are listed in `/home/hskim/jarvis/config/projects.yaml`.
 - [[hermes-slide-director/status|hermes-slide-director]] — Phase 1-42 learning harness, closed/archived after Phase 42; no new work should be routed here.
 - [[SlideForge/status|SlideForge]] — active clean-start SlideForge pipeline: JARVIS planning, visual asset approval board, ComfyUI/deterministic assets, guizang HTML composition, PPTX delivery.
 - [[S1000D-RAG/status|S1000D-RAG]] — reference-complete S1000D RDF/AnswerPlan Graph RAG implementation; preserved as architecture seed for internal business-document chatbot work.
+- [[InternalDocRAG/status|InternalDocRAG]] — active closed-network internal business-document chatbot project.

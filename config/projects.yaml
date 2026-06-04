@@ -73,3 +73,14 @@ projects:
     default_executor: omx-ralph
     status: reference-complete
     notes: S1000D RDF/AnswerPlan Graph RAG reference implementation; closed for new MRO-specific feature work after pivot to internal business-document chatbot.
+
+  InternalDocRAG:
+    name: InternalDocRAG
+    type: rag-application
+    path: /home/hskim/projects/InternalDocRAG
+    repo: /home/hskim/projects/InternalDocRAG
+    remote: https://github.com/Han43seong/InternalDocRAG.git
+    wiki: /home/hskim/jarvis/wiki/projects/InternalDocRAG
+    default_executor: omx-ralph
+    status: active
+    notes: Closed-network internal business-document chatbot for enterprise document search, source-grounded summaries, comparison, and drafting support.
