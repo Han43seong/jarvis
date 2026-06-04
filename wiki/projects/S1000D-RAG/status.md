@@ -9,7 +9,11 @@
 
 ## Purpose
 
-S1000D Data Module XML을 파싱하여 구조적 청킹, 벡터 인덱싱, LangChain 기반 RAG 파이프라인을 구성하는 로컬 LLM 프로젝트.
+Originally, this project parsed S1000D Data Module XML for structured chunking, vector indexing, and LangChain-based local RAG over manual/MRO data.
+
+As of 2026-06-04, the target direction changed: use the current RAG/ontology work as a reference for a closed-network internal general-employee chatbot focused on past business-document search, company information lookup, source-grounded summaries, comparisons, and drafting support.
+
+Transition plan: `internal-business-chatbot-transition-plan.md`.
 
 ## Current snapshot
 
@@ -48,26 +52,21 @@ S1000D Data Module XML을 파싱하여 구조적 청킹, 벡터 인덱싱, LangC
 
 ## Current gate
 
-- S1000D-RAG repo is locally ahead of `origin/main`; push is not approved yet.
-- Runtime smoke/eval is complete on the current WSL environment:
-  - Model file/env check: PASS (`15/15` required artifacts present)
-  - Embedding load: PASS (`bge-m3`, CPU)
-  - Reranker load: PASS (`bge-reranker-v2-m3`, CPU)
-  - Chroma ingest/retrieval smoke: PASS
-  - Text LLM load/generation: PASS with CPU-only `llama-cpp-python`
-  - End-to-end RAG+LLM smoke: PASS, but slow (~108s for one short answer on CPU)
-  - Full tests from the runtime-smoke checkpoint: `148 passed, 3 warnings`
-- Latest ontology/Graph-first verification:
-  - Autonomous 500 QA loop: final `500/500` passed.
-  - Focused ontology + graph retrieval tests: `12 passed`.
-  - Broader ontology/graph/RAG/query/model suite: `96 passed`.
-  - Ontology exports rebuilt successfully with 995 nodes and 1918 edges.
-  - Independent Reviewer: `PASS`, no blocking findings.
-- Remaining blockers/gaps:
-  - GPU offload is not active because installed `llama-cpp-python 0.3.23` reports CPU-only backend.
-  - Qwen3-VL files and mmproj are present, but image inference adapter is not yet implemented/executed.
-  - Chroma score normalization still emits warnings for negative distance-like scores; pipeline now has a safe fallback but retrieval score semantics should be normalized later.
-  - Ontology Turtle export is currently Turtle-like; strict RDF import should later normalize IDs/namespaces to declared prefixes or absolute IRIs.
+- Latest v4 RDF/AnswerPlan implementation was committed and pushed to `origin/main` as `353b64f feat: add v4 RDF graph answer planning`.
+- Commit scope excluded local untracked `uv.lock` by user request.
+- Latest implementation verification:
+  - Full test suite: `300 passed, 5 warnings`.
+  - Focused v4/app/UI tests: `52 passed, 2 warnings`.
+  - `/api/health` smoke: PASS.
+  - `/api/chat` v4 RDFLib smoke: PASS with source-grounded `related` / `deterministic_fallback` behavior.
+- Product direction has changed away from strict S1000D/MRO expert operation toward an internal business-document chatbot. The next implementation should not keep adding MRO-specific guards; it should pivot data, metadata, ontology, retrieval, and answer policies to enterprise document search.
+- Remaining blockers/gaps for the new direction:
+  - Need representative business-document corpus and metadata manifest.
+  - Need general document loaders for Korean enterprise formats, especially HWP/HWPX, PDF, DOCX, PPTX, and XLSX.
+  - Need hybrid retrieval: vector + BM25/full-text + metadata filters + graph/entity search.
+  - Need permission-aware retrieval before answer generation.
+  - Need new AnswerPlan intents for document search, fact lookup, summarization, comparison, and drafting.
+  - Existing FastAPI `on_event` deprecation warnings and Chroma relevance-score warnings remain cleanup candidates.
 
 ## Operating notes
 
