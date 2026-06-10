@@ -103,6 +103,25 @@ Allowed tags:
 - `control-plane`
 - `repository-model`
 - `knowledge-management`
+- `adapters`
+- `adoption`
+- `agent-ops`
+- `agent-os`
+- `evaluation`
+- `gajae-code`
+- `harness`
+- `lazykodex`
+- `lazycodex`
+- `ledger`
+- `opencode`
+- `ouroboros`
+- `open-source`
+- `powerpoint`
+- `presentation`
+- `qa-loop`
+- `runtime`
+- `slides`
+- `vnext`
 
 Add new tags here before using them.
 
@@ -132,6 +151,14 @@ Use `relations` frontmatter entries with `type` and `target` fields. Preferred r
 - `catalogs`
 - `stores`
 - `retrieves_from`
+- `complements`
+- `extends`
+- `informed_by`
+- `informs`
+- `produces`
+- `relates_to`
+- `supports`
+- `uses`
 
 Targets should use page slugs or stable document identifiers, for example `hermes-agent`, `executor-routing`, `projects-yaml`, or `projects/jarvis/architecture`.
 

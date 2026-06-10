@@ -2,7 +2,7 @@
 
 > Ontology-informed content catalog for the Hermes-centered JARVIS control plane.
 > Read this after `SCHEMA.md` and before creating or updating pages.
-> Last updated: 2026-05-11 | Total indexed pages: 14
+> Last updated: 2026-06-11 | Total indexed pages: 20
 
 ## Core Orientation
 
@@ -21,10 +21,16 @@
 
 - [[concepts/executor-routing|Executor Routing]] — policy for mapping tasks to Hermes direct work, Codex, OMX, cron, kanban, or ask-user.
 - [[concepts/jarvis-control-plane|JARVIS Control Plane]] — architecture pattern keeping orchestration, docs, registry, and verification separate from app repos.
+- [[concepts/jarvis-open-source-strategy|JARVIS Open Source Strategy]] — strategy for extracting a public Agent Operations Control Plane with Hermes-agnostic core and first-class Hermes adapter, while keeping the private JARVIS instance Hermes-first.
+- [[concepts/jarvis-office-runtime-direction|JARVIS Office Runtime Direction]] — future direction for run ledgers, approval queues, status views, and Producer/Reviewer runners that support rather than replace JARVIS judgment.
+- [[concepts/jarvis-vnext-executor-ontology|JARVIS vNext Executor Ontology]] — draft future executor pool and routing ontology with Gajae-Code as preferred default candidate, OMX fallback, LazyCodex high-intensity path, OpenCode alternate, and raw Codex fallback.
+- [[concepts/jarvis-vnext-meta-control-plane|JARVIS vNext Meta-Control-Plane Direction]] — positions JARVIS vNext as a Director over Runtime, Producer, and Verifier roles rather than another fixed coding-agent runner or generic orchestrator.
 - [[concepts/learning-harness|Learning Harness]] — how memory, skills, session search, wiki, config, and verification compound across sessions.
+- [[concepts/ouroboros-adoption-review|Ouroboros Adoption Review for JARVIS vNext]] — decision to use Q00/ouroboros as a reference and selective design source for task contracts, ledgers, evaluation gates, runtime adapters, and harness manifests without replacing JARVIS as Director.
 - [[concepts/llm-wiki-pattern|LLM Wiki Pattern]] — persistent interlinked markdown wiki that compiles knowledge rather than re-deriving it per query.
 - [[concepts/ontology-informed-wiki|Ontology-Informed Wiki]] — lightweight ontology approach using frontmatter types, relations, tags, and wikilinks.
 - [[concepts/project-repository-model|Project Repository Model]] — active application repos live under `/home/hskim/projects/<project>`, outside the JARVIS repo.
+- [[concepts/slide-generation-harness|Slide Generation Harness]] — presentation-generation harness pattern for slide/PPTX workflows, QA loops, and design/asset verification.
 - [[concepts/skill-lifecycle|Skill Lifecycle]] — candidate, active, deprecated, archived, and promoted states for Hermes skill growth control.
 
 ## Comparisons
