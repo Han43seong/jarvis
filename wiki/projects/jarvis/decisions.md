@@ -109,6 +109,28 @@ Verification:
 - `omc --version` returned `4.13.7` after installing `oh-my-claude-sisyphus`.
 - `omc setup` completed agent/skill/hook sync under `~/.claude`.
 
+## 2026-06-11 — JARVIS vNext should optimize intent-to-contract over orchestration
+
+Decision:
+- Treat the default vNext workflow as `Understand -> Contract -> Delegate -> Verify -> Report`.
+- Narrow JARVIS's core role to requirement normalization, backend-native task-contract generation, policy/approval gating, evidence-backed verification, and result arbitration.
+- Assume modern backends such as Claude Code/Fable, Codex, Cursor Cloud Agents, Devin, OpenHands, OMX, and Gajae-Code may act as both Runtime and Producer in a single selected backend.
+- Do not make separate orchestration layers the default path. Use them only when multi-backend arbitration, long-running programs, queues, cron/kanban, cross-repo coordination, high risk, or audit needs justify the overhead.
+- Expose backend-native systems through adapters that standardize capability, contract preparation, launch, status, result collection, and cancellation while preserving backend-specific strengths.
+
+Rationale:
+- Backend-native systems increasingly include planning, subagents, background/cloud execution, worktree isolation, test/fix loops, PR workflows, hooks, skills, and MCP-style extension surfaces.
+- As backend execution improves, the bottleneck shifts from running agents to giving them high-quality requirements and judging whether the result is trustworthy.
+- JARVIS's defensible value is converting vague user intent and accumulated project knowledge into executable contracts, then verifying explicit QA plus implicit user/project constraints.
+
+Consequences:
+- MVP schemas should prioritize `task-contract.yaml`, backend capability metadata, backend result records, workflow-level routing, and verification reports.
+- JARVIS thin runtime should remain a ledger/adapter/evidence layer rather than a full custom orchestrator.
+- Multi-agent or multi-backend flows should be escalation levels, not the default.
+
+Reference:
+- `wiki/concepts/jarvis-vnext-intent-to-contract-director.md`
+
 ## 2026-06-10 — JARVIS vNext should be a Director over runtimes and producers
 
 Decision:

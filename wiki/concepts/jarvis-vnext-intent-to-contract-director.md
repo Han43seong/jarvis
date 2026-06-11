@@ -1,0 +1,358 @@
+---
+title: JARVIS vNext Intent-to-Contract Director
+created: 2026-06-11
+updated: 2026-06-11
+type: concept
+concept_type: architecture
+status: draft
+tags: [jarvis, vnext, agent-ops, control-plane, executor-routing, automation, verification]
+sources: [conversation-2026-06-11]
+confidence: high
+relations:
+  - type: extends
+    target: concepts/jarvis-vnext-meta-control-plane
+  - type: supports
+    target: concepts/jarvis-office-runtime-direction
+  - type: relates_to
+    target: concepts/jarvis-vnext-executor-ontology
+  - type: references
+    target: projects/jarvis/decisions
+---
+
+# JARVIS vNext Intent-to-Contract Director
+
+## Summary
+
+The current vNext direction narrows JARVIS from a broad agent orchestrator into a specialized Agent Operations Director.
+
+JARVIS should not try to out-code or out-orchestrate backend-native systems such as Claude Code, Codex, Cursor Cloud Agents, Devin, OpenHands, OMX, or Gajae-Code. Those backends increasingly combine runtime and producer roles: planning, subagents, background work, worktrees, testing, repair loops, and PR preparation.
+
+JARVIS's durable value is therefore the layer before and after backend execution:
+
+```text
+User vague intent
+  -> JARVIS intent/context/policy compiler
+  -> backend-native optimized task contract
+  -> strong backend-native execution
+  -> JARVIS evidence-backed verification and judgment
+  -> user-facing decision report
+```
+
+Short form:
+
+> JARVIS is the system that turns poor or incomplete user requirements into high-quality backend-native work contracts, then verifies whether the delivered result actually satisfies the contract and the user's implicit intent.
+
+## Why the scope should narrow
+
+Recent Claude Code, Codex, Cursor, Devin, and OpenHands-style systems show a clear trend: single strong backends increasingly include their own native orchestration.
+
+Backend-native capabilities now commonly include:
+
+- codebase exploration;
+- planning and task decomposition;
+- background or cloud execution;
+- subagents or parallel threads;
+- worktree or isolated environment handling;
+- test/fix/self-repair loops;
+- PR/review workflows;
+- hooks, skills, MCP, or similar extension surfaces.
+
+Therefore, these are no longer strong JARVIS differentiators by themselves:
+
+- running agents in the background;
+- parallelizing multiple coding agents;
+- wrapping sessions in a dashboard;
+- creating worktrees;
+- queueing tasks;
+- relaying PR/CI automation;
+- acting as another generic orchestrator.
+
+JARVIS should still support those functions through adapters and runtime metadata, but they should not be the core product identity.
+
+## New default workflow
+
+The default workflow should be short:
+
+```text
+1. Understand
+   JARVIS interprets the user's request with project memory, wiki, repo state, policies, and prior decisions.
+
+2. Contract
+   JARVIS converts the interpreted request into an explicit task contract.
+
+3. Delegate
+   JARVIS sends the contract to a selected backend-native system through an adapter.
+
+4. Verify
+   JARVIS checks the backend result against explicit QA plus implicit user/project constraints.
+
+5. Report
+   JARVIS returns PASS / REQUEST_CHANGES / APPROVAL_REQUIRED / ESCALATE / ABORT with evidence and next actions.
+```
+
+Simplified:
+
+```text
+Understand -> Contract -> Delegate -> Verify -> Report
+```
+
+This replaces the heavier default assumption:
+
+```text
+JARVIS -> separate orchestrator -> executor -> reviewer -> revision loop -> verifier
+```
+
+That heavier flow remains available, but only when risk, ambiguity, quality sensitivity, or cross-backend comparison justifies it.
+
+## Core role: Intent-to-Contract compiler
+
+The most important JARVIS role is requirement normalization.
+
+Users usually provide incomplete requirements:
+
+```text
+"이거 좀 고쳐줘"
+"어제 하던 거 이어서 해줘"
+"품질 좀 올려줘"
+"더 고급스럽게 만들어줘"
+"끝까지 해줘"
+```
+
+Backend-native agents need precise contracts:
+
+```yaml
+task_contract:
+  objective: clear target outcome
+  context: project/user background JARVIS recovered
+  target: repo, path, module, artifact, or service
+  assumptions: defaults JARVIS is applying
+  scope:
+    include: []
+    exclude: []
+  constraints: project rules and architecture constraints
+  forbidden_actions: actions the backend must not take
+  acceptance_criteria: explicit completion criteria
+  qa_checklist: checks the backend should self-run before reporting
+  verification_commands: commands or smoke checks expected where feasible
+  approval_gates: actions requiring user approval
+  escalation_conditions: when the backend should stop and return control
+  report_format: required changed files, commands, evidence, risks, and open questions
+```
+
+The contract is not merely a prompt. It is the operational boundary between user intent, JARVIS policy, and backend-native execution.
+
+## Ambiguity handling
+
+JARVIS should not interview the user for every request. It should use accumulated knowledge to infer safe defaults whenever possible.
+
+Rule:
+
+```text
+If clear: infer and contract.
+If unclear but low-impact: use an explicit default and contract.
+If unclear and high-impact: ask a focused question before contracting.
+If safety/cost/authority is involved: request approval before execution.
+```
+
+Questions are required when ambiguity affects:
+
+- product direction;
+- subjective design/tone/quality expectations;
+- architecture boundaries;
+- model/provider/cost selection;
+- security, secrets, data retention, deploy, push, delete, installs, or paid actions;
+- broad rewrites or irreversible changes.
+
+For most implementation tasks, JARVIS should produce a contract from context and proceed with the appropriate backend.
+
+## Backend-native adapters
+
+Backends should be pluggable through adapters, but JARVIS should avoid over-normalizing them.
+
+Common lifecycle:
+
+```text
+describe_capabilities -> prepare_contract -> launch_run -> get_status -> collect_result -> cancel_run
+```
+
+Each adapter should expose:
+
+```yaml
+backend_capabilities:
+  roles: [runtime, producer, partial_verifier]
+  native_features:
+    planning: true
+    subagents: true
+    background: true
+    worktree: true
+    self_check: true
+    pr_workflow: false
+  constraints:
+    data_retention: optional note
+    cost_profile: optional note
+    network_policy: optional note
+    auth_requirements: optional note
+```
+
+Adapter responsibilities:
+
+- translate the JARVIS contract into the backend's best native prompt/API/task format;
+- launch work using the backend's native mode where appropriate;
+- preserve backend-specific strengths rather than flattening everything into a generic `run(prompt)`;
+- map backend state to standard JARVIS states;
+- collect logs, self-report, diff, artifacts, test output, warnings, and cost/model metadata where available.
+
+JARVIS core should own policy and judgment. Adapters should own backend mechanics.
+
+## Workflow levels
+
+Use workflow levels to keep the default path short and escalate only when necessary.
+
+### Level 0 — JARVIS direct
+
+```text
+JARVIS -> direct edit/check -> JARVIS report
+```
+
+Use for small docs, status checks, simple config edits, and quick verification.
+
+### Level 1 — Single backend
+
+```text
+JARVIS -> one backend -> JARVIS verify
+```
+
+Use for clear single-repo tasks with bounded scope and reasonable tests.
+
+### Level 2 — Single backend with native orchestration
+
+```text
+JARVIS -> Claude Code/Codex/Cursor/OpenHands native runtime -> JARVIS verify
+```
+
+Use when the selected backend can internally plan, use subagents, run in the background, isolate worktrees, and self-check. This should become the default for many medium implementation tasks.
+
+### Level 3 — Multi-backend arbitration
+
+```text
+JARVIS
+  -> Backend A
+  -> Backend B
+  -> optional Backend C
+  -> JARVIS compare / select / reject
+```
+
+Use when quality, risk, uncertainty, or multiple viable approaches justify comparing results. The value is not parallel execution itself, but arbitration: choosing which result to trust.
+
+### Level 4 — Managed program
+
+```text
+JARVIS -> kanban/cron/queue/program runtime -> many runs -> JARVIS governance
+```
+
+Use for long-running project programs, recurring monitoring, multi-issue backlogs, release trains, or durable QA loops.
+
+## QA and verification model
+
+The task contract's QA checklist is used twice.
+
+### Backend self-QA
+
+The backend uses the contract QA checklist during its own producer loop:
+
+```text
+implement -> check QA -> fix -> recheck -> self-report
+```
+
+This is useful and should be encouraged, especially as backend-native agents become stronger.
+
+### JARVIS final verification
+
+Backend self-QA is not final completion. JARVIS must independently verify:
+
+- whether explicit QA items were actually satisfied;
+- whether reported tests/logs/artifacts exist and are credible;
+- whether changed files stayed within scope;
+- whether forbidden actions were avoided;
+- whether user approval is still required;
+- whether the output satisfies the user's implicit intent and project context;
+- whether QA-list gaps reveal additional problems.
+
+JARVIS may reject a backend result even if all explicit QA items appear green, when Director judgment finds issues such as:
+
+- architecture drift;
+- brittle or hardcoded implementation;
+- excessive scope creep;
+- design/tone mismatch;
+- missing evidence;
+- security or privacy concerns;
+- conflict with durable project decisions.
+
+## Fable 5 and high-end model implications
+
+High-end backend-native models such as Claude Fable 5 strengthen this direction.
+
+Implication:
+
+```text
+More delegation to strong backends.
+Less middle orchestration by JARVIS.
+More contract, policy, data/cost governance, verification, and arbitration.
+```
+
+JARVIS should explicitly track model/backend policy when relevant:
+
+```yaml
+model_policy:
+  requested_model: claude-fable-5
+  actual_model: unknown | claude-fable-5 | fallback_model
+  data_retention_allowed: true | false
+  sensitive_data_allowed: true | false
+  max_cost: optional
+  fallback_or_refusal_handling_required: true
+```
+
+Model strength does not eliminate the need for JARVIS. It increases the importance of good contracts and trustworthy verification because a stronger backend can do more work, faster, in the wrong direction if the contract is poor.
+
+## Revised JARVIS identity
+
+Avoid:
+
+> JARVIS is a better coding agent orchestrator.
+
+Prefer:
+
+> JARVIS is an Agent Operations Director and Intent-to-Contract compiler that turns vague user goals into backend-native work contracts, then verifies and arbitrates the results.
+
+Korean short form:
+
+> JARVIS는 AI 작업자나 오케스트레이터 자체가 아니라, 사용자의 부실한 요구사항을 강한 백엔드가 가장 잘 수행할 수 있는 계약서로 변환하고, 결과를 검증·판정·보고하는 시스템이다.
+
+## MVP implications
+
+The MVP should prioritize:
+
+1. task contract schema;
+2. backend capability schema;
+3. backend result schema;
+4. workflow-level router;
+5. evidence-backed verification report;
+6. adapter interface for Hermes-direct, Codex CLI, Claude Code, and existing OMX/Gajae path;
+7. later multi-backend arbitration.
+
+The MVP should defer or minimize:
+
+- custom multi-agent scheduler;
+- full dashboard;
+- broad PR/CI automation platform;
+- cloud agent platform;
+- deep queue/kanban mechanics unless a project program requires them.
+
+## Open design questions
+
+1. What is the exact minimal `task-contract.yaml` schema?
+2. What is the minimal `backend-result.json` schema that supports comparison?
+3. Which backend adapter should be implemented first after Hermes-direct: Codex CLI or Claude Code?
+4. How should JARVIS record model/data-retention/cost policy without leaking sensitive data?
+5. When should Level 3 multi-backend arbitration be worth the cost?
+6. How should contract quality itself be evaluated over time?

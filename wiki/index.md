@@ -2,7 +2,7 @@
 
 > Ontology-informed content catalog for the Hermes-centered JARVIS control plane.
 > Read this after `SCHEMA.md` and before creating or updating pages.
-> Last updated: 2026-06-11 | Total indexed pages: 20
+> Last updated: 2026-06-11 | Total indexed pages: 21
 
 ## Core Orientation
 
@@ -24,6 +24,7 @@
 - [[concepts/jarvis-open-source-strategy|JARVIS Open Source Strategy]] — strategy for extracting a public Agent Operations Control Plane with Hermes-agnostic core and first-class Hermes adapter, while keeping the private JARVIS instance Hermes-first.
 - [[concepts/jarvis-office-runtime-direction|JARVIS Office Runtime Direction]] — future direction for run ledgers, approval queues, status views, and Producer/Reviewer runners that support rather than replace JARVIS judgment.
 - [[concepts/jarvis-vnext-executor-ontology|JARVIS vNext Executor Ontology]] — draft future executor pool and routing ontology with Gajae-Code as preferred default candidate, OMX fallback, LazyCodex high-intensity path, OpenCode alternate, and raw Codex fallback.
+- [[concepts/jarvis-vnext-intent-to-contract-director|JARVIS vNext Intent-to-Contract Director]] — revised vNext direction: JARVIS turns vague user goals into backend-native work contracts, delegates to strong native runtimes, then verifies and arbitrates results.
 - [[concepts/jarvis-vnext-meta-control-plane|JARVIS vNext Meta-Control-Plane Direction]] — positions JARVIS vNext as a Director over Runtime, Producer, and Verifier roles rather than another fixed coding-agent runner or generic orchestrator.
 - [[concepts/learning-harness|Learning Harness]] — how memory, skills, session search, wiki, config, and verification compound across sessions.
 - [[concepts/ouroboros-adoption-review|Ouroboros Adoption Review for JARVIS vNext]] — decision to use Q00/ouroboros as a reference and selective design source for task contracts, ledgers, evaluation gates, runtime adapters, and harness manifests without replacing JARVIS as Director.

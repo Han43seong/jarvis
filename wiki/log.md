@@ -4,6 +4,12 @@
 > Format: `## [YYYY-MM-DD] action | subject`.
 > Actions: create, ingest, update, query, lint, archive, review.
 
+## [2026-06-11] update | JARVIS vNext intent-to-contract direction captured
+
+- Added `concepts/jarvis-vnext-intent-to-contract-director.md` to capture the revised direction that JARVIS should focus on requirement normalization, backend-native task contracts, policy gates, evidence-backed verification, and result arbitration.
+- Recorded the shorter default workflow: `Understand -> Contract -> Delegate -> Verify -> Report`, with strong backend-native systems handling more planning, subagents, background work, worktrees, and self-repair internally.
+- Updated `concepts/jarvis-vnext-meta-control-plane.md`, `projects/jarvis/decisions.md`, and `index.md` to link the new direction.
+
 ## [2026-06-08] update | Open-source strategy and Hermes-agnostic public core captured
 
 - Added `concepts/jarvis-open-source-strategy.md` to record that JARVIS has open-source potential as an Agent Operations Control Plane, but the private JARVIS repo should not be published as-is.

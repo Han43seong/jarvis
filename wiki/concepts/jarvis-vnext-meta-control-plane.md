@@ -19,6 +19,8 @@ relations:
   - type: relates_to
     target: wiki/concepts/jarvis-vnext-executor-ontology.md
   - type: relates_to
+    target: wiki/concepts/jarvis-vnext-intent-to-contract-director.md
+  - type: relates_to
     target: wiki/projects/jarvis/decisions.md
 ---
 
@@ -302,6 +304,8 @@ Initial vNext should not overbuild deep integrations.
 The MVP should start with levels 1-2.
 
 ## Revised MVP priority
+
+After the 2026-06-11 intent-to-contract discussion, the MVP should prioritize the shorter backend-native flow described in [[concepts/jarvis-vnext-intent-to-contract-director|JARVIS vNext Intent-to-Contract Director]]: JARVIS contracts and verifies, while strong backend-native systems handle more of their own planning, background execution, subagents, and self-repair.
 
 High priority:
 
