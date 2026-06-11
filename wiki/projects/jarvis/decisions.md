@@ -154,3 +154,28 @@ Consequences:
 
 Reference:
 - `wiki/concepts/jarvis-vnext-meta-control-plane.md`
+
+
+## 2026-06-11 — vNext must separate Markdown instructions from executable guardrails
+
+Decision:
+- Treat Markdown instruction files (`AGENTS.md`, `CLAUDE.md`, skills, wiki, runbooks) as guidance, not as deterministic enforcement.
+- Add an explicit Contract Enforcement Layer to the vNext design: task contracts should include allowed paths, denied paths, denied commands, approval gates, required evidence, budget limits, and completion gates.
+- Model backend-native deep workflow modes, including Claude Code `ultracode` / Dynamic workflows, as control-flow orchestration capabilities rather than as policy enforcement by themselves.
+- Require adapters to map JARVIS guardrails to the strongest available backend mechanisms: permissions, hooks, sandboxing, managed settings, command/path policy, wrapper checks, isolated worktrees, post-run diff checks, and JARVIS completion refusal when evidence is missing.
+
+Rationale:
+- Markdown can be skipped, summarized away, or inconsistently followed by LLM backends.
+- Dynamic workflows improve execution structure by scripting phases, loops, subagent fanout, result aggregation, and verifier passes, but they do not guarantee that prose instructions are semantically obeyed.
+- Deterministic safety requires executable guardrails and evidence gates: “do not edit secrets” must become path/tool denial, and “run verification before completion” must become a completion gate backed by logs or an explicit failed/blocked status.
+
+Consequences:
+- The vNext MVP should include an executable guardrail schema before investing in a full custom workflow engine.
+- Backend capability records should distinguish `native_features.deep_workflow` from `enforcement_features.permissions/hooks/sandbox/managed_settings`.
+- JARVIS remains the final judge: a backend workflow can complete, but JARVIS should report success only after scope, secret, diff, and verification evidence pass.
+
+Reference:
+- `wiki/concepts/jarvis-vnext-intent-to-contract-director.md`
+- `wiki/concepts/jarvis-vnext-meta-control-plane.md`
+- Claude Code Dynamic workflows: `https://docs.anthropic.com/en/docs/claude-code/workflows`
+- Claude Code permissions/hooks/sandboxing docs: `https://docs.anthropic.com/en/docs/claude-code/settings`

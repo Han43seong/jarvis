@@ -75,6 +75,8 @@ JARVIS owns:
 - selecting the executor or external orchestrator and recording why;
 - defining automation limits and approval gates;
 - producing executor task contracts with allowed paths, forbidden actions, acceptance criteria, tests, evidence requirements, and escalation conditions;
+- turning policy prose into executable guardrails where possible: permissions, hooks, sandbox boundaries, command/path deny rules, and completion gates;
+- selecting backend-native deep workflow modes, such as Claude Code ultracode / Dynamic workflows, only when their control-flow orchestration is worth the cost;
 - collecting execution results and independently verifying them;
 - distinguishing executor self-report from JARVIS completion judgment;
 - updating project status/wiki/run ledger;
@@ -282,6 +284,51 @@ route:
 ```
 
 This preserves the key JARVIS distinction: Runtime and Producer can report completion, but JARVIS decides whether the Run is actually complete.
+
+## Policy enforcement model
+
+A vNext Director cannot rely only on Markdown instruction files. `AGENTS.md`, `CLAUDE.md`, skills, wiki pages, and runbooks are necessary context, but they are not deterministic controls. They tell a model what it should do; they do not physically prevent a backend from taking a forbidden action.
+
+JARVIS should therefore treat policy as an executable contract:
+
+```text
+Instruction context
+  -> task contract
+  -> adapter-enforced guardrails
+  -> evidence collection
+  -> JARVIS final judgment
+```
+
+Examples:
+
+```yaml
+guardrails:
+  allowed_paths:
+    - /home/hskim/projects/<project>/**
+  denied_paths:
+    - "**/.env"
+    - "**/auth.json"
+    - "**/*key*"
+  denied_commands:
+    - "rm -rf"
+    - "git reset --hard"
+    - "git clean -f"
+    - "git push"
+  approval_required:
+    - sudo
+    - deploy
+    - broad_delete
+    - secrets_or_auth_files
+  completion_gates:
+    - git_status_checked
+    - diff_scope_checked
+    - verification_attempted
+    - secret_diff_checked
+```
+
+Backend adapters should map these to native mechanisms when available. Claude Code may support stronger native mapping through permissions, hooks, sandboxed Bash, and managed settings; other backends may require wrapper-side checks, command filters, isolated worktrees, post-run diff checks, and JARVIS refusal to mark completion.
+
+Dynamic workflows should be modeled separately from guardrails. They can force more of the control flow into a workflow runtime — phases, loops, branching, subagent fanout, result aggregation, and verifier passes — but they are not the same as permission enforcement. The design target is both: workflow control flow for complex work, and executable guardrails for safety/policy.
 
 ## Integration levels
 

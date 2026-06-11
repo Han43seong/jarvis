@@ -141,6 +141,100 @@ task_contract:
 
 The contract is not merely a prompt. It is the operational boundary between user intent, JARVIS policy, and backend-native execution.
 
+## Instruction layer vs enforcement layer
+
+A key vNext design correction is that Markdown instructions are not enough. Files such as `AGENTS.md`, `CLAUDE.md`, skills, wiki notes, and runbooks are valuable instruction context, but they are still interpreted by a model. They can be skipped, forgotten, summarized away, or followed inconsistently.
+
+JARVIS should distinguish four layers:
+
+```text
+Instruction layer
+  - AGENTS.md, CLAUDE.md, skills, wiki, runbooks
+  - tells the model what it should do
+
+Contract layer
+  - task-contract.yaml, route record, acceptance criteria
+  - makes scope, forbidden actions, QA, evidence, budget, and escalation explicit
+
+Executable enforcement layer
+  - permissions, hooks, sandbox, command/path policy, approval gates
+  - prevents or blocks actions the backend must not take
+
+Evidence/judgment layer
+  - git diff, tests, logs, artifacts, reviewer verdict, JARVIS final decision
+  - verifies what actually happened before reporting completion
+```
+
+Design principle:
+
+> Markdown says what should happen. Executable guardrails define what cannot happen. Evidence gates decide whether the work is allowed to count as complete.
+
+The task contract should therefore contain machine-checkable policy fields, not only prose instructions:
+
+```yaml
+task_contract:
+  allowed_paths: []
+  denied_paths:
+    - "**/.env"
+    - "**/auth.json"
+    - "**/*key*"
+  denied_commands:
+    - "rm -rf"
+    - "git reset --hard"
+    - "git clean -f"
+    - "git push"
+  approval_gates:
+    - sudo
+    - deploy
+    - paid_api
+    - broad_delete
+    - secrets_or_auth_files
+  required_evidence:
+    - git_status
+    - git_diff
+    - verification_logs
+    - changed_files
+  completion_gates:
+    require_scope_check: true
+    require_secret_check: true
+    require_verification_attempt: true
+    require_jarvis_final_judgment: true
+```
+
+Backend adapters should translate these fields into the strongest available native enforcement mechanism. For Claude Code this may include permissions, hooks, sandboxed Bash, and managed settings where available. For Codex/OMX/Gajae-style backends this may be implemented through wrapper policy, preflight checks, post-run diff checks, command allow/deny rules, and JARVIS completion gates.
+
+## Dynamic workflows and backend-native deep workflow modes
+
+Claude Code `ultracode` / Dynamic workflows are useful references, but they should be modeled precisely.
+
+They do not make Markdown instructions physically impossible to ignore. Instead, they move parts of the work procedure into a backend runtime workflow: phases, loops, branching, subagent spawning, result gathering, and independent verification can be executed by a script/runtime rather than remembered only as prose instructions.
+
+JARVIS should capture this as a backend capability:
+
+```yaml
+backend_capabilities:
+  native_features:
+    deep_workflow: true
+    workflow_script: true
+    subagents: true
+    independent_verification: true
+  enforcement_features:
+    permissions: true
+    pre_tool_hooks: true
+    sandbox: true
+    managed_settings: optional
+```
+
+Use this distinction:
+
+```text
+Dynamic workflow = stronger control-flow execution
+Executable guardrails = stronger policy enforcement
+JARVIS verification = final completion judgment
+```
+
+JARVIS should call backend-native deep workflow modes only when the task benefits from broad exploration, independent checks, high-risk review, or many parallelizable subtasks. Routine work should not default to high-cost deep workflow mode.
+
 ## Ambiguity handling
 
 JARVIS should not interview the user for every request. It should use accumulated knowledge to infer safe defaults whenever possible.
@@ -231,6 +325,33 @@ JARVIS -> Claude Code/Codex/Cursor/OpenHands native runtime -> JARVIS verify
 ```
 
 Use when the selected backend can internally plan, use subagents, run in the background, isolate worktrees, and self-check. This should become the default for many medium implementation tasks.
+
+### Level 2.5 — Single backend deep workflow mode
+
+```text
+JARVIS contract + guardrails
+  -> backend-native deep workflow mode
+  -> backend subagents / workflow script / independent checks
+  -> JARVIS evidence verification and final judgment
+```
+
+Use when one strong backend has a native high-intensity workflow mode and the task justifies the overhead. Claude Code `ultracode` / Dynamic workflows are the reference example: the backend can script phases, spawn subagents, gather intermediate results, and run verifier-style work inside its own runtime.
+
+This level should require explicit budget and guardrail fields:
+
+```yaml
+workflow_constraints:
+  allow_deep_workflow: true
+  require_plan_before_execution: true
+  max_subagents: 8
+  max_concurrent_agents: 4
+  max_runtime_minutes: 60
+  require_independent_verification: true
+  store_intermediate_results: true
+  stop_on_permission_prompt: true
+```
+
+Avoid Level 2.5 for narrow edits, simple docs/config changes, unclear scope, low budget, or any task where executable guardrails cannot be mapped to the selected backend.
 
 ### Level 3 — Multi-backend arbitration
 
@@ -333,12 +454,13 @@ Korean short form:
 The MVP should prioritize:
 
 1. task contract schema;
-2. backend capability schema;
-3. backend result schema;
-4. workflow-level router;
-5. evidence-backed verification report;
-6. adapter interface for Hermes-direct, Codex CLI, Claude Code, and existing OMX/Gajae path;
-7. later multi-backend arbitration.
+2. executable guardrail schema for allowed paths, denied paths, denied commands, approval gates, and required evidence;
+3. backend capability schema, including native deep workflow support and native enforcement mechanisms;
+4. backend result schema;
+5. workflow-level router;
+6. evidence-backed verification report;
+7. adapter interface for Hermes-direct, Codex CLI, Claude Code, and existing OMX/Gajae path;
+8. later multi-backend arbitration.
 
 The MVP should defer or minimize:
 
