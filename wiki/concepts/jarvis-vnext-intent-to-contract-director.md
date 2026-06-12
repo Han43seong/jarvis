@@ -203,6 +203,79 @@ task_contract:
 
 Backend adapters should translate these fields into the strongest available native enforcement mechanism. For Claude Code this may include permissions, hooks, sandboxed Bash, and managed settings where available. For Codex/OMX/Gajae-style backends this may be implemented through wrapper policy, preflight checks, post-run diff checks, command allow/deny rules, and JARVIS completion gates.
 
+## Harness engineering and loop engineering
+
+JARVIS should explicitly model harnesses and loops as different layers.
+
+Definitions:
+
+```text
+Harness engineering
+  = designing the wrapper that helps an AI perform a task reliably:
+    instructions, context, tools, environment, permissions, sandbox,
+    output schema, validation criteria, logging, and evidence capture.
+
+Loop engineering
+  = designing a closed automation cycle where AI observes, judges,
+    acts, verifies, repairs, and repeats until a stop condition is met.
+```
+
+Relationship:
+
+```text
+Harness = makes one unit of AI work safer, clearer, and more reproducible.
+Loop    = repeats one or more harnessed work units until the target state is reached.
+JARVIS  = sits above the loops: selects/designs the loop, binds harnesses,
+          sets guardrails, controls budget/risk, verifies evidence, and decides stop/pass/escalate.
+```
+
+A loop may contain multiple harnesses:
+
+```text
+Test-fix loop
+  -> diagnosis harness
+  -> implementation harness
+  -> test harness
+  -> review harness
+  -> report harness
+```
+
+This distinction prevents JARVIS from collapsing into either a prompt library or a generic automation runner. Harnesses make backend work more reliable. Loops create autonomous progress. JARVIS governs which harnesses and loops are appropriate for the user's intent, project state, risk, backend capability, and available evidence.
+
+Example JARVIS loop contract:
+
+```yaml
+loop_contract:
+  goal: make test suite pass without broad rewrite
+  observe:
+    - run_tests
+    - inspect_failures
+  decide:
+    - classify_failure
+    - choose_next_fix
+  act:
+    harness: implementation_harness
+    allowed_paths: []
+  verify:
+    harness: test_harness
+    commands: []
+  repair:
+    max_iterations: 5
+    stop_if_same_failure_repeats: 2
+  stop_conditions:
+    success:
+      - tests_pass
+      - diff_scope_ok
+    escalate:
+      - approval_required
+      - max_iterations_reached
+      - architecture_change_needed
+```
+
+The key design rule is:
+
+> Loop engineering is an execution pattern JARVIS can use. JARVIS itself is the higher-level Director/Governor that decides whether to run a loop, how to harness it, when to stop it, and whether to trust its result.
+
 ## Dynamic workflows and backend-native deep workflow modes
 
 Claude Code `ultracode` / Dynamic workflows are useful references, but they should be modeled precisely.
@@ -455,12 +528,14 @@ The MVP should prioritize:
 
 1. task contract schema;
 2. executable guardrail schema for allowed paths, denied paths, denied commands, approval gates, and required evidence;
-3. backend capability schema, including native deep workflow support and native enforcement mechanisms;
-4. backend result schema;
-5. workflow-level router;
-6. evidence-backed verification report;
-7. adapter interface for Hermes-direct, Codex CLI, Claude Code, and existing OMX/Gajae path;
-8. later multi-backend arbitration.
+3. harness schema for instructions, context, tool/environment setup, permissions, output format, validation, and evidence capture;
+4. loop contract schema for observe/decide/act/verify/repair cycles, iteration limits, and stop conditions;
+5. backend capability schema, including native deep workflow support and native enforcement mechanisms;
+6. backend result schema;
+7. workflow-level router;
+8. evidence-backed verification report;
+9. adapter interface for Hermes-direct, Codex CLI, Claude Code, and existing OMX/Gajae path;
+10. later multi-backend arbitration.
 
 The MVP should defer or minimize:
 
@@ -478,3 +553,5 @@ The MVP should defer or minimize:
 4. How should JARVIS record model/data-retention/cost policy without leaking sensitive data?
 5. When should Level 3 multi-backend arbitration be worth the cost?
 6. How should contract quality itself be evaluated over time?
+7. What is the minimal reusable harness manifest schema?
+8. What loop types should be first-class in vNext: test-fix, review-revision, research-verify, migration, monitor, or release?

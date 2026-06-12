@@ -179,3 +179,26 @@ Reference:
 - `wiki/concepts/jarvis-vnext-meta-control-plane.md`
 - Claude Code Dynamic workflows: `https://docs.anthropic.com/en/docs/claude-code/workflows`
 - Claude Code permissions/hooks/sandboxing docs: `https://docs.anthropic.com/en/docs/claude-code/settings`
+
+
+## 2026-06-11 — JARVIS sits above harness and loop engineering
+
+Decision:
+- Define harness engineering as the design of task wrappers that help AI work reliably: instructions, context, tools, environment, permissions, sandbox, output schema, validation, logging, and evidence capture.
+- Define loop engineering as closed-cycle AI automation: observe, judge, act, verify, repair, and repeat until success, failure, or escalation.
+- Treat loops as execution patterns available to JARVIS, not as the top-level JARVIS identity.
+- Position JARVIS as the Director/Governor above loops: it chooses whether a loop is needed, selects or designs the loop, binds harnesses into loop steps, applies guardrails, controls budget/risk, verifies evidence, and makes the final stop/pass/escalate judgment.
+
+Rationale:
+- Harnesses make individual AI work units more reliable; loops create autonomous progress across repeated work units.
+- A loop can contain multiple harnesses, such as diagnosis, implementation, test, review, and report harnesses inside a test-fix loop.
+- JARVIS's differentiator is not merely running loops, but deciding which loop and harness combination is appropriate for a user's intent, project context, backend capability, and risk profile.
+
+Consequences:
+- vNext schemas should include reusable harness manifests and loop contracts in addition to task contracts and guardrails.
+- Run ledgers should record the selected loop type, harnesses used, iteration count, stop condition, evidence, and JARVIS final judgment.
+- The product language should describe JARVIS as an Agent Operations Director/Governor that uses harness and loop engineering, not as a generic loop runner.
+
+Reference:
+- `wiki/concepts/jarvis-vnext-intent-to-contract-director.md`
+- `wiki/concepts/jarvis-vnext-meta-control-plane.md`

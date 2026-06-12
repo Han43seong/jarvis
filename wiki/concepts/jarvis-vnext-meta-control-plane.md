@@ -77,6 +77,7 @@ JARVIS owns:
 - producing executor task contracts with allowed paths, forbidden actions, acceptance criteria, tests, evidence requirements, and escalation conditions;
 - turning policy prose into executable guardrails where possible: permissions, hooks, sandbox boundaries, command/path deny rules, and completion gates;
 - selecting backend-native deep workflow modes, such as Claude Code ultracode / Dynamic workflows, only when their control-flow orchestration is worth the cost;
+- designing or selecting the appropriate harness and loop pattern when autonomous iteration is useful;
 - collecting execution results and independently verifying them;
 - distinguishing executor self-report from JARVIS completion judgment;
 - updating project status/wiki/run ledger;
@@ -284,6 +285,41 @@ route:
 ```
 
 This preserves the key JARVIS distinction: Runtime and Producer can report completion, but JARVIS decides whether the Run is actually complete.
+
+## Harness and loop model
+
+JARVIS vNext should treat harness engineering and loop engineering as first-class concepts, but not as the same layer.
+
+```text
+Harness engineering
+  -> wraps AI work with instructions, context, tools, environment,
+     permissions, sandbox, output schema, validation, and evidence capture.
+
+Loop engineering
+  -> closes the cycle around AI work: observe, judge, act, verify,
+     repair, and repeat until a success, failure, or escalation condition.
+
+JARVIS Director/Governor
+  -> decides which loop is needed, which harnesses to bind into it,
+     what guardrails apply, what budget/risk limits exist, when to stop,
+     and whether the evidence is trustworthy enough to report completion.
+```
+
+Therefore JARVIS is above loop engineering, not merely an implementation of it. Loop engineering is one execution pattern available to JARVIS. JARVIS adds cross-project intent recovery, route selection, approval governance, memory, evidence arbitration, and next-action judgment.
+
+Canonical layered view:
+
+```text
+User Intent
+  -> JARVIS Director
+  -> Task Contract
+  -> Harness + Guardrails
+  -> Backend / Loop Runtime
+  -> Evidence
+  -> JARVIS Final Judgment
+```
+
+A loop can contain multiple harnesses. For example, a test-fix loop may contain a diagnosis harness, implementation harness, test harness, reviewer harness, and reporting harness. JARVIS should record which harnesses and loop type were used so later routing can learn which patterns worked.
 
 ## Policy enforcement model
 
