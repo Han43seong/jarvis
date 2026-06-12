@@ -545,6 +545,56 @@ The MVP should defer or minimize:
 - cloud agent platform;
 - deep queue/kanban mechanics unless a project program requires them.
 
+## Agent implementation brief
+
+When an implementation agent builds JARVIS vNext from a new environment, it should treat this document as architecture constraints and a task-contract source, not as a step-by-step human build manual.
+
+The implementation agent should preserve these invariants:
+
+```yaml
+must_preserve:
+  - JARVIS is the Director/Governor above backend agents, harnesses, and loops.
+  - User intent is normalized into explicit task contracts before substantial execution.
+  - Harnesses and loops are first-class concepts but remain subordinate to JARVIS judgment.
+  - Markdown instructions are guidance, not deterministic enforcement.
+  - Executable guardrails and evidence gates are required for trustworthy completion.
+  - Backend adapters should preserve backend-native strengths rather than flattening every tool into a generic prompt runner.
+  - Backend self-reports are evidence, not final completion.
+  - JARVIS makes the final PASS / REQUEST_CHANGES / APPROVAL_REQUIRED / ESCALATE / ABORT decision.
+```
+
+The first implementation artifacts should be minimal and contract-shaped:
+
+```yaml
+first_artifacts:
+  - task-contract schema
+  - executable guardrail schema
+  - harness manifest schema
+  - loop contract schema
+  - backend capability schema
+  - backend result schema
+  - run ledger schema
+  - simple route/contract CLI or API entrypoint
+  - local/direct backend adapter
+  - evidence verification report
+  - small test fixtures for routing, guardrails, and completion judgment
+```
+
+The implementation agent should avoid these early traps:
+
+```yaml
+non_goals:
+  - do not build a new coding agent as the MVP
+  - do not build a generic multi-agent dashboard first
+  - do not make multi-backend arbitration the default path
+  - do not make Hermes a hard dependency in a portable/public core
+  - do not treat AGENTS.md, CLAUDE.md, skills, or wiki prose as enforcement
+  - do not skip JARVIS final verification just because a backend reports success
+  - do not over-specify a build manual that prevents backend-native agents from using their own planning, subagents, repair loops, or workflow modes
+```
+
+A suitable greenfield prompt to a coding agent should therefore ask it to design and implement the smallest working skeleton that satisfies these contracts, then verify it with schema tests, routing fixtures, guardrail examples, and an evidence-backed sample run.
+
 ## Open design questions
 
 1. What is the exact minimal `task-contract.yaml` schema?

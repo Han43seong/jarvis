@@ -447,6 +447,23 @@ Korean version:
 
 > JARVIS는 코딩 에이전트를 하나 더 만드는 것이 아니라, 여러 코딩 에이전트와 오케스트레이터를 프로젝트 운영 흐름 안에서 안전하게 맡기고, 멈추고, 검증하고, 기억하게 만드는 상위 Director 계층이다.
 
+## Greenfield implementation use
+
+This plan is intended to be usable in a fresh environment as an implementation-agent brief, not only as documentation for the current Hermes/JARVIS workspace.
+
+A new implementation should read these vNext concept pages as constraints:
+
+```text
+- build an Agent Operations Director, not another coding agent;
+- compile user intent into task contracts;
+- represent harnesses, loops, guardrails, evidence, and backend adapters explicitly;
+- keep JARVIS as final judge above backend-native runtimes;
+- start with minimal schemas, a local/direct adapter, a route/contract command, and evidence gates;
+- let backend-native agents own their own planning and repair mechanics where useful.
+```
+
+The document is deliberately not a line-by-line build manual. If an AI coding agent implements vNext, it should infer the most suitable repo/module layout for the target environment while preserving the architectural invariants, non-goals, and verification expectations recorded here and in [[concepts/jarvis-vnext-intent-to-contract-director|JARVIS vNext Intent-to-Contract Director]].
+
 ## Next discussion prompts
 
 For the next session, continue from these questions:

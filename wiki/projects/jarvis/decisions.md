@@ -202,3 +202,25 @@ Consequences:
 Reference:
 - `wiki/concepts/jarvis-vnext-intent-to-contract-director.md`
 - `wiki/concepts/jarvis-vnext-meta-control-plane.md`
+
+
+## 2026-06-11 — vNext plans should be agent implementation briefs, not line-by-line manuals
+
+Decision:
+- Keep the vNext planning documents at the level of architecture constraints, implementation contracts, invariants, non-goals, and first artifacts.
+- Do not expand them into a detailed human step-by-step build manual unless a future task specifically needs that.
+- Make the documents usable in a fresh environment by an implementation agent: it should be able to infer repo/module layout and implementation details while preserving JARVIS Director/Governor semantics, task contracts, harnesses, loops, guardrails, evidence gates, and backend adapters.
+
+Rationale:
+- The intended implementation path will use capable coding agents, so over-specifying every build step may reduce backend-native planning, subagent, workflow, and repair-loop strengths.
+- What must be preserved is the operating contract: JARVIS turns vague intent into bounded contracts, applies executable guardrails, delegates to backend-native systems, collects evidence, and makes the final judgment.
+- A greenfield agent needs clear invariants and acceptance criteria more than a hand-coded installation recipe.
+
+Consequences:
+- Add an Agent implementation brief to the intent-to-contract concept page.
+- Treat future implementation prompts as task contracts derived from the concept pages.
+- Keep current-environment details such as Hermes, OMX, Gajae, Codex, and Claude Code as adapter examples rather than mandatory dependencies for a portable core.
+
+Reference:
+- `wiki/concepts/jarvis-vnext-intent-to-contract-director.md`
+- `wiki/concepts/jarvis-vnext-meta-control-plane.md`
