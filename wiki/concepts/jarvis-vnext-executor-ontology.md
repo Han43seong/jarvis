@@ -1,7 +1,7 @@
 ---
 title: JARVIS vNext Executor Ontology
 created: 2026-06-05
-updated: 2026-06-08
+updated: 2026-06-12
 type: concept
 concept_type: architecture
 status: draft
@@ -32,6 +32,8 @@ This note records the planned executor-pool direction for a future JARVIS vNext 
 Current JARVIS operation remains governed by `AGENTS.md`, `config/routing.yaml`, and `harnesses/executor-router.md`. At the time of writing, the live default implementation path is still the existing Codex/OMX line. The private JARVIS instance remains Hermes-first, while any future public core should be runtime-agnostic and express Hermes as an adapter.
 
 The vNext design should add an ontology-backed executor pool and route tasks by executor attributes rather than by keyword-only rules. The Ouroboros review adds one important refinement: the ontology should also model Seed-like task contracts, harness manifests, evaluation gates, and event/ledger state, not only executor identities.
+
+Role-terminology alignment: in the role terms adopted on 2026-06-10 (`Director`, `Runtime`, `Producer`, `Verifier` — see [[concepts/jarvis-vnext-meta-control-plane|JARVIS vNext Meta-Control-Plane Direction]]), the "executors" on this page are Producer- and/or Runtime-role backends, classified per Run rather than per tool. The single `executor:` field in the ontology schema below predates that decision; a future revision should split it into role fields (`runtime.backend`, `production.producer`, `verification.final_judge`) as recommended there. (Adversarial review 2026-06-12, F-B3)
 
 ## Design principle
 

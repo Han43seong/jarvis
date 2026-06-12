@@ -425,7 +425,9 @@ JARVIS -> Claude Code/Codex/Cursor/OpenHands native runtime -> JARVIS verify
 
 Use when the selected backend can internally plan, use subagents, run in the background, isolate worktrees, and self-check. This should become the default for many medium implementation tasks.
 
-### Level 2.5 — Single backend deep workflow mode
+### Level 2 deep variant — single backend deep workflow mode
+
+This is not a separate routing level. It is Level 2 with the deep workflow capability engaged, selected by `backend_capabilities.native_features.deep_workflow` plus `workflow_constraints.allow_deep_workflow` rather than by a distinct level number. (Adversarial review 2026-06-12, F-A5)
 
 ```text
 JARVIS contract + guardrails
@@ -450,7 +452,7 @@ workflow_constraints:
   stop_on_permission_prompt: true
 ```
 
-Avoid Level 2.5 for narrow edits, simple docs/config changes, unclear scope, low budget, or any task where executable guardrails cannot be mapped to the selected backend.
+Avoid the deep workflow variant for narrow edits, simple docs/config changes, unclear scope, low budget, or any task where executable guardrails cannot be mapped to the selected backend.
 
 ### Level 3 — Multi-backend arbitration
 
@@ -564,7 +566,7 @@ Korean short form:
 
 ## MVP implications
 
-The MVP should prioritize:
+The MVP should prioritize (canonical vNext MVP priority list; the meta-control-plane page orders only the operational subset):
 
 1. task contract schema;
 2. executable guardrail schema for allowed paths, denied paths, denied commands, approval gates, and required evidence;

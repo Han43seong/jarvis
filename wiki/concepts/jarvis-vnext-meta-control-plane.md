@@ -1,7 +1,7 @@
 ---
 title: JARVIS vNext Meta-Control-Plane Direction
 created: 2026-06-10
-updated: 2026-06-11
+updated: 2026-06-12
 type: concept
 concept_type: architecture
 status: draft
@@ -389,6 +389,8 @@ The MVP should start with levels 1-2.
 ## Revised MVP priority
 
 After the 2026-06-11 intent-to-contract discussion, the MVP should prioritize the shorter backend-native flow described in [[concepts/jarvis-vnext-intent-to-contract-director|JARVIS vNext Intent-to-Contract Director]]: JARVIS contracts and verifies, while strong backend-native systems handle more of their own planning, background execution, subagents, and self-repair.
+
+The canonical MVP priority list lives in [[concepts/jarvis-vnext-intent-to-contract-director|JARVIS vNext Intent-to-Contract Director]] (schemas-first, 11 items). The high-priority items below are the operational/runtime subset of that list and do not replace it. (Adversarial review 2026-06-12, F-B1)
 
 High priority:
 
