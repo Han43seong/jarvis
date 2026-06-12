@@ -4,6 +4,12 @@
 > Format: `## [YYYY-MM-DD] action | subject`.
 > Actions: create, ingest, update, query, lint, archive, review.
 
+## [2026-06-12] review | vNext adversarial design review applied to concept docs
+
+- Ran an approval-gated adversarial review of `concepts/jarvis-vnext-intent-to-contract-director.md` and the 2026-06-11 decisions against 24 external sources (verdict: revise / conditionally keep direction; BLOCK 0 · MAJOR 7 · MINOR 6 · NOTE 4). Full report archived at `projects/jarvis/reviews/vnext-adversarial-review-2026-06-12.md`.
+- Applied the 7 MAJOR revisions: P2 differentiation redefined as the compile→delegate→contract-derived-judgment closed loop; P1 narrowed to interest-separated, contract-derived final judgment; per-field guardrail `enforcement_level` with auto-escalation; two-stage final judgment (mechanical gate → Director judgment); contract field grading must/should/optional; contract quality feedback loop added to MVP.
+- Added `projects/jarvis/decisions.md` entry correcting the 2026-06-10 claim that competitors ship no verification layer (Optio/Symphony counter-evidence).
+
 ## [2026-06-11] update | JARVIS vNext intent-to-contract direction captured
 
 - Added `concepts/jarvis-vnext-intent-to-contract-director.md` to capture the revised direction that JARVIS should focus on requirement normalization, backend-native task contracts, policy gates, evidence-backed verification, and result arbitration.

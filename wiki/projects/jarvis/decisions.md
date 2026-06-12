@@ -1,5 +1,23 @@
 # JARVIS Decisions
 
+## 2026-06-12 — Adversarial design review applied: redefine P1/P2, correct P4, grade enforcement
+
+Decision:
+- Apply the 7 MAJOR revision proposals from the 2026-06-12 adversarial design review (verdict: revise / conditionally keep direction; BLOCK 0 · MAJOR 7 · MINOR 6 · NOTE 4) to the vNext concept docs.
+- Redefine the differentiation claim (P2): not the intent-to-contract compiler alone — intent→spec compilation is already commoditized (AWS Kiro, GitHub Spec Kit, backend plan modes) — but the closed loop: compile → delegate → contract-derived, interest-separated final judgment.
+- Redefine verification residency (P1): what stays with JARVIS is not "verification" in general but the final judgment that is contract-derived and interest-separated. Backend self cross-review (including Claude Code dynamic workflows adversarial review, official GA) is evidence, not judgment.
+- Correct the 2026-06-10 statement that competing control planes provide no contract+verification layer: competitors already ship verification gates that delegate to external CI/review (Optio: CI polling + review agent + auto-merge, multi-vendor A/B). The actually-empty layer is contract-derived judgment, and the contract-compilation layer itself.
+- Introduce per-field guardrail enforcement levels (native | wrapper | post_hoc); any field below native auto-escalates to completion_gates post-hoc checks. Confirmed: completion gates are not natively enforceable on any backend, and Codex cannot deny per-file writes inside the workspace.
+- Split final judgment into two stages: deterministic mechanical gate (necessary condition) → model-based Director judgment.
+- Grade contract fields must/should/optional with backend-strength thickness profiles, and add a contract quality feedback loop (run ledger links contracts to outcomes with defect classification) to the MVP priorities.
+
+Rationale:
+- Adversarial review against 24 external sources (all verified 2026-06-12; 3 top claims checked directly against original sources) found the target layer genuinely empty across 6 competitor control planes, but the existing wording indefensible as written against current backend-native capabilities.
+
+Reference:
+- wiki/projects/jarvis/reviews/vnext-adversarial-review-2026-06-12.md
+- wiki/concepts/jarvis-vnext-intent-to-contract-director.md
+
 ## 2026-05-06 — Hermes-first hybrid architecture
 
 Decision:

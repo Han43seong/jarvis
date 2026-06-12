@@ -1,7 +1,7 @@
 ---
 title: JARVIS vNext Intent-to-Contract Director
 created: 2026-06-11
-updated: 2026-06-11
+updated: 2026-06-12
 type: concept
 concept_type: architecture
 status: draft
@@ -141,6 +141,21 @@ task_contract:
 
 The contract is not merely a prompt. It is the operational boundary between user intent, JARVIS policy, and backend-native execution.
 
+### Contract field grading and thickness profiles
+
+Not every contract field is equally mandatory. Grade fields to avoid over-specification:
+
+```yaml
+contract_field_grades:
+  must: [objective, forbidden_actions, acceptance_criteria, approval_gates]
+  should: [scope, qa_checklist, verification_commands, report_format]
+  optional: [assumptions, context_notes, style_preferences]
+```
+
+Contract thickness should adapt to backend strength: strong backends get thinner, objective-centric contracts plus a strict final judgment; weaker or unfamiliar backends get thicker contracts.
+
+Counter-position note: OpenAI Symphony explicitly bets on "objectives instead of strict transitions". The JARVIS answer is that objectives without a contract-derived final judgment regress to human review of every result; the must-grade fields exist precisely to keep the final judgment mechanical. (Adversarial review 2026-06-12, F-C2)
+
 ## Instruction layer vs enforcement layer
 
 A key vNext design correction is that Markdown instructions are not enough. Files such as `AGENTS.md`, `CLAUDE.md`, skills, wiki notes, and runbooks are valuable instruction context, but they are still interpreted by a model. They can be skipped, forgotten, summarized away, or followed inconsistently.
@@ -202,6 +217,17 @@ task_contract:
 ```
 
 Backend adapters should translate these fields into the strongest available native enforcement mechanism. For Claude Code this may include permissions, hooks, sandboxed Bash, and managed settings where available. For Codex/OMX/Gajae-style backends this may be implemented through wrapper policy, preflight checks, post-run diff checks, command allow/deny rules, and JARVIS completion gates.
+
+Enforcement strength varies per field and per backend, and the gap must not be silent:
+
+```yaml
+guardrail_enforcement:
+  enforcement_level_per_field: native | wrapper | post_hoc
+  escalation_rule: any field below native is automatically added to completion_gates post-hoc checks
+  adapter_duty: inject explicit denies for unsafe backend defaults (e.g. credential reads allowed by default); never assume backend defaults are safe
+```
+
+Known gaps (verified 2026-06-12): Codex cannot deny writes to individual files inside the workspace (e.g. `**/.env`) and lacks per-path read-deny; its rules engine is marked experimental. Completion gates are not natively enforceable on any backend — they remain a Director-side check. (Adversarial review 2026-06-12, F-A3)
 
 ## Harness engineering and loop engineering
 
@@ -472,6 +498,20 @@ Backend self-QA is not final completion. JARVIS must independently verify:
 - whether the output satisfies the user's implicit intent and project context;
 - whether QA-list gaps reveal additional problems.
 
+Final judgment is two-stage, and the distinction must stay explicit:
+
+1. Mechanical gate — deterministic, code-enforced necessary conditions: diff scope check, secret diff check, verification-log existence, forbidden-command traces. A run is never reported complete without passing these, because JARVIS's own judgment is also model judgment and must not be the only floor.
+2. Director judgment — model-based evaluation (architecture drift, intent fit, taste), allowed only after the mechanical gate passes.
+
+Backend self-verification — including cross-agent adversarial review inside backend-native workflows (e.g. Claude Code dynamic workflows) — is evidence, not judgment: it shares the vendor and session permission boundary, and it does not evaluate against the compiled contract. JARVIS judgment is defined by two properties: contract-derived criteria and separation of interest from the producer. Track backend self-verification capability explicitly:
+
+```yaml
+backend_capabilities:
+  self_verification: none | self_check | cross_agent_review
+```
+
+(Adversarial review 2026-06-12, F-A2/F-A4)
+
 JARVIS may reject a backend result even if all explicit QA items appear green, when Director judgment finds issues such as:
 
 - architecture drift;
@@ -516,11 +556,11 @@ Avoid:
 
 Prefer:
 
-> JARVIS is an Agent Operations Director and Intent-to-Contract compiler that turns vague user goals into backend-native work contracts, then verifies and arbitrates the results.
+> JARVIS is an Agent Operations Director that compiles vague user goals into backend-native work contracts and renders a final judgment that is derived from that contract and independent of the producer. The differentiation is not the compiler alone — intent-to-spec compilation is already commoditized (AWS Kiro, GitHub Spec Kit, backend plan modes) — but the closed loop: compile → delegate → contract-derived, interest-separated judgment.
 
 Korean short form:
 
-> JARVIS는 AI 작업자나 오케스트레이터 자체가 아니라, 사용자의 부실한 요구사항을 강한 백엔드가 가장 잘 수행할 수 있는 계약서로 변환하고, 결과를 검증·판정·보고하는 시스템이다.
+> JARVIS는 부실한 요구사항을 계약으로 컴파일하는 것에 그치지 않고, 그 계약에서 파생된 기준으로 실행 주체와 이해관계가 분리된 최종 판정까지 닫는 폐루프 시스템이다. 컴파일러 단독은 이미 상품화되었다. (적대적 검토 2026-06-12, F-A1)
 
 ## MVP implications
 
@@ -536,6 +576,7 @@ The MVP should prioritize:
 8. evidence-backed verification report;
 9. adapter interface for Hermes-direct, Codex CLI, Claude Code, and existing OMX/Gajae path;
 10. later multi-backend arbitration.
+11. contract quality feedback loop: the run ledger links each contract to outcomes (REQUEST_CHANGES rate, rework count, scope violations, judgment reversals) with failure causes classified as contract_defect | execution_defect | verification_defect. (Adversarial review 2026-06-12, F-C1)
 
 The MVP should defer or minimize:
 
