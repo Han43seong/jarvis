@@ -1,0 +1,5 @@
+#!/usr/bin/env python3
+from just_chill_visible_session_helpers import main_prompt
+
+if __name__ == "__main__":
+    raise SystemExit(main_prompt())

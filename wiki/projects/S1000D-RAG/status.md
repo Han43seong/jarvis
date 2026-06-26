@@ -44,20 +44,19 @@ Transition plan: `internal-business-chatbot-transition-plan.md`.
   - `ontology/s1000d_ontology.jsonld`
   - `ontology/s1000d_ontology.ttl`
 - Ontology export snapshot verified at 995 nodes / 1918 edges, including Reference, Warning, Caution, Figure, GraphicAsset, and Hotspot nodes.
-- Latest local commits include:
-  - `d40babd chore: ignore executor workdirs`
-  - `74b22f2 fix: stabilize runtime smoke eval`
-  - `d102169 feat: add local model env helper`
-  - `58b140f feat: verify local model stack`
+- Latest pushed commits (origin/main synced):
+  - `075c879 [verified] add grounded v4 symptom answers`
+  - `7f1209c [verified] preserve longer v4 procedure drafts`
+  - `28aaba6 [verified] split v4 Korean composer`
+  - `353b64f feat: add v4 RDF graph answer planning`
 
 ## Current gate
 
-- Latest v4 RDF/AnswerPlan implementation was committed and pushed to `origin/main` as `353b64f feat: add v4 RDF graph answer planning`.
-- Final local closure slice adds SPARQL-endpoint failure fallback to local RDF store, plus README/wiki reference-complete status. Push is pending the next approved batch.
+- All v4 closure commits, including the SPARQL-endpoint failure fallback to local RDF store and README/wiki reference-complete status, are committed and pushed. `main` tracks `origin/main` at `075c879 [verified] add grounded v4 symptom answers` with `ahead/behind = 0/0` (verified 2026-06-14).
 - Commit scope continues to exclude local untracked `uv.lock` by user request.
 - Latest implementation verification:
-  - Full test suite: `300 passed, 5 warnings`.
-  - Focused v4/app/UI tests: `52 passed, 2 warnings`.
+  - Full test suite: `321 passed, 5 warnings` (verified 2026-06-14 with miniforge python 3.12).
+  - Focused v4/app/UI/runtime-router tests: `88 passed, 2 warnings`.
   - `/api/health` smoke: PASS.
   - `/api/chat` v4 RDFLib smoke: PASS with source-grounded `related` / `deterministic_fallback` behavior.
 - Product direction has changed away from strict S1000D/MRO expert operation toward an internal business-document chatbot. The next implementation should not keep adding MRO-specific guards; it should pivot data, metadata, ontology, retrieval, and answer policies to enterprise document search.

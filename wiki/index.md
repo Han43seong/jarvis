@@ -2,7 +2,7 @@
 
 > Ontology-informed content catalog for the Hermes-centered JARVIS control plane.
 > Read this after `SCHEMA.md` and before creating or updating pages.
-> Last updated: 2026-06-11 | Total indexed pages: 21
+> Last updated: 2026-06-24 | Total indexed pages: 23
 
 ## Core Orientation
 
@@ -22,6 +22,7 @@
 - [[concepts/executor-routing|Executor Routing]] — policy for mapping tasks to Hermes direct work, Codex, OMX, cron, kanban, or ask-user.
 - [[concepts/jarvis-control-plane|JARVIS Control Plane]] — architecture pattern keeping orchestration, docs, registry, and verification separate from app repos.
 - [[concepts/jarvis-open-source-strategy|JARVIS Open Source Strategy]] — strategy for extracting a public Agent Operations Control Plane with Hermes-agnostic core and first-class Hermes adapter, while keeping the private JARVIS instance Hermes-first.
+- [[concepts/just-chill-vnext-operating-layer|just-chill vNext Operating Layer]] — current canonical vNext direction: update the existing Jarvis project into a personal operating console that routes development work to GJC and uses Hermes-backed memory/ontology gates.
 - [[concepts/jarvis-office-runtime-direction|JARVIS Office Runtime Direction]] — future direction for run ledgers, approval queues, status views, and Producer/Reviewer runners that support rather than replace JARVIS judgment.
 - [[concepts/jarvis-vnext-executor-ontology|JARVIS vNext Executor Ontology]] — draft future executor pool and routing ontology with Gajae-Code as preferred default candidate, OMX fallback, LazyCodex high-intensity path, OpenCode alternate, and raw Codex fallback.
 - [[concepts/jarvis-vnext-intent-to-contract-director|JARVIS vNext Intent-to-Contract Director]] — revised vNext direction: JARVIS turns vague user goals into backend-native work contracts, delegates to strong native runtimes, then verifies and arbitrates results.
@@ -44,6 +45,7 @@
 - [[projects/jarvis/status|JARVIS Status]] — current operating state and next steps for the JARVIS control-plane project.
 - [[projects/jarvis/architecture|JARVIS Architecture]] — workspace layout, project repository model, and executor boundaries.
 - [[projects/jarvis/decisions|JARVIS Decisions]] — durable architecture and workflow decisions.
+- [[projects/jarvis/just-chill-migration-inventory|just-chill Migration Inventory]] — staged brownfield asset inventory for migrating existing Jarvis routing/docs/scripts toward just-chill.
 
 ## Skills
 

@@ -1,7 +1,7 @@
 ---
 title: JARVIS vNext Meta-Control-Plane Direction
 created: 2026-06-10
-updated: 2026-06-12
+updated: 2026-06-23
 type: concept
 concept_type: architecture
 status: draft
@@ -22,9 +22,17 @@ relations:
     target: wiki/concepts/jarvis-vnext-intent-to-contract-director.md
   - type: relates_to
     target: wiki/projects/jarvis/decisions.md
+  - type: relates_to
+    target: concepts/just-chill-vnext-operating-layer
 ---
 
 # JARVIS vNext Meta-Control-Plane Direction
+
+## 2026-06-23 just-chill resolution
+
+This page is now predecessor context for [[concepts/just-chill-vnext-operating-layer|just-chill vNext Operating Layer]]. The Director boundary remains valid, but the current product direction is narrower: just-chill routes development work to GJC instead of compiling its own development contracts, and it focuses on intake, risk/routing, result summaries, non-development knowledge/communication work, and Hermes-backed memory gates.
+
+The old open question about a new `/home/hskim/projects/jarvis-vnext` repo is resolved: update the existing `/home/hskim/jarvis` project and preserve Git/wiki lineage.
 
 ## Conversation context
 
@@ -468,11 +476,14 @@ The document is deliberately not a line-by-line build manual. If an AI coding ag
 
 ## Next discussion prompts
 
-For the next session, continue from these questions:
+The 2026-06-23 just-chill decision resolves two former prompts: implementation should update `/home/hskim/jarvis`, and GJC is the preferred development worker family for the target design.
 
-1. What is the minimum useful `Run` schema?
-2. What fields are required in an executor task contract?
-3. Should the first implementation be a new `/home/hskim/projects/jarvis-vnext` repo or an extension inside `/home/hskim/jarvis`?
-4. Which backends should vNext support first: Hermes-direct, Codex, OMX/Gajae-Code, or manual external-orchestrator contracts?
-5. How should JARVIS record backend selection rationale and learn from outcomes?
-6. What should be excluded from MVP to avoid becoming just another orchestrator?
+The GJC/Hermes integration question is also narrowed by the Gajae Code Hermes MCP Bridge reference: <https://gajae-code.com/docs/hermes-mcp-bridge.html>. The first just-chill pass should prefer visible routed sessions for observability, then graduate to coordinator MCP, `gjc_delegate_*`, or RPC host tools when durable machine-control requirements justify them.
+
+Remaining prompts for implementation planning:
+
+1. Which documented GJC/Hermes bridge path should Phase 1 implement first: visible routed session, coordinator MCP, `gjc_delegate_*`, or RPC host tools?
+2. What Hermes-side raw artifact, summary, access-control, retention, deletion/redaction, and provenance APIs map to that bridge path?
+3. What is the minimum route-decision packet and memory-promotion record schema for Phase 0/1?
+4. Which existing Jarvis assets should be kept, renamed, adapted, deprecated, or removed during the brownfield migration?
+5. What static-launcher comparison metric proves just-chill adds value beyond a fixed GJC handoff template plus manual notes?

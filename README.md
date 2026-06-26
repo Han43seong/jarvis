@@ -16,7 +16,7 @@ Plan work, route it to the right executor, verify results, and preserve durable 
 
 <br />
 
-[Overview](#overview) · [Why](#why-this-exists) · [Methodology](#methodology) · [Architecture](#architecture) · [Harnesses](#harness-taxonomy) · [History](#build-history-and-lessons-learned) · [Korean](#jarvis-컨트롤-플레인)
+[Overview](#overview) · [Why](#why-this-exists) · [Methodology](#methodology) · [Architecture](#architecture) · [Harnesses](#harness-taxonomy) · [just-chill](#just-chill-vnext-update) · [History](#build-history-and-lessons-learned)
 
 </div>
 
@@ -281,6 +281,92 @@ Use the right durability layer:
 | Hermes memory | Compact durable facts and preferences only. |
 | Hermes skills | Reusable procedures that should guide future agent behavior. |
 
+## just-chill vNext update
+
+The current implementation adds `just-chill` as a Hermes-facing operating layer for development routing, memory policy, approval checks, and GJC handoff contracts.
+
+### Why it changed
+
+The previous JARVIS vNext direction risked turning the control plane into another coding agent. The new boundary is stricter:
+
+| Layer | Responsibility |
+| --- | --- |
+| Hermes | User-facing UX, tool access, memory/artifact authority, and session continuity. |
+| just-chill | Routing, policy, recall gates, approval verification, and GJC handoff contracts. |
+| GJC | Development execution, planning workflows, implementation, verification, and durable execution evidence. |
+
+This keeps the system observable and avoids hidden execution paths. `scripts/just-chill` remains a debug/test/fixture CLI, not the product UX.
+
+### What was implemented
+
+| Surface | Files |
+| --- | --- |
+| Routing and bridge contracts | `scripts/just_chill_router.py`, `scripts/just_chill_bridge.py`, `scripts/just_chill_memory_contracts.py` |
+| Live boundary mapping | `scripts/just_chill_live_bindings.py`, `scripts/just_chill_hermes_adapter.py` |
+| Visible GJC session helpers | `scripts/create-gjc-session`, `scripts/prompt-gjc-session`, `scripts/tail-gjc-session`, `scripts/just_chill_visible_session_helpers.py` |
+| Hermes memory API | `scripts/just_chill_hermes_memory_mcp.py`, `scripts/just_chill_hermes_mcp_receipts.py` |
+| Raw artifact, RDF, SHACL, vector, and migration contracts | `scripts/just_chill_raw_artifact_store.py`, `scripts/just_chill_ontology_contracts.py`, `scripts/just_chill_rdf_persistence_receipts.py`, `scripts/just_chill_vector_recall.py`, `scripts/just_chill_memory_migration_fixture.py` |
+| CLI and dogfood contracts | `scripts/just_chill_cli.py`, `scripts/just-chill`, `scripts/just_chill_dogfood_harness.py` |
+| Hermes-facing harness | `scripts/just_chill_harness.py`, `scripts/just_chill_harness_mcp.py`, `scripts/just_chill_hermes_harness.py` |
+| Approval registry | `scripts/just_chill_approval_registry.py` |
+| Visible-session-only GJC bridge | `scripts/just_chill_gjc_execution_bridge.py` |
+
+### Current execution mode
+
+Visible-session-only execution is enabled in `config/routing.yaml`.
+
+The enabled mode prepares visible GJC handoff artifacts but does not hide execution:
+
+- create task and session metadata,
+- emit operator-visible argv plans,
+- keep coordinator/delegate auto-mutation disabled,
+- reject prompt injection from just-chill,
+- reject tmux scrollback as completion evidence,
+- require durable evidence such as a `turn_id`, report, artifact, diff, test output, or PR reference.
+
+### Update process and lessons learned
+
+| Step | Trial or issue | Resolution |
+| --- | --- | --- |
+| Requirements discovery | The initial direction mixed product UX, memory authority, and executor behavior. | Re-established Hermes as UX and memory authority, just-chill as policy harness, and GJC as development executor. |
+| CLI productization | A standalone just-chill CLI looked convenient but would compete with Hermes. | Kept the CLI as a deterministic debug/test/fixture contract surface only. |
+| Approval tokens | Prefix shape checks blocked random strings but did not prove authenticity, scope, subject, expiry, or revocation. | Added a host-owned approval registry that stores only token hashes and verifies scope, subject hash, expiry, and revocation state. |
+| Recall gates | Early recall paths could drift toward local probing or stale evidence. | Made host-owned retrieval evidence, fresh source hash, deletion state, redaction state, and scope checks mandatory. |
+| GJC handoff | Direct coordinator/delegate mutation was too powerful to enable by default. | Kept visible sessions first, added a consent policy for coordinator/delegate paths, and added visible-session-only bridge preparation. |
+| Completion evidence | tmux scrollback is useful for debugging but weak as proof. | Treated scrollback as debug-only and required durable evidence for completion. |
+| Hermes integration | MCP registration mutates external Hermes config. | Required explicit approval, registered `just_chill_harness`, then verified a fresh Hermes session with `just_chill.status: ready`. |
+| Quality gates | Individual checks could pass while stitched behavior drifted. | Added dogfood harnesses and a full just-chill regression suite covering router, bridge, memory, MCP, approval, consent, harness, and execution-bridge behavior. |
+
+### Verification commands
+
+The current full just-chill regression suite includes:
+
+```sh
+python3 scripts/check_just_chill_router.py
+python3 scripts/check_just_chill_bridge_contracts.py
+python3 scripts/check_just_chill_live_bindings.py
+python3 scripts/check_just_chill_visible_helpers.py
+python3 scripts/check_just_chill_hermes_boundary.py
+python3 scripts/check_just_chill_raw_artifact_store.py
+python3 scripts/check_just_chill_hermes_raw_artifact_boundary.py
+python3 scripts/check_just_chill_hermes_memory_mcp.py
+python3 scripts/check_just_chill_hermes_mcp_receipts.py
+python3 scripts/check_just_chill_summary_memory_receipts.py
+python3 scripts/check_just_chill_ontology_contracts.py
+python3 scripts/check_just_chill_rdf_persistence_receipts.py
+python3 scripts/check_just_chill_vector_recall.py
+python3 scripts/check_just_chill_memory_migration_fixture.py
+python3 scripts/check_just_chill_cli.py
+python3 scripts/check_just_chill_approval_registry.py
+python3 scripts/check_just_chill_gjc_consent_policy.py
+python3 scripts/check_just_chill_gjc_execution_bridge.py
+python3 scripts/check_just_chill_dogfood_harness.py
+python3 scripts/check_just_chill_harness.py
+python3 scripts/check_just_chill_harness_mcp.py
+python3 scripts/check_just_chill_hermes_harness.py
+python3 scripts/check_executor_routing_policy.py
+```
+
 ## Build history and lessons learned
 
 The workflow was assembled iteratively. Important decisions and fixes include:
@@ -298,292 +384,3 @@ The workflow was assembled iteratively. Important decisions and fixes include:
 | Claude Code auth | Refreshed Claude Code OAuth through an interactive terminal session after print mode returned an authentication error. | Interactive login status and print-mode auth must be verified separately. |
 | OMC setup | Confirmed the correct package/repository naming before installation. | Similar package names should be verified before installing. |
 | Commit hygiene | Avoided committing large or unrelated research artifacts during setup and README commits. | Stage only intended files. |
-
----
-
-<div align="center">
-
-# JARVIS 컨트롤 플레인
-
-**Hermes 중심의 AI 보조 개발 작업 관제 워크스페이스.**
-
-작업을 계획하고, 적절한 실행자에게 라우팅하고, 결과를 검증하며, 장기 지식을 보존합니다.
-
-</div>
-
-## 개요
-
-JARVIS는 애플리케이션 소스 저장소가 아닙니다. 프로젝트 레지스트리, 라우팅 정책, 운영 규칙, 위키, 실행 하네스, 검증 기록을 관리하는 **컨트롤 플레인**입니다.
-
-목표는 AI 보조 작업을 더 안정적으로 운영하는 것입니다.
-
-- 작업마다 적절한 실행자를 선택합니다.
-- 애플리케이션 코드는 컨트롤 플레인 저장소 밖에 둡니다.
-- 중요한 작업에서는 제작자와 검토자를 분리해 품질을 안정화합니다.
-- 중요한 변경은 git 상태, diff, 테스트, 표적 점검으로 검증합니다.
-- 장기 결정사항은 위키에 남깁니다.
-- 반복 가능한 절차는 skill로 승격합니다.
-
-## 왜 만들었는가
-
-초기 구상은 실무적으로 쓸 수 있는 개인용 JARVIS를 만드는 것이었습니다. 하나의 만능 코딩 봇이 아니라, 여러 AI 실행자를 조율하고, 중요한 맥락을 기억하고, 결과를 검증 가능한 형태로 남기는 컨트롤 플레인을 만드는 것이 핵심입니다.
-
-기본 전제는 명확합니다. AI 작업은 계획, 실행, 검증, 기억을 분리할수록 더 안전하고 유용해집니다.
-
-| 관심사 | 담당 | 목적 |
-| --- | --- | --- |
-| 계획과 라우팅 | Hermes / JARVIS | 처리 가능한 가장 작은 실행 경로를 선택합니다. |
-| 제작 | Producer 에이전트 | 제한된 범위 안에서 코드, 산출물, 디자인을 만듭니다. |
-| 독립 검토 | Reviewer/Critic 에이전트 | 원래 기준에 비춰 통과/수정/에스컬레이션/중단을 판정합니다. |
-| 수정 계획 | Hermes / JARVIS | 반려 사유를 다음 제작자가 실행 가능한 지시로 바꿉니다. |
-| 검증 | Hermes / JARVIS | 저장소 상태, diff, 테스트, lint, 산출물, 완료 기준을 확인합니다. |
-| 장기 지식 | Wiki | 결정사항, 상태, 아키텍처, 리서치를 보관합니다. |
-| 재사용 절차 | Skills | 검증된 워크플로우를 반복 가능한 운영 지식으로 만듭니다. |
-| 변경 기준 | Git | 실제 변경 사항을 기록합니다. |
-
-## 방법론
-
-JARVIS는 컨트롤 플레인 방법론을 따릅니다.
-
-1. 컨트롤 플레인은 작고 명확하게 유지하며 주로 문서, 설정, 라우팅, 검증을 담당합니다.
-2. 애플리케이션 소스코드는 독립 프로젝트 저장소에 둡니다.
-3. 각 작업은 처리 가능한 가장 작은 실행자에게 라우팅합니다.
-4. 중대형 구현, 디자인, 품질 민감 산출물에는 Producer/Reviewer 반려 루프를 사용합니다.
-5. 실행자에게는 제한된 프롬프트, 허용 범위, 금지 행동, 완료 기준을 함께 제공합니다.
-6. 성공 보고 전에는 저장소 상태, diff, 테스트, lint, 표적 점검으로 검증합니다.
-7. 반복되는 절차는 skill로, 장기 지식은 wiki로, 아주 압축된 사실만 memory로 보존합니다.
-8. 숨겨진 자동화보다 되돌릴 수 있고 검토 가능한 변경을 우선합니다.
-
-## 아키텍처
-
-```text
-사용자 요청
-   │
-   ▼
-Hermes / JARVIS 컨트롤 플레인
-   ├─ 작업 계획 및 분해
-   ├─ 적절한 실행자 선택
-   ├─ 필요 시 Producer/Reviewer 반려 루프 실행
-   ├─ diff, 테스트, 저장소 상태 검증
-   ├─ 장기 위키/상태 문서 업데이트
-   └─ 재사용 가능한 절차는 skill로 보존
-        │
-        ├─ Codex CLI + OMX          Codex 계열 제작자 라인
-        ├─ Claude Code + OMC        Claude 계열 제작/검토 라인
-        ├─ Hermes direct tools      빠른 수정, 문서, 점검, 위키 관리
-        ├─ background workers       조사, 비교, 장시간 분석
-        └─ cron / kanban            반복 모니터링 또는 지속형 작업
-```
-
-
-## 하네스 체계
-
-JARVIS는 단일 executor나 플러그인이 아니라 **최상위 운영 하네스**로 보는 것이 가장 정확합니다. JARVIS의 역할은 어떤 작업을, 어느 프로젝트에서, 누구에게 맡기고, 어떤 기준으로 검증하며, 결과를 어디에 기록할지 결정하는 것입니다.
-
-```text
-JARVIS 운영 하네스
-├─ Project Registry Harness
-│  └─ config/projects.yaml
-├─ Routing Harness
-│  ├─ AGENTS.md
-│  ├─ config/routing.yaml
-│  └─ jarvis-executor-router skill
-├─ Skill Harness
-│  └─ Hermes가 로드하는 재사용 운영 매뉴얼
-├─ Wiki / Status Harness
-│  └─ wiki/projects/<project>/status.md
-├─ External Executor Workflow Harness
-│  ├─ Hermes-native 직접 작업
-│  ├─ Codex-family: codex direct + OMX wrapper
-│  └─ Claude-family: Claude Code + OMC wrapper
-├─ Producer / Reviewer Quality Harness
-│  └─ 품질 민감 작업에 적용하는 제작자/검수자 분리 패턴
-├─ Background / Cron / Kanban Harnesses
-│  └─ 장시간, 반복, 지속형 다중 작업
-└─ Project-specific Harnesses
-   └─ /home/hskim/projects/<project> 아래의 실행 가능한 프로젝트 repo
-```
-
-### 하네스 계층
-
-| 하네스 | 역할 | 대표 위치 |
-| --- | --- | --- |
-| **JARVIS 운영 하네스** | 요청 해석, 대상 프로젝트 선택, 라우팅, 안전 게이트, 검증, 기록을 총괄합니다. | `/home/hskim/jarvis`, `AGENTS.md` |
-| **Project registry 하네스** | 프로젝트 목록, path, active/legacy 상태, default executor를 관리합니다. | `config/projects.yaml` |
-| **Routing 하네스** | 대상, 작업 유형, 위험도, executor/workflow, quality gate, 기록 위치를 결정하는 배차 하네스입니다. 직접 산출물을 만들지는 않습니다. | `config/routing.yaml`, `AGENTS.md`, `jarvis-executor-router` skill |
-| **External executor workflow 하네스** | Codex-family, Claude-family 등 외부 실행자에게 제한된 작업을 위임하고 artifact/evidence/log를 수집합니다. 최종 검증은 Hermes/JARVIS가 수행합니다. | `harnesses/`, `jarvis-codex-omx-executor` skill, project run scripts |
-| **Producer/Reviewer 품질 하네스** | 제작자와 검수자를 분리합니다. JARVIS 상위 레벨, external executor workflow 내부, project-specific harness 내부, 또는 중첩 구조에서 모두 적용될 수 있습니다. | `harnesses/producer-reviewer-rejection-loop.md` 및 프로젝트별 gate |
-| **Project-specific 하네스** | CLI, runner, validator, test, artifact, evidence 처리를 포함한 실행 가능한 프로젝트 repo입니다. | `/home/hskim/projects/<project>` |
-| **Skill 하네스** | Hermes/JARVIS가 특정 workflow나 project harness를 언제/어떻게 쓸지 알려주는 운영 매뉴얼입니다. 실행 코드를 대체하지 않습니다. | `~/.hermes/skills/...` |
-| **Wiki/status 하네스** | 프로젝트 결정, 상태, phase 결과, 다음 작업을 장기 기록합니다. | `wiki/` |
-
-### Executor family 구분
-
-JARVIS는 executor를 “완전히 다른 모델인가”보다 “어떤 운영 모드로 실행하는가” 기준으로 구분합니다. 특히 OMX는 Codex와 경쟁하는 별도 모델 계열이라기보다, Codex CLI 위에 붙는 oh-my-codex wrapper/orchestration layer로 이해하는 것이 정확합니다.
-
-```text
-Executor families
-├─ Hermes-native
-│  └─ 직접 tool, browser, terminal, verification
-├─ Codex-family
-│  ├─ codex direct
-│  │  └─ codex exec
-│  └─ OMX wrapper
-│     ├─ omx exec
-│     ├─ omx ralph
-│     └─ omx team
-└─ Claude-family
-   ├─ Claude Code
-   └─ OMC wrapper
-```
-
-작고 명확한 단발 작업은 `codex exec`가 적합하고, 여러 파일 구현이나 test/fix loop처럼 목표지향 흐름이 필요한 Codex-family 작업은 `omx ralph` 같은 OMX 모드가 적합합니다. Claude-family는 계획, 비평, 디자인, 독립 review 강점이 필요한 곳에 배치합니다.
-
-### Producer/Reviewer는 고정 위치가 아니라 패턴
-
-Producer/Reviewer는 특정 executor 하나가 아니라, 제작자와 검수자를 분리하는 품질관리 패턴입니다.
-
-```text
-Director: Hermes / JARVIS
-  -> Producer: 코드, 문서, deck, report 등 산출물 제작
-  -> Hermes verifier: git status, diff, tests, scope, secrets, artifacts 확인
-  -> Reviewer: PASS / REQUEST_CHANGES / ESCALATE_TO_USER / ABORT 판정
-  -> JARVIS: 승인, 수정 지시, 사용자 에스컬레이션, 중단 결정
-```
-
-이 패턴은 다음 위치에 모두 붙을 수 있습니다.
-
-- JARVIS 상위 레벨에서 executor가 프로젝트 코드를 구현할 때,
-- External executor workflow 안에서 Codex/OMX/Claude가 Producer와 Reviewer 역할을 맡을 때,
-- Project-specific harness 내부에서 산출물 후보를 만들고 비교할 때,
-- 또는 JARVIS가 어떤 project harness를 구현하고, 그 project harness 내부에서 다시 산출물 Producer/Reviewer를 돌리는 중첩 구조에서.
-
-### Project harness와 skill의 관계
-
-Project-specific harness는 실행 가능한 repo/CLI/tooling으로 남아야 하고, skill은 그 하네스를 선택하고 사용하는 운영 지식을 담아야 합니다.
-
-예를 들어 `hermes-slide-director`는 `/home/hskim/projects/hermes-slide-director` 아래의 실행 가능한 project-specific harness로 유지하는 것이 맞습니다. CLI, runner, validator, tests, evidence handling은 repo에 남기고, 테스트 후 안정화된 routing/운영/QA 정책은 skill로 추출해 Hermes/JARVIS가 언제 어떻게 사용할지 알게 하는 구조가 좋습니다.
-
-```text
-hermes-slide-director repo
-= 실행 가능한 project-specific harness
-
-hermes-slide-director skill
-= routing, 후보 선택, QA gate, evidence 기대치를 담은 운영 매뉴얼
-```
-
-## 실행자 매트릭스
-
-| 실행 경로 | 적합한 작업 | 비고 |
-| --- | --- | --- |
-| **Hermes direct** | 작은 수정, 문서, 설정 점검, 위키 관리 | 저위험 컨트롤 플레인 작업에 가장 빠른 경로입니다. |
-| **Codex CLI + OMX** | Codex 계열 제작 작업: 중대형 구현, 제한된 저장소 수정 | `omx`는 Codex CLI 위의 oh-my-codex 오케스트레이션 계층입니다. |
-| **Claude Code + OMC** | Claude 계열 제작/검토 작업: 계획, 리팩터링, 디자인 중심 산출물, 독립 비평 | `omc`는 Claude Code 위의 oh-my-claudecode 오케스트레이션 계층입니다. |
-| **Producer/Reviewer 루프** | 중대형 구현, 디자인, 품질 민감 산출물 | 제작자와 검토자를 분리하고 `PASS`, `REQUEST_CHANGES`, `ESCALATE_TO_USER`, `ABORT`로 판정합니다. |
-| **Background workers** | 조사, 비교, 장시간 분석 | 메인 JARVIS 세션의 응답성을 유지합니다. |
-| **cron** | 반복 모니터링/보고 | 예약 점검과 보고에 사용합니다. |
-| **kanban** | 지속형 다중 작업 백로그 | 긴 협업형 작업에 사용합니다. |
-
-## Producer/Reviewer 반려 루프
-
-비사소한 작업에서는 JARVIS가 제작과 검토를 분리합니다.
-
-```text
-사용자 요청
-  -> JARVIS Director가 범위, 기준, 허용 경로, 금지 행동, 검증 명령을 정의
-  -> Producer 에이전트가 산출물을 생성/수정
-  -> JARVIS가 기본 git/test/artifact 점검
-  -> Reviewer/Critic 에이전트가 원래 기준에 따라 독립 평가
-  -> JARVIS가 승인, 에스컬레이션, 중단, 또는 제한된 수정 지시 생성
-  -> 통과 또는 최대 반복까지 반복
-```
-
-이 루프는 선택적으로 사용합니다. 중대형 구현, 디자인/슬라이드 생성, 품질 민감 산출물, 명시적 반려 루프 요청, `hermes-slide-director` 개발에 적용합니다. 빠른 읽기, 단순 상태 확인, 한 줄 문서/설정 수정, 로컬 서버 시작/중지는 제외합니다.
-
-구체 프로토콜은 `harnesses/producer-reviewer-rejection-loop.md`, 라우팅 정책은 `config/routing.yaml`, 실제 에이전트 운영 지침은 `AGENTS.md`에 있습니다.
-
-## 저장소 구조
-
-| 경로 | 목적 |
-| --- | --- |
-| `AGENTS.md` | 이 저장소에서 시작되는 JARVIS 세션의 상시 운영 규칙. |
-| `config/projects.yaml` | 프로젝트 레지스트리. |
-| `config/routing.yaml` | 실행자 라우팅 정책과 선택적 Producer/Reviewer 루프 트리거. |
-| `harnesses/` | 재사용 가능한 실행 절차와 검증 하네스. Producer/Reviewer 반려 루프 프로토콜을 포함합니다. |
-| `plans/` | 구현 및 마이그레이션 계획. |
-| `runs/` | 실행 로그와 executor 요약. |
-| `scripts/` | 컨트롤 플레인 점검 및 자동화 보조 스크립트. |
-| `wiki/` | Obsidian에서도 읽을 수 있는 장기 프로젝트 지식. |
-| `logs/` | 로컬 워크플로 로그. |
-| `tmp/` | 임시 작업 파일. |
-
-## 프로젝트 저장소 모델
-
-애플리케이션 소스코드는 이 컨트롤 플레인 저장소 안에 넣지 않는 것을 원칙으로 합니다.
-
-각 애플리케이션 프로젝트는 일반적으로 다음 흐름을 따릅니다.
-
-1. 별도 디렉터리로 생성합니다.
-2. 독립 git 저장소로 초기화합니다.
-3. 필요하면 별도 GitHub 저장소에 연결합니다.
-4. `config/projects.yaml`에 등록합니다.
-5. 장기 문서가 필요하면 `wiki/projects/<project>/` 아래에 정리합니다.
-
-이 구조는 관제 기록, 프로젝트 소스, CI, remote, executor 작업 이력을 깔끔하게 분리하기 위한 것입니다.
-
-## 일반 작업 흐름
-
-```text
-1. 요청과 대상 프로젝트를 파악합니다.
-2. 현재 저장소 상태와 관련 문서/위키 맥락을 확인합니다.
-3. 실행자 모드를 선택합니다.
-4. Producer/Reviewer 루프가 필요한지 판단합니다.
-5. 제한된 프롬프트 또는 직접 수정 계획을 준비합니다.
-6. 선택한 도구 또는 외부 CLI 실행자로 작업합니다.
-7. 루프 대상이면 독립 reviewer를 실행하고 반려 사유를 제한된 수정 지시로 변환합니다.
-8. git status, git diff, 테스트, lint, 표적 점검으로 검증합니다.
-9. 장기적으로 남길 결정/상태는 위키에 기록합니다.
-10. 의도한 파일만 커밋합니다.
-```
-
-## 안전 기준
-
-JARVIS는 높은 자율성을 목표로 하지만 명시적인 안전 게이트를 둡니다.
-
-| 기준 | 정책 |
-| --- | --- |
-| 저위험 로컬 자동화 | smart approval 기반으로 처리합니다. |
-| 시크릿 | API key, OAuth token, private key, auth file, credential 내용은 저장소에 보관하지 않습니다. |
-| 영구 삭제 | 정확한 대상 경로를 명시한 사용자 확인이 필요합니다. |
-| push/deploy/auth 변경 | 사용자의 명확한 요청이 필요합니다. |
-| 광범위한 rewrite | 명확한 범위와 확인이 필요합니다. |
-
-## 문서화 정책
-
-정보의 성격에 따라 저장 위치를 분리합니다.
-
-| 계층 | 용도 |
-| --- | --- |
-| `README.md` | 공개 가능한 개요와 운영 모델. |
-| `AGENTS.md` | 이 워크스페이스에서 실행되는 에이전트의 실제 운영 지침. |
-| `wiki/` | 장기 지식, 결정사항, 상태, 리서치. |
-| Hermes memory | 앞으로도 유용한 압축된 사실과 선호도. |
-| Hermes skills | 향후 에이전트 행동을 직접 안내해야 하는 재사용 절차. |
-
-## 구축 이력과 해결한 문제
-
-이 워크플로우는 한 번에 만든 것이 아니라 단계적으로 구축했습니다.
-
-| 영역 | 발생한 일 | 배운 점 |
-| --- | --- | --- |
-| 컨트롤 플레인 경계 | 이 저장소를 애플리케이션 저장소가 아니라 관리 워크스페이스로 정의했습니다. | 관제와 애플리케이션 소스는 분리해야 합니다. |
-| 라우팅 | Hermes direct, Codex/OMX, Claude Code/OMC, background worker, cron, kanban, 선택적 Producer/Reviewer 루프 중 선택할 수 있도록 레지스트리와 라우팅 정책을 추가했습니다. | 라우팅은 즉흥적으로 정하지 않고 명시해야 합니다. |
-| Producer/Reviewer 루프 | `AGENTS.md`, `config/routing.yaml`, `harnesses/producer-reviewer-rejection-loop.md`, README, 관련 JARVIS skill에 루프 정책을 연결했습니다. | 품질 민감 작업에는 독립 비평이 필요하지만, 루프 비용은 선택적으로 써야 합니다. |
-| 기본 실행자 | Codex CLI + OMX 라인을 smoke test로 검증한 뒤 기본 구현 경로로 채택했습니다. | 실행자 신뢰는 실제 검증으로 확보해야 합니다. |
-| 안전성 | sandbox와 approval 정책을 정리했습니다. | 자율성에는 안전 게이트가 필요합니다. |
-| 위키 | ontology-informed markdown wiki를 구축했습니다. | 장기 지식은 사람이 읽기 쉽고 git 친화적이어야 합니다. |
-| 리서치 | 긴 조사 작업은 background/research-worker로 분리했습니다. | 장시간 추론은 foreground loop 밖에서 처리하는 편이 좋습니다. |
-| MCP bridge | OMX Hermes MCP bridge는 안정화 부족으로 기본 경로 도입을 보류했습니다. | 불안정한 통합은 core workflow로 승격하지 않습니다. |
-| Claude Code 인증 | print mode 인증 오류를 interactive OAuth 갱신과 별도 smoke test로 해결했습니다. | interactive 로그인과 print-mode 인증은 별도로 검증해야 합니다. |
-| OMC 설치 | 정확한 패키지/저장소 이름을 확인한 뒤 설치했습니다. | 유사 패키지명은 설치 전 검증해야 합니다. |
-| 커밋 위생 | 대용량 또는 관련 없는 리서치 산출물은 README/세팅 커밋에서 제외했습니다. | 의도한 파일만 stage합니다. |

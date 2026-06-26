@@ -1,7 +1,7 @@
 ---
 title: JARVIS vNext Executor Ontology
 created: 2026-06-05
-updated: 2026-06-12
+updated: 2026-06-23
 type: concept
 concept_type: architecture
 status: draft
@@ -21,11 +21,19 @@ relations:
     target: ouroboros-adoption-review
   - type: supports
     target: jarvis-open-source-strategy
+  - type: relates_to
+    target: concepts/just-chill-vnext-operating-layer
 ---
 
 # JARVIS vNext Executor Ontology
 
 This note records the planned executor-pool direction for a future JARVIS vNext routing/ontology redesign. It is a design target, not an immediate change to the active runtime policy.
+
+## 2026-06-23 just-chill routing update
+
+This page remains the predecessor executor-pool design. In the current [[concepts/just-chill-vnext-operating-layer|just-chill vNext]] target, GJC is the preferred development worker family rather than merely a future candidate. just-chill should route broad development intent to GJC and attach only observable hints for GJC direct, `deep-interview`, `ralplan`, `ultragoal`, or `team`.
+
+LazyCodex remains a specialized Codex-native high-intensity option, not the default. This wiki update does not by itself mutate active runtime routing policy; implementation still requires Phase 0/1 contract mapping and verification.
 
 ## Scope
 

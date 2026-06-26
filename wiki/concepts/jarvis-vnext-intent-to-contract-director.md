@@ -1,7 +1,7 @@
 ---
 title: JARVIS vNext Intent-to-Contract Director
 created: 2026-06-11
-updated: 2026-06-12
+updated: 2026-06-23
 type: concept
 concept_type: architecture
 status: draft
@@ -17,9 +17,17 @@ relations:
     target: concepts/jarvis-vnext-executor-ontology
   - type: references
     target: projects/jarvis/decisions
+  - type: relates_to
+    target: concepts/just-chill-vnext-operating-layer
 ---
 
 # JARVIS vNext Intent-to-Contract Director
+
+## 2026-06-23 just-chill update
+
+This page remains the predecessor design for contract-first delegation, but [[concepts/just-chill-vnext-operating-layer|just-chill vNext]] narrows the rule for development work: just-chill should not become its own development requirements compiler when GJC already owns direct work, `deep-interview`, `ralplan`, `ultragoal`, and `team`. For development requests, just-chill prepares a lightweight route/context/risk packet and delegates to GJC with an observable subroute hint.
+
+The intent-to-contract model remains useful for non-development tools, high-risk approvals, external-effect drafts, and result verification packets.
 
 ## Summary
 

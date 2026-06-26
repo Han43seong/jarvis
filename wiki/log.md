@@ -4,6 +4,142 @@
 > Format: `## [YYYY-MM-DD] action | subject`.
 > Actions: create, ingest, update, query, lint, archive, review.
 
+## [2026-06-26] create | just-chill visible GJC execution bridge MVP
+
+- Added `scripts/just_chill_gjc_execution_bridge.py` and `scripts/check_just_chill_gjc_execution_bridge.py`.
+- The bridge consumes a `gjcHandoffPlan`, writes host-owned task/session metadata, emits visible-session operator argv plans, and verifies durable completion evidence.
+- It still does not start GJC, inject prompts, call coordinator/delegate tools, write Hermes, or accept tmux scrollback as completion evidence.
+
+## [2026-06-26] verify | just-chill harness visible in fresh Hermes session
+
+- Fresh Hermes session returned `just_chill.status: ready`.
+- The status output confirmed `just_chill_harness` and `just_chill_memory_api` are enabled, coordinator MCP smoke is ok, delegate tools are present, visible routed-session helpers are contract-valid, and just-chill still has no local execution, Hermes-write, or mutation authority.
+- Remaining productization work moves to host-owned execution/evidence bridges, production approval/audit integration, and real memory migration policy.
+
+## [2026-06-26] create | just-chill approval registry
+
+- Added `scripts/just_chill_approval_registry.py` and `scripts/check_just_chill_approval_registry.py`.
+- Approval tokens can now be issued, verified, and revoked against scope, optional subject hash, expiry, and revocation state while persisting only token hashes.
+- CLI, Hermes-facing harness, and MCP remember/recall flows accept optional registry-backed approval inputs; shape-only acceptance remains debug/fixture-only.
+
+## [2026-06-26] update | just-chill harness MCP registered in Hermes
+
+- After explicit approval, registered `scripts/just_chill_harness_mcp.py` as Hermes MCP server `just_chill_harness`.
+- `hermes mcp add just_chill_harness --command python3 --args /home/hskim/jarvis/scripts/just_chill_harness_mcp.py` connected and enabled all 7 `just_chill.*` tools.
+- `hermes mcp list` and `hermes mcp test just_chill_harness` verified the server is enabled and discoverable; a new Hermes session is required before using newly registered tools.
+
+## [2026-06-26] create | just-chill Hermes-facing harness
+
+- Added `scripts/just_chill_harness.py`, `scripts/just_chill_harness_mcp.py`, `scripts/just_chill_hermes_harness.py`, and focused checks for each.
+- Hermes is now documented as the user-facing product layer; just-chill is a routing/memory/approval/GJC-handoff harness and `scripts/just-chill` is debug/test/fixture-only.
+- The harness MCP exposes `just_chill.*` tools and is now registered in Hermes as `just_chill_harness` after explicit approval.
+## [2026-06-25] create | just-chill end-to-end dogfood contract harness
+
+- Added `scripts/just_chill_dogfood_harness.py` and `scripts/check_just_chill_dogfood_harness.py`.
+- The harness exercises route, GJC handoff, memory/raw/RDF/SHACL/vector contracts, recall gate, and consent policy without starting GJC, calling Hermes, running SHACL, or searching a vector store.
+- Updated live-binding harness, canonical concept, status, decisions, and migration inventory with the integrated dogfood contract and negative stale/deleted/redacted-recall and sensitive-memory cases.
+
+## [2026-06-25] create | just-chill GJC consent policy
+
+- Added `scripts/just_chill_gjc_consent_policy.py` and `scripts/check_just_chill_gjc_consent_policy.py`.
+- Coordinator/delegation paths now fail closed unless coordinator smoke, mutation classes, per-call `allow_mutation`, delegate availability, durable evidence policy, and scrollback rejection all pass.
+- Updated live-binding harness, canonical concept, status, decisions, and migration inventory so the consent policy is the gate before any host-owned executable GJC bridge.
+
+## [2026-06-25] create | just-chill CLI contract entrypoint
+
+- Added `scripts/just_chill_cli.py`, `scripts/just-chill`, and `scripts/check_just_chill_cli.py`.
+- The CLI emits JSON contracts for route, remember, recall, and GJC handoff flows without executing GJC, writing Hermes, or owning canonical memory.
+- Updated live-binding harness, canonical concept, status, decisions, and migration inventory so the CLI is documented as a contract producer for future host-owned bridges.
+
+## [2026-06-25] create | just-chill memory migration fixture replay
+
+- Added `scripts/just_chill_memory_migration_fixture.py` and `scripts/check_just_chill_memory_migration_fixture.py`.
+- The fixture selects non-sensitive canonical wiki design facts, replays them through host-owned Hermes raw/RDF/vector MCP lifecycles plus summary receipts, and cleans up with delete receipts.
+- Updated live-binding harness, canonical concept, status, decisions, and migration inventory so real personal memory migration remains explicit-approval work.
+
+## [2026-06-25] update | just-chill vector sidecar MCP API
+
+- Extended the registered host-owned `just_chill_memory_api` MCP server with `hermes.vector_sidecar.create/search/read/delete`.
+- Added vector lifecycle receipt coverage, including read-back hash checks, exact hash/source-id search evidence, delete receipts, sensitive approval blocking, and deleted-source blocking.
+- Updated live-binding/vector docs so vector search is mapped as host-owned exact sidecar evidence while production semantic ranking remains a later operator-owned model/index policy.
+
+## [2026-06-25] create | just-chill vector recall gate slice
+
+- Added `scripts/just_chill_vector_recall.py` and checks for vector sidecar contracts, provider-search-not-vector-authority mapping, recall allow/reject decisions, stale hash blocking, deletion/redaction propagation, scope checks, and sensitive-memory blocking.
+- Updated live-binding harness, canonical concept, status, decisions, and migration inventory so vector recall remains a gated sidecar over Hermes-canonical refs rather than a new memory authority.
+- Recorded that Holographic search is provider summary search only; vector sidecar search is now mapped separately through host-owned MCP exact-hash/source-id tools.
+
+## [2026-06-25] create | just-chill host-owned Hermes/RDF receipt slice
+
+- Added `scripts/just_chill_hermes_mcp_receipts.py` and checks to exercise the registered `just_chill_memory_api` MCP server through stdio JSON-RPC with raw/RDF create-read-delete receipts, read-back hashes, approval/hash negative checks, and tombstone evidence.
+- Installed/mapped live `pyshacl` and added `scripts/just_chill_rdf_persistence_receipts.py` with checks for host-owned RDF persistence evidence: deterministic ontology export, live SHACL conformance, Hermes RDF graph read-back, delete receipt, and just-chill boundary guards.
+- Updated live-binding, ontology harness, status, decisions, concept, and migration inventory docs so the current state distinguishes host-owned evidence from just-chill execution authority.
+
+## [2026-06-24] create | just-chill RDF/SHACL export slice
+
+- Added deterministic RDF/OWL Turtle export manifests for just-chill ontology candidates, including source contract hashes, source artifact triples, promotion policy, and live-binding status.
+- Added deterministic SHACL shape exports and validation reports that mirror candidate blockers without claiming a live SHACL engine ran.
+- Updated ontology checks and docs so fake persistence receipts, storage-authority drift, and live-engine claims fail closed.
+
+## [2026-06-24] create | just-chill ontology contract slice
+
+- Added deterministic TBox/ABox ontology contracts for just-chill memory promotion candidates.
+- Added SHACL-style validation blockers for explicit confirmation, PreferenceAssertion auto-promotion criteria, missing provenance, sensitive sources, deleted/redacted sources, and unmapped Hermes boundaries.
+- Added `scripts/check_just_chill_ontology_contracts.py` and `harnesses/just-chill-ontology-contracts.md` to document and verify the contract-only ontology slice.
+
+## [2026-06-24] create | just-chill Hermes live-boundary slice
+
+- Added `just-chill-hermes-live-boundary-v1` reports to separate Hermes read-only status/MCP/setup visibility from unmapped raw artifact and summary memory write APIs.
+- Added `scripts/check_just_chill_hermes_boundary.py` to verify storage authority, sensitive approval blocking, and ready-but-not-local write gates.
+- Updated live-binding docs, inventory, status, and decisions so future RDF/OWL and SHACL work depends on explicit Hermes binding evidence rather than storage assumptions.
+
+## [2026-06-24] create | just-chill visible-session orchestration planning slice
+
+- Extended visible-session helpers with `--tmux-plan` and `tmux-orchestration-plan-v1` dry-run argv plans for create/attach/readiness/prompt/tail flows.
+- Updated live binding readiness so visible handoff is `orchestration-plan-ready` only after clean helper probes plus `tmux`/`gjc` availability; missing tooling remains fail-closed.
+- Added checks for invalid tmux targets, missing-tool readiness, no hidden execution, and durable evidence gates.
+
+## [2026-06-24] create | just-chill visible-session helper slice
+
+- Added repo-local host-owned visible-session helpers: `scripts/create-gjc-session`, `scripts/prompt-gjc-session`, and `scripts/tail-gjc-session`.
+- Added `scripts/just_chill_visible_session_helpers.py` and `scripts/check_just_chill_visible_helpers.py` to validate helper contracts, metadata flow, scrollback rejection, and durable evidence acceptance.
+- Updated live-binding docs and decisions so visible routed-session readiness depends on clean helper contract probes while real GJC execution remains owned by GJC/operator-visible sessions.
+
+## [2026-06-24] create | just-chill live-binding slice
+
+- Added `scripts/just_chill_live_bindings.py` to map available local GJC/Hermes surfaces with read-only probes and emit fail-closed visible-session handoff instructions.
+- Added `scripts/just_chill_hermes_adapter.py` to wrap Hermes memory contracts in a write-blocked boundary adapter that preserves Hermes storage authority.
+- Added `scripts/check_just_chill_live_bindings.py` and `harnesses/just-chill-live-bindings.md` to verify and document visible-session, coordinator/delegation, RPC, and Hermes storage readiness.
+
+## [2026-06-24] create | just-chill bridge and memory contract slice
+
+- Added `wiki/projects/jarvis/just-chill-migration-inventory.md` to classify current Jarvis assets as keep/adapt/rename/deprecate/remove for staged just-chill migration.
+- Added `scripts/just_chill_bridge.py` to turn router packets into non-executing GJC bridge plans for visible routed sessions, coordinator MCP, `gjc_delegate_*`, and RPC host tools.
+- Added `scripts/just_chill_memory_contracts.py`, `scripts/check_just_chill_bridge_contracts.py`, and `harnesses/just-chill-bridge-contracts.md` to define and verify Hermes raw artifact / summary memory contract skeletons before live API binding.
+
+## [2026-06-24] create | just-chill router first executable slice
+
+- Added `scripts/just_chill_router.py` as a deterministic request-to-route handoff packet generator for the just-chill design.
+- Added `scripts/check_just_chill_router.py` and `harnesses/just-chill-router.md` to verify and document the first safe implementation slice.
+- Updated `projects/jarvis/status.md` with the current operating-layer status and next integration steps.
+
+## [2026-06-23] update | Hermes-GJC bridge reference added to just-chill
+
+- Added the Gajae Code Hermes MCP Bridge documentation as the canonical integration reference for just-chill's GJC/Hermes handoff.
+- Updated the canonical just-chill concept and Jarvis decisions to prefer visible routed GJC sessions first, then coordinator MCP, `gjc_delegate_*`, or RPC host tools when durable machine control or reverse host-tool access is needed.
+- Clarified that completion evidence must come from durable turn/report/artifact/work signals, not tmux scrollback alone.
+
+## [2026-06-23] update | just-chill vNext design reflected in wiki
+
+- Added `concepts/just-chill-vnext-operating-layer.md` as the current canonical vNext design, preserving older JARVIS vNext pages as predecessor context.
+- Recorded the rename and narrowing decision in `projects/jarvis/decisions.md`: just-chill is a personal operating console/router/memory gate, development routes to GJC, and Hermes remains the state/artifact/memory authority.
+- Updated `index.md`, `entities/jarvis.md`, and the vNext concept pages to link forward to the just-chill design and resolve the old new-repo-vs-existing-repo question in favor of updating `/home/hskim/jarvis`.
+
+## [2026-06-14] update | S1000D-RAG status synced to measured repo state
+
+- Verified live repo state and corrected `projects/S1000D-RAG/status.md` drift: full suite `321 passed, 5 warnings` (was 300), focused v4/app/UI/runtime-router subset `88 passed, 2 warnings` (was 52), both run with miniforge python 3.12.
+- Updated the "Current gate" section: all v4 closure commits are pushed; `main` tracks `origin/main` at `075c879` with `ahead/behind = 0/0`, replacing the stale "push pending / 353b64f latest" note. Refreshed the recent-commit list to current HEAD.
+
 ## [2026-06-12] review | vNext adversarial design review applied to concept docs
 
 - Ran an approval-gated adversarial review of `concepts/jarvis-vnext-intent-to-contract-director.md` and the 2026-06-11 decisions against 24 external sources (verdict: revise / conditionally keep direction; BLOCK 0 · MAJOR 7 · MINOR 6 · NOTE 4). Full report archived at `projects/jarvis/reviews/vnext-adversarial-review-2026-06-12.md`.

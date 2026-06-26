@@ -138,6 +138,17 @@ executors:
       - paid_external_action
       - broad_rewrite
 
+just_chill:
+  execution_bridge:
+    enabled: true
+    mode: visible-session-only
+    bridge_script: scripts/just_chill_gjc_execution_bridge.py
+    host_owned: true
+    starts_gjc_here: false
+    injects_prompt_here: false
+    coordinator_delegate_auto_mutation: false
+    requires_durable_evidence: true
+    scrollback_accepted_as_completion: false
 routing_defaults:
   small_control_plane: hermes_direct
   jarvis_bootstrap: hermes_direct
