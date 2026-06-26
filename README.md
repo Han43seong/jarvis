@@ -12,6 +12,7 @@ Hermes is the user-facing agent. just-chill is the policy layer. GJC is the deve
 ![Hermes](https://img.shields.io/badge/UX-Hermes-5e6ad2?style=for-the-badge)
 ![just-chill](https://img.shields.io/badge/policy-just--chill-7170ff?style=for-the-badge)
 ![GJC](https://img.shields.io/badge/executor-GJC-111827?style=for-the-badge)
+![License](https://img.shields.io/badge/license-MIT-3b82f6?style=for-the-badge)
 
 <br />
 
@@ -143,7 +144,15 @@ Runtime/session folders such as `.gjc/`, browser profiles, local research checko
 
 ## Verification
 
-The full just-chill regression suite currently includes:
+Run the whole suite (every check below plus `python3 -m compileall -q scripts`) with one command:
+
+```sh
+python3 scripts/check_all.py
+```
+
+`scripts/check_all.py` runs each check as a subprocess, prints a per-check PASS/FAIL summary, fails on any check failure, and also flags drift between the on-disk `scripts/check_*.py` set and the canonical list documented here.
+
+The individual commands are:
 
 ```sh
 python3 scripts/check_just_chill_router.py
@@ -202,3 +211,7 @@ The implementation is structurally complete for the current safe operating layer
 4. Bind summary add/remove receipts to Hermes-native audit receipts when Hermes exposes that API.
 5. Add a production semantic vector runner only after choosing embedding model, dimensions, rebuild policy, invalidation, and deletion propagation rules.
 6. Map RPC `customTools` only after the same authority and evidence boundaries are preserved.
+
+## License
+
+Released under the [MIT License](LICENSE). Copyright (c) 2026 Han43seong.

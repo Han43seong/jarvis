@@ -1,0 +1,61 @@
+# just-chill packaging metadata.
+#
+# just-chill is currently a flat collection of standalone, stdlib-only scripts
+# under `scripts/` that import each other as top-level modules and are run
+# directly (for example, `python3 scripts/check_all.py`). It is intentionally a
+# metadata-only distribution: no console-script entry points are declared,
+# because the scripts are not yet reorganized into an importable package and
+# declaring entry points now would point at modules that do not resolve after a
+# normal install. Entry points can be added once the modules are moved into a
+# real `just_chill/` package.
+#
+# Authority boundary: packaging metadata only. just-chill remains a policy /
+# contract / handoff layer and never executes GJC, writes Hermes, or owns
+# canonical memory.
+
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "just-chill"
+version = "0.1.0"
+description = "A Hermes-facing routing, memory-policy, approval, and GJC-handoff harness."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Han43seong" }]
+keywords = [
+    "hermes",
+    "gjc",
+    "agent",
+    "routing",
+    "policy",
+    "approval",
+    "memory",
+    "harness",
+    "mcp",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Libraries",
+]
+# stdlib-only: no third-party runtime dependencies.
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/Han43seong/just-chill"
+Repository = "https://github.com/Han43seong/just-chill"
+Issues = "https://github.com/Han43seong/just-chill/issues"
+
+[tool.setuptools]
+# Flat script collection; nothing is exposed as an importable installed module
+# yet, so the distribution carries metadata only and never claims a broken
+# import surface or console script.
+py-modules = []
