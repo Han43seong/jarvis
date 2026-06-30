@@ -1,14 +1,8 @@
-<div align="center">
-
 # just-chill
 
 **Hermes와 GJC 사이의 라우팅·메모리 정책·승인 검증 하네스**
 
-![Status](https://img.shields.io/badge/status-active-10b981?style=for-the-badge)
-![Python](https://img.shields.io/badge/Python-3-3776ab?style=for-the-badge&logo=python&logoColor=white)
-![License](https://img.shields.io/badge/license-MIT-3b82f6?style=for-the-badge)
-
-</div>
+![Status](https://img.shields.io/badge/status-active-brightgreen) ![Python](https://img.shields.io/badge/Python-3.11+-blue) ![License](https://img.shields.io/badge/license-MIT-blue)
 
 ---
 
@@ -93,7 +87,7 @@ python3 scripts/check_just_chill_approval_registry.py
 **디버그 CLI**
 
 ```sh
-scripts/just-chill classify "GJC로 인증 모듈 구현해줘"
+scripts/just-chill route "GJC로 인증 모듈 구현해줘"
 ```
 
 ---
