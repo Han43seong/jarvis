@@ -1,217 +1,123 @@
 <div align="center">
 
-# just-chill Operating Layer
+# just-chill
 
-**A Hermes-facing routing, memory-policy, approval, and GJC-handoff harness.**
-
-Hermes is the user-facing agent. just-chill is the policy layer. GJC is the development executor.
-
-<br />
+**Hermes와 GJC 사이의 라우팅·메모리 정책·승인 검증 하네스**
 
 ![Status](https://img.shields.io/badge/status-active-10b981?style=for-the-badge)
-![Hermes](https://img.shields.io/badge/UX-Hermes-5e6ad2?style=for-the-badge)
-![just-chill](https://img.shields.io/badge/policy-just--chill-7170ff?style=for-the-badge)
-![GJC](https://img.shields.io/badge/executor-GJC-111827?style=for-the-badge)
+![Python](https://img.shields.io/badge/Python-3-3776ab?style=for-the-badge&logo=python&logoColor=white)
 ![License](https://img.shields.io/badge/license-MIT-3b82f6?style=for-the-badge)
-
-<br />
-
-[Overview](#overview) · [Architecture](#architecture) · [Current status](#current-status) · [Execution mode](#execution-mode) · [Verification](#verification) · [Update history](#update-history-and-lessons-learned)
 
 </div>
 
 ---
 
-## Overview
+## 목적
 
-This repository is the working home for the `just-chill` vNext operating layer inside the existing JARVIS control-plane repository.
+Hermes(사용자 대면 에이전트)와 GJC(개발 실행기) 사이에서 정책 레이어 역할을 한다.
 
-The final product direction is:
+- **Hermes**가 요청을 받으면 → **just-chill**이 분류·라우팅·승인 검증·GJC 핸드오프 계획을 생성
+- **GJC**가 실제 구현·검증을 수행하고 내구성 있는 증거를 Hermes에 반환
 
-- **Hermes is the main user-facing UX.** Users talk to Hermes, and Hermes owns session continuity, tool access, canonical memory/artifact authority, and user-facing orchestration.
-- **just-chill is a Hermes-facing harness.** It classifies requests, applies routing policy, builds memory and recall gates, verifies approval-token contracts, and emits GJC handoff plans.
-- **GJC is the development execution layer.** Development planning, implementation, verification, durable workflow state, and multi-agent execution remain GJC responsibilities.
+just-chill은 독립형 CLI 제품도, 숨겨진 실행기도, 메모리 데이터베이스도 아니다. Hermes와 GJC의 권한 경계를 지키는 정책 하네스다.
 
-just-chill is not a standalone daily CLI product, not a hidden executor, not a memory database, and not a replacement for Hermes or GJC.
+---
 
-## Architecture
+## 원리 / 동작 방식
 
 ```text
 User
-  -> Hermes
-       -> just-chill harness
-            -> route request
-            -> build memory / recall / approval gates
-            -> build GJC handoff plan when development work is needed
-       -> host-owned bridge
-            -> visible GJC session or approved coordinator/delegate path
-            -> durable evidence returned to Hermes
-       -> Hermes memory/artifact tools
-            -> canonical storage, recall, audit, and user-facing continuity
+  → Hermes
+       → just-chill 하네스
+            → 요청 분류 (dev / non-dev / 고위험)
+            → 메모리·회수·승인 게이트 구성
+            → GJC 핸드오프 계획 생성 (개발 작업인 경우)
+       → 호스트 소유 브리지
+            → 가시 GJC 세션 또는 승인된 coordinator/delegate 경로
+            → 내구성 있는 증거 (turn_id, 아티팩트, 테스트 결과 등) 반환
+       → Hermes 메모리·아티팩트 도구
+            → 정식 저장·회수·감사·사용자 연속성 관리
 ```
 
-Authority boundaries:
+**권한 경계**
 
-| Layer | Owns | Must not own |
-| --- | --- | --- |
-| Hermes | User-facing UX, canonical memory/artifact access, tool calls, session continuity | GJC implementation internals or just-chill policy decisions |
-| just-chill | Routing, policy, approval verification, recall gates, GJC handoff contracts | GJC execution, Hermes writes, canonical memory, SHACL execution, vector search |
-| GJC | Development execution, planning workflows, verification-ready implementation, durable development evidence | Personal memory authority or Hermes UX |
-| Host bridge | Approved visible-session or coordinator/delegate execution mechanics | Completing work from tmux scrollback alone |
+| 레이어 | 소유 | 소유 불가 |
+|---|---|---|
+| Hermes | 사용자 UX, 정식 메모리/아티팩트, 도구 호출 | GJC 내부 또는 just-chill 정책 결정 |
+| just-chill | 라우팅, 정책, 승인 검증, 회수 게이트, GJC 핸드오프 계약 | GJC 실행, Hermes 쓰기, 벡터 검색 |
+| GJC | 개발 실행, 계획 워크플로, 검증 구현 | 개인 메모리 권한 또는 Hermes UX |
 
-## Current status
+라우팅은 `scripts/just_chill_router.py`의 키워드·신호 기반 결정론적 분류기로 수행되며, `gjc-direct` / `gjc-deep-interview` / `gjc-ralplan` / `gjc-ultragoal` 등의 경로로 분기한다. 실행 브리지(`scripts/just_chill_gjc_execution_bridge.py`)는 **가시 세션 전용**으로 제한되며 숨겨진 GJC 실행은 허용하지 않는다.
 
-Implemented and verified surfaces include:
+---
 
-| Surface | Main files |
-| --- | --- |
-| Request router and GJC bridge contracts | `scripts/just_chill_router.py`, `scripts/just_chill_bridge.py` |
-| Memory contract records | `scripts/just_chill_memory_contracts.py` |
-| Live-boundary discovery | `scripts/just_chill_live_bindings.py`, `scripts/just_chill_hermes_adapter.py` |
-| Visible GJC session helper contracts | `scripts/just_chill_visible_session_helpers.py`, `scripts/create-gjc-session`, `scripts/prompt-gjc-session`, `scripts/tail-gjc-session` |
-| Hermes raw/RDF/vector MCP API | `scripts/just_chill_hermes_memory_mcp.py` |
-| MCP receipt checks | `scripts/just_chill_hermes_mcp_receipts.py` |
-| Raw artifact staging | `scripts/just_chill_raw_artifact_store.py` |
-| Summary memory receipts | `scripts/just_chill_summary_memory_receipts.py` |
-| Ontology/RDF/SHACL contracts | `scripts/just_chill_ontology_contracts.py`, `scripts/just_chill_rdf_persistence_receipts.py` |
-| Vector sidecar and recall gates | `scripts/just_chill_vector_recall.py` |
-| Non-sensitive memory migration fixture | `scripts/just_chill_memory_migration_fixture.py` |
-| Debug/test CLI contract surface | `scripts/just_chill_cli.py`, `scripts/just-chill` |
-| Coordinator/delegation consent policy | `scripts/just_chill_gjc_consent_policy.py` |
-| Hermes-facing harness adapter | `scripts/just_chill_harness.py` |
-| Hermes-facing harness MCP wrapper | `scripts/just_chill_harness_mcp.py` |
-| Hermes-main dogfood harness | `scripts/just_chill_hermes_harness.py` |
-| Approval registry | `scripts/just_chill_approval_registry.py` |
-| Visible-session-only GJC execution bridge | `scripts/just_chill_gjc_execution_bridge.py` |
+## 주요 기능
 
-Hermes MCP registration status:
+| 표면 | 파일 |
+|---|---|
+| 요청 라우터 및 GJC 브리지 계약 | `scripts/just_chill_router.py`, `scripts/just_chill_bridge.py` |
+| Hermes 대면 하네스 (MCP 래퍼 포함) | `scripts/just_chill_harness.py`, `scripts/just_chill_harness_mcp.py` |
+| Hermes 메인 도그푸드 하네스 | `scripts/just_chill_hermes_harness.py` |
+| 승인 레지스트리 (토큰 해시·스코프·만료·취소 검증) | `scripts/just_chill_approval_registry.py` |
+| 메모리 계약 및 마이그레이션 픽스처 | `scripts/just_chill_memory_contracts.py`, `scripts/just_chill_memory_migration_fixture.py` |
+| 원시 아티팩트 스테이징 | `scripts/just_chill_raw_artifact_store.py` |
+| 벡터 사이드카 및 회수 게이트 | `scripts/just_chill_vector_recall.py` |
+| 온톨로지/RDF/SHACL 계약 | `scripts/just_chill_ontology_contracts.py`, `scripts/just_chill_rdf_persistence_receipts.py` |
+| Hermes 메모리 MCP API | `scripts/just_chill_hermes_memory_mcp.py` |
+| coordinator/delegate 동의 정책 | `scripts/just_chill_gjc_consent_policy.py` |
+| 가시 GJC 세션 헬퍼 | `scripts/create-gjc-session`, `scripts/prompt-gjc-session`, `scripts/tail-gjc-session` |
+| 디버그/테스트 CLI | `scripts/just_chill_cli.py`, `scripts/just-chill` |
 
-- `just_chill_memory_api` is registered and enabled.
-- `just_chill_harness` is registered and enabled.
-- A fresh Hermes session returned `just_chill.status: ready` with GJC, Hermes, tmux, coordinator MCP, delegate tools, visible-session helpers, and memory API surfaces visible.
+Hermes MCP 등록 상태: `just_chill_memory_api`와 `just_chill_harness`가 등록·활성화됨. 신선한 Hermes 세션에서 `just_chill.status: ready` 확인됨.
 
-## Execution mode
+---
 
-Visible-session-only execution is enabled in `config/routing.yaml`.
+## 설치 & 사용법
 
-This mode may prepare host-owned visible GJC handoff artifacts:
-
-- task file,
-- session metadata,
-- prompt handoff metadata,
-- operator-visible argv plan,
-- durable evidence validation.
-
-It still does **not**:
-
-- start hidden GJC work from just-chill,
-- inject prompts from just-chill,
-- call coordinator/delegate tools automatically,
-- write Hermes memory,
-- run SHACL locally,
-- run vector search locally,
-- accept tmux scrollback as completion evidence.
-
-Completion requires durable evidence such as a `turn_id`, report, artifact, diff, test output, or PR reference.
-
-## Approval and memory policy
-
-Approval tokens have two modes:
-
-| Mode | Use |
-| --- | --- |
-| Shape-only | Local debug and fixture compatibility only. Accepts host-style token prefixes but does not prove authenticity. |
-| Registry-backed | Production-meaningful local host approval. Verifies token hash, scope, optional subject hash, expiry, and revocation state. |
-
-The local host-owned registry is implemented in `scripts/just_chill_approval_registry.py`. It stores only token hashes and token previews, not plaintext tokens.
-
-Sensitive memory and recall paths must use registry-backed approval or a future Hermes-native approval/audit equivalent before production promotion.
-
-## Repository layout
-
-| Path | Purpose |
-| --- | --- |
-| `scripts/just_chill_*.py` | Executable contracts and harnesses for routing, memory, approval, recall, MCP, and GJC handoff. |
-| `scripts/check_just_chill_*.py` | Deterministic regression checks for each just-chill surface. |
-| `harnesses/just-chill-*.md` | Human-readable contracts and operating boundaries. |
-| `wiki/concepts/just-chill-vnext-operating-layer.md` | Canonical concept page for the vNext direction. |
-| `wiki/projects/jarvis/status.md` | Current project status and next steps. |
-| `wiki/projects/jarvis/decisions.md` | Durable decisions and rationale. |
-| `wiki/projects/jarvis/just-chill-migration-inventory.md` | Migration inventory and asset classification. |
-| `config/routing.yaml` | Routing defaults and visible-session-only execution bridge setting. |
-
-Runtime/session folders such as `.gjc/`, browser profiles, local research checkouts, and local evidence stores are not product source surfaces.
-
-## Verification
-
-Run the whole suite (every check below plus `python3 -m compileall -q scripts`) with one command:
+**전체 회귀 검사 실행** (권장)
 
 ```sh
 python3 scripts/check_all.py
 ```
 
-`scripts/check_all.py` runs each check as a subprocess, prints a per-check PASS/FAIL summary, fails on any check failure, and also flags drift between the on-disk `scripts/check_*.py` set and the canonical list documented here.
+`check_all.py`는 모든 `scripts/check_*.py`를 서브프로세스로 실행하고 PASS/FAIL 요약을 출력한다.
 
-The individual commands are:
+**개별 표면 검사 예시**
 
 ```sh
 python3 scripts/check_just_chill_router.py
-python3 scripts/check_just_chill_bridge_contracts.py
-python3 scripts/check_just_chill_live_bindings.py
-python3 scripts/check_just_chill_visible_helpers.py
-python3 scripts/check_just_chill_hermes_boundary.py
-python3 scripts/check_just_chill_raw_artifact_store.py
-python3 scripts/check_just_chill_hermes_raw_artifact_boundary.py
-python3 scripts/check_just_chill_hermes_memory_mcp.py
-python3 scripts/check_just_chill_hermes_mcp_receipts.py
-python3 scripts/check_just_chill_summary_memory_receipts.py
-python3 scripts/check_just_chill_ontology_contracts.py
-python3 scripts/check_just_chill_rdf_persistence_receipts.py
-python3 scripts/check_just_chill_vector_recall.py
-python3 scripts/check_just_chill_memory_migration_fixture.py
-python3 scripts/check_just_chill_cli.py
-python3 scripts/check_just_chill_approval_registry.py
-python3 scripts/check_just_chill_gjc_consent_policy.py
-python3 scripts/check_just_chill_gjc_execution_bridge.py
-python3 scripts/check_just_chill_dogfood_harness.py
 python3 scripts/check_just_chill_harness.py
-python3 scripts/check_just_chill_harness_mcp.py
-python3 scripts/check_just_chill_hermes_harness.py
-python3 scripts/check_executor_routing_policy.py
+python3 scripts/check_just_chill_approval_registry.py
 ```
 
-Verification run for this README correction:
+**디버그 CLI**
 
-- README now leads with the final just-chill product description,
-- README contains no Hangul characters,
-- `git diff --check -- README.md` passed,
-- focused harness, MCP, and execution-bridge checks passed.
+```sh
+scripts/just-chill classify "GJC로 인증 모듈 구현해줘"
+```
 
-## Update history and lessons learned
+---
 
-| Step | Problem or trial | Resolution |
-| --- | --- | --- |
-| Product boundary | The earlier JARVIS vNext framing still looked like a broad control plane or another executor. | Reframed the final product as Hermes UX + just-chill policy harness + GJC executor. |
-| CLI direction | A standalone just-chill CLI was tempting, but it would compete with Hermes. | Kept `scripts/just-chill` as a debug/test/fixture contract surface only. |
-| Hermes integration | MCP registration mutates external Hermes configuration. | Required explicit approval, registered `just_chill_harness`, then verified a fresh Hermes session with `just_chill.status: ready`. |
-| Approval tokens | Prefix-shape checks did not prove scope, subject, expiry, or revocation. | Added a local host-owned approval registry storing only token hashes. |
-| Recall safety | Recall can become unsafe if stale, deleted, redacted, sensitive, or scope-mismatched evidence enters context. | Required host-owned retrieval evidence, fresh source hash, deletion/redaction state, access scope, and approval gates. |
-| Coordinator/delegate execution | Direct machine-control mutation is powerful and should not be default. | Kept visible sessions first and added deterministic consent policy for coordinator/delegate mutation. |
-| Execution bridge | Hermes needs a concrete next hop after `gjcHandoffPlan`, but just-chill must not execute GJC. | Added visible-session-only bridge preparation and durable evidence verification without hidden execution. |
-| Completion evidence | tmux scrollback is useful for debugging but weak as proof. | Kept scrollback debug-only and required durable evidence such as turn ids, reports, artifacts, diffs, tests, or PR references. |
-| Regression coverage | Individual contracts could pass while stitched behavior drifted. | Added dogfood harnesses and a full just-chill suite covering router, bridge, memory, MCP, approval, consent, harness, and execution-bridge behavior. |
+## 요구사항 / 의존성
 
-## Remaining productization work
+- Python 3.11+
+- `pyproject.toml` 참조 (외부 패키지 의존성 최소화)
+- Hermes 세션과 GJC가 실행 중인 JARVIS 컨트롤 플레인 환경 필요
 
-The implementation is structurally complete for the current safe operating layer. Remaining work is operational/productization work:
+---
 
-1. Wrap the visible-session-only argv plan in a host-owned operator bridge that actually opens tmux/GJC and returns durable evidence.
-2. Replace or connect the local approval registry to a Hermes-native approval/audit API when available.
-3. Run real personal or production memory migration only after explicit source selection, approval, and deletion/redaction policy gates.
-4. Bind summary add/remove receipts to Hermes-native audit receipts when Hermes exposes that API.
-5. Add a production semantic vector runner only after choosing embedding model, dimensions, rebuild policy, invalidation, and deletion propagation rules.
-6. Map RPC `customTools` only after the same authority and evidence boundaries are preserved.
+## 주요 변경 이력
 
-## License
+| 시기 | 내용 |
+|---|---|
+| 2026-05-06 | JARVIS 컨트롤 플레인 초기화 — 삭제 명시적 확인 정책 포함 |
+| 2026-05-11 | 라우팅 스모크 테스트 완료, 온톨로지 기반 LLM 위키 및 Hermes 백그라운드 라우팅 점검 기초 수립 |
+| 2026-05-12 | executor 모델 정립 및 README 재정비, JARVIS 근거·빌드 이력 정의 |
+| 2026-06-11~12 | vNext 아키텍처 설계 — 실행 가드레일·권한 경계·에이전트 역할 정의, 적대적 설계 검토 반영 |
+| 2026-06-26 | Hermes 하네스 구현 완료, LICENSE·CI·패키징 메타데이터 및 `check_all` 집계기 추가 |
 
-Released under the [MIT License](LICENSE). Copyright (c) 2026 Han43seong.
+---
+
+## 라이선스
+
+[MIT License](LICENSE) — Copyright (c) 2026 Han43seong
