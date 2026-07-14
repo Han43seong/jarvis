@@ -182,7 +182,7 @@ Reference:
 
 Decision:
 - Add `scripts/just_chill_vector_recall.py` for vector sidecar candidates and recall-gate decisions.
-- Treat Holographic `fact_store(search/probe/list)` as provider summary search only, not vector sidecar authority.
+- Treat compatible provider summary search as distinct from vector-sidecar authority.
 - Keep vector sidecars non-canonical: they reference Hermes-owned source ids/hashes and cannot replace raw/RDF/summary storage.
 - Require recall gates to check canonical Hermes provenance, fresh read-back hashes, access scope, deletion/redaction state, sensitivity approval, retrieval score, and durable host retrieval evidence.
 
@@ -240,8 +240,8 @@ Rationale:
 - Read-back hashes and delete/redact lifecycle tools are required before canonical storage can be trusted.
 
 Consequences:
-- Hermes config now includes `just_chill_memory_api`; new Hermes sessions can access all seven tools.
-- Canonical host-owned store root is `/home/hskim/.local/share/jarvis/just-chill-hermes-memory-api`.
+- Host registration is an external, approval-gated operation; current configuration and tool availability are not published.
+- The canonical host-owned store root is environment-configured and intentionally not published.
 - Raw artifact promotion can become ready when it has local staging receipts and approval gates; RDF/ABox persistence needed a live SHACL engine such as `pyshacl`, which the later host-owned receipt decision maps for evidence production.
 
 Reference:
@@ -295,13 +295,13 @@ Reference:
 ## 2026-06-24 — Summary provider receipts are local evidence, not provider execution
 
 Decision:
-- Add a host-owned receipt bridge for provider-backed summary memories while Hermes exposes Holographic `fact_store(add/remove)` but no Hermes-native receipt/audit API is mapped.
+- Add a host-owned receipt bridge for provider-backed summary memories without assuming a current provider or receipt/audit mapping.
 - Emit add/remove provider-tool plans and record local add/remove receipts only when the host supplies durable provider result evidence.
 - Require explicit approval for sensitive summary writes and every summary removal; removal also requires a prior add receipt and a reason.
 - Keep Hermes as canonical memory authority and keep just-chill from calling provider tools directly.
 
 Rationale:
-- Holographic can store summary/fact memories, but just-chill still needs auditable retention/deletion evidence before those memories influence routing or policy.
+- A compatible provider may store summary/fact memories, but auditable retention/deletion evidence remains required before those memories influence routing or policy.
 - Recording host-supplied provider results preserves provenance without pretending that just-chill executed the provider call.
 - Requiring prior add receipts prevents destructive memory operations from being logged without provenance.
 
@@ -322,7 +322,7 @@ Decision:
 - Keep Hermes as the canonical storage authority and keep Hermes raw artifact writes blocked until a real Hermes API or MCP tool is mapped.
 
 Rationale:
-- Holographic can carry summary/fact memories, but it does not preserve raw source artifacts or standalone retention/deletion evidence.
+- A summary/fact provider does not by itself preserve raw source artifacts or standalone retention/deletion evidence.
 - The ontology and memory gates need source provenance receipts now, without pretending that a live Hermes artifact backend exists.
 - Using ignored local staging preserves evidence for migration and testing while keeping authority boundaries explicit.
 
@@ -335,20 +335,20 @@ Reference:
 - `scripts/check_just_chill_raw_artifact_store.py`
 - `harnesses/just-chill-live-bindings.md`
 
-## 2026-06-24 — Holographic is a summary/fact-memory provider, not a raw artifact store
+## 2026-06-24 — Summary/fact-memory providers are not raw artifact stores
 
 Decision:
-- When Hermes reports active provider `holographic`, map its `fact_store` provider tool as a host-owned summary/fact-memory write surface.
+- When a compatible summary/fact provider is available, map it only as a host-owned summary/fact-memory write surface.
 - Keep raw artifact storage unmapped and write-blocked until Hermes exposes a raw artifact create/read/delete API or MCP tool.
 - Keep just-chill local execution disabled: adapter output may include a `fact_store(action=add)` write plan, but the host/Hermes side owns the actual call and evidence receipt.
 
 Rationale:
-- The user enabled Holographic, and Hermes confirms the provider is installed and available.
-- Holographic exposes structured fact memory (`fact_store` add/search/probe/list/remove), which can carry just-chill summary memory candidates.
+- Provider-specific installation and availability are host-local state and are not recorded in the public contract.
+- A compatible structured fact-memory interface can carry summary-memory candidates.
 - It does not by itself provide a raw artifact store, standalone retention/deletion receipts, or canonical ontology promotion.
 
 Consequences:
-- `scripts/just_chill_live_bindings.py` now maps active Holographic provider-tool availability.
+- `scripts/just_chill_live_bindings.py` models compatible provider-tool availability without publishing current host state.
 - `scripts/just_chill_hermes_adapter.py` can emit a host-owned summary-memory write plan with `allowedHere: false`.
 - The next live storage slice is raw artifact storage/provenance plus provider-backed retention/deletion evidence.
 
@@ -492,7 +492,7 @@ Reference:
 ## 2026-06-23 — Rename JARVIS vNext direction to just-chill and narrow it to an operating layer
 
 Decision:
-- Rename the current vNext product direction to `just-chill` while preserving the existing `/home/hskim/jarvis` repository and Git history.
+- Rename the current vNext product direction to `just-chill` while preserving the existing `$HOME/jarvis` repository and Git history.
 - Treat just-chill as a personal operating console, router, result summarizer, long-term memory gate, and knowledge-management layer.
 - Route development-related requests to GJC by default, using only observable subroute hints for GJC direct, `deep-interview`, `ralplan`, `ultragoal`, or `team`.
 - Do not make just-chill a second development requirements interviewer, planner, coding agent, or implementation workflow runtime.
@@ -671,7 +671,7 @@ Reference:
 ## 2026-06-08 — Open-source target should be Hermes-agnostic core plus adapters
 
 Decision:
-- The JARVIS system has open-source potential as an Agent Operations Control Plane, but the private `/home/hskim/jarvis` instance should not be published as-is.
+- The JARVIS system has open-source potential as an Agent Operations Control Plane, but the private `$HOME/jarvis` instance should not be published as-is.
 - Public extraction should separate a runtime-agnostic core from host/runtime adapters.
 - The private JARVIS instance may remain Hermes-first because Hermes is operationally useful for memory, skills, session search, tools, cron, gateway, and wiki orchestration.
 - The public core must not require Hermes; Hermes should be a first-class adapter and recommended host, not a hard dependency.
@@ -736,11 +736,11 @@ Rationale:
 ## 2026-05-06 — Workspace layout
 
 Decision:
-- JARVIS root: `/home/hskim/jarvis`
-- Active WSL project root: `/home/hskim/projects`
+- JARVIS root: `$HOME/jarvis`
+- Active WSL project root: `$HOME/projects`
 - Application project source stays outside the JARVIS control-plane repo.
 - Each project is managed as an independent git repository and can map to its own GitHub repository.
-- If `/home/hskim/jarvis/projects/` is created locally as a root-level folder or symlink, it is ignored by `.gitignore`.
+- If `$HOME/jarvis/projects/` is created locally as a root-level folder or symlink, it is ignored by `.gitignore`.
 
 Rationale:
 - Keeps the control plane separate from application repositories.

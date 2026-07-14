@@ -240,9 +240,9 @@ require_in("missing receipt blocker", "retrieval requires durable host search re
 cases.append("retrieval-evidence-integrity-blocked")
 
 
-sensitive_packet = classify_request("remember my API key sk-test-1234567890 for later")
-sensitive_raw = build_raw_artifact_record(sensitive_packet, content="API key sk-test-1234567890")
-sensitive_summary = build_summary_memory_record(sensitive_raw, "API key sk-test-1234567890", confidence=0.9)
+sensitive_packet = classify_request("remember my API key <example-api-key> for later")
+sensitive_raw = build_raw_artifact_record(sensitive_packet, content="API key <example-api-key>")
+sensitive_summary = build_summary_memory_record(sensitive_raw, "API key <example-api-key>", confidence=0.9)
 sensitive_candidate = build_vector_sidecar_candidate(sensitive_summary, canonical_reference=canonical_ref(sensitive_summary), embedding_model="local-test-embedding", embedding_dimensions=384)
 require("sensitive candidate blocked", sensitive_candidate["status"], "vector-index-blocked")
 require_in("sensitive blocker", "sensitive memory requires explicit recall/index approval", sensitive_candidate["indexGate"]["blockedReasons"])

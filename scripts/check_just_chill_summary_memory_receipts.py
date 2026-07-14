@@ -124,7 +124,7 @@ with tempfile.TemporaryDirectory() as tmp:
     require_in("raw authority guard", "summary receipt bridge must not claim raw artifact authority", raw_claim_plan["receiptGate"]["blockedReasons"])
     cases.append("raw-authority-guard")
 
-    sensitive_packet = classify_request("remember my API key sk-test-1234567890 for later")
+    sensitive_packet = classify_request("remember my API key <example-api-key> for later")
     sensitive_raw = build_raw_artifact_record(sensitive_packet)
     sensitive_summary = build_summary_memory_record(sensitive_raw, "Sensitive API key must not persist without approval.")
     sensitive_blocked = build_summary_provider_receipt_plan(sensitive_summary, provider_summary_surfaces(), receipt_root=root)

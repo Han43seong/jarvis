@@ -22,10 +22,10 @@ Use this harness when Hermes delegates implementation to Codex CLI or OMX.
 
 Keep executor runtime files out of the tracked JARVIS root.
 
-- Store generated executor prompts under `/home/hskim/jarvis/tmp/executor-prompts/`.
-- Store captured logs, pid files, and run metadata under `/home/hskim/jarvis/tmp/executor-runs/`.
+- Store generated executor prompts under `$HOME/jarvis/tmp/executor-prompts/`.
+- Store captured logs, pid files, and run metadata under `$HOME/jarvis/tmp/executor-runs/`.
 - Run long executor processes from an ignored runtime work directory when practical.
-- Treat `.omx/` created under `/home/hskim/jarvis` as ignored local runtime state. Future launches should still prefer ignored work directories so the root stays visually clean.
+- Treat `.omx/` created under `$HOME/jarvis` as ignored local runtime state. Future launches should still prefer ignored work directories so the root stays visually clean.
 - Do not place prompt files at repo root or under tracked wiki/project documentation unless the prompt is intentionally curated documentation.
 
 ## Prompt handling
@@ -36,7 +36,7 @@ Avoid placing long or sensitive prompts directly in process argv.
 - Codex supports stdin prompts:
 
 ```bash
-codex exec -C <target_repo> - < /home/hskim/jarvis/tmp/executor-prompts/<task>.md
+codex exec -C <target_repo> - < $HOME/jarvis/tmp/executor-prompts/<task>.md
 ```
 
 - If an executor cannot read stdin or a prompt file directly, pass a short argv prompt that points to an ignored prompt file path.
@@ -79,10 +79,10 @@ Report exactly:
 ## Standard command
 
 ```bash
-omx exec -C <target_repo> "<short prompt that references /home/hskim/jarvis/tmp/executor-prompts/<task>.md>"
+omx exec -C <target_repo> "<short prompt that references $HOME/jarvis/tmp/executor-prompts/<task>.md>"
 ```
 
-For long-running work, run in background or tmux and capture output under `/home/hskim/jarvis/tmp/executor-runs/`.
+For long-running work, run in background or tmux and capture output under `$HOME/jarvis/tmp/executor-runs/`.
 
 Immediately after launching a background Codex/OMX process, poll it once before stepping away:
 

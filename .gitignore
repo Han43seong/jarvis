@@ -21,7 +21,7 @@ dist/
 /tmp/executor-runs/
 
 # Project repositories are managed outside this control-plane repo.
-# Canonical location: /home/hskim/projects/<project>
+# Canonical location: ~/projects/<project>
 # Keep this ignored in case a local root-level projects/ folder or symlink is created here.
 /projects/
 

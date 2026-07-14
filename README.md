@@ -2,7 +2,7 @@
 
 **Hermes와 GJC 사이의 라우팅·메모리 정책·승인 검증 하네스**
 
-![Status](https://img.shields.io/badge/status-active-brightgreen) ![Python](https://img.shields.io/badge/Python-3.11+-blue) ![License](https://img.shields.io/badge/license-MIT-blue)
+![Status](https://img.shields.io/badge/status-prototype-yellow) ![Python](https://img.shields.io/badge/Python-3.11+-blue) ![License](https://img.shields.io/badge/license-MIT-blue)
 
 ---
 
@@ -62,7 +62,7 @@ User
 | 가시 GJC 세션 헬퍼 | `scripts/create-gjc-session`, `scripts/prompt-gjc-session`, `scripts/tail-gjc-session` |
 | 디버그/테스트 CLI | `scripts/just_chill_cli.py`, `scripts/just-chill` |
 
-Hermes MCP 등록 상태: `just_chill_memory_api`와 `just_chill_harness`가 등록·활성화됨. 신선한 Hermes 세션에서 `just_chill.status: ready` 확인됨.
+검증 스냅샷(2026-06-26): 계약 회귀 검사를 로컬 환경에서 실행했다. 현재 호스트의 등록·도구·provider 상태는 공개하지 않으며 아래 검사를 다시 실행해 확인해야 한다.
 
 ---
 

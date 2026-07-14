@@ -42,7 +42,7 @@ Hermes Director
 **Objective:** Create a durable producer/reviewer rejection loop harness under the JARVIS control plane.
 
 **Files:**
-- Created: `/home/hskim/jarvis/harnesses/producer-reviewer-rejection-loop.md`
+- Created: `$HOME/jarvis/harnesses/producer-reviewer-rejection-loop.md`
 
 **Status:** Done in planning pass.
 
@@ -57,7 +57,7 @@ Hermes Director
 **Objective:** Make the harness discoverable from `AGENTS.md` without making every trivial task expensive.
 
 **Files:**
-- Modify: `/home/hskim/jarvis/AGENTS.md`
+- Modify: `$HOME/jarvis/AGENTS.md`
 
 **Change:**
 Add a concise policy:
@@ -83,7 +83,7 @@ Use `harnesses/producer-reviewer-rejection-loop.md` as the protocol. Do not use 
 - Modify skill: `jarvis-core`
 
 **Change:**
-Add a section pointing to `/home/hskim/jarvis/harnesses/producer-reviewer-rejection-loop.md` and the conditions for use.
+Add a section pointing to `$HOME/jarvis/harnesses/producer-reviewer-rejection-loop.md` and the conditions for use.
 
 **Verification:**
 - `skill_view(name='jarvis-core')` shows the new guidance.
@@ -94,7 +94,7 @@ Add a section pointing to `/home/hskim/jarvis/harnesses/producer-reviewer-reject
 **Objective:** Decide when to pay the overhead of a full producer/reviewer loop.
 
 **Files:**
-- Modify: `/home/hskim/jarvis/config/routing.yaml` or create `/home/hskim/jarvis/config/review-loop.yaml` after inspecting current routing config.
+- Modify: `$HOME/jarvis/config/routing.yaml` or create `$HOME/jarvis/config/review-loop.yaml` after inspecting current routing config.
 
 **Suggested policy:**
 

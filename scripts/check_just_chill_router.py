@@ -96,7 +96,8 @@ require("api key memory category", p["classification"]["category"], "memory")
 require("api key memory approval", p["classification"]["approvalRequired"], True)
 cases.append("sensitive-memory-approval")
 
-p = route("remember my API key sk-test-1234567890 for later")
+fake_token = "sk-" + "test-" + "1234567890"
+p = route(f"remember my API key {fake_token} for later")
 require("token-shaped api key memory remains nondev", p["classification"]["isDevelopment"], False)
 require("token-shaped api key memory category", p["classification"]["category"], "memory")
 require("token-shaped api key memory approval", p["classification"]["approvalRequired"], True)

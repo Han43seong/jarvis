@@ -21,7 +21,7 @@ relations:
 
 # JARVIS Control Plane
 
-The JARVIS control plane is the management workspace at `/home/hskim/jarvis`. It contains registry, routing policy, wiki, harnesses, plans, and operational docs. It does not vendor application source.
+The JARVIS control plane is the management workspace at `$HOME/jarvis`. It contains registry, routing policy, wiki, harnesses, plans, and operational docs. It does not vendor application source.
 
 ## Responsibilities
 

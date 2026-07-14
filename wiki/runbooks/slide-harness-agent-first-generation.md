@@ -25,7 +25,7 @@ The user should not need to manually write `brief.json` or `content-plan.json`. 
 
 ## Default Korean workflow
 
-From `/home/hskim/projects/slide-harness`:
+From `$HOME/projects/slide-harness`:
 
 1. Interpret the user's request into a brief.
 2. Save the brief under `runs/agent-inputs/<slug>-brief.json` or `/tmp/<slug>-brief.json` for throwaway work.
@@ -131,10 +131,10 @@ For quick deck-only runs, full pytest/build can be skipped if no code changed; s
 If the local viewer is not running, start:
 
 ```bash
-SLIDE_HARNESS_RUNS_ROOT=/home/hskim/projects/slide-harness/runs \
+SLIDE_HARNESS_RUNS_ROOT=$HOME/projects/slide-harness/runs \
 python -m uvicorn slide_harness.server.app:app --host 127.0.0.1 --port 8000
 
-cd /home/hskim/projects/slide-harness/web
+cd $HOME/projects/slide-harness/web
 NEXT_PUBLIC_API_BASE_URL=http://127.0.0.1:8000 npm run dev -- --hostname 127.0.0.1 --port 3000
 ```
 

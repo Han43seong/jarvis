@@ -109,17 +109,17 @@ require("remember status", remember["status"], "memory-candidate-ready")
 require("remember no write", remember["authorityBoundary"]["justChillWritesHermes"], False)
 cases.append("call-remember")
 
-sensitive = call_tool(TOOL_REMEMBER, {"request": "remember my API key sk-test-1234567890"})
+sensitive = call_tool(TOOL_REMEMBER, {"request": "remember my API key <example-api-key>"})
 require("sensitive blocked", sensitive["status"], "memory-candidate-blocked")
 require_in("sensitive blocker", "sensitive memory requires explicit approval before host-owned persistence", sensitive["blockedReasons"])
 cases.append("call-sensitive-remember")
 with TemporaryDirectory() as tmp:
-    sensitive_request = "remember my API key sk-test-1234567890"
+    sensitive_request = "remember my API key <example-api-key>"
     registry_path = str(Path(tmp) / "approvals.jsonl")
     issued = issue_approval(
         scope="memory.write",
         subject=sensitive_request,
-        actor="hskim",
+        actor="example-user",
         reason="MCP registry acceptance test",
         registry=registry_path,
     )

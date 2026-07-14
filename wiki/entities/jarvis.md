@@ -27,7 +27,7 @@ relations:
 
 # JARVIS
 
-JARVIS is the user's Hermes-centered operating system for multi-project automation. Its control-plane repository is `/home/hskim/jarvis`; active application repositories live outside it under `/home/hskim/projects/<project>`.
+JARVIS is the user's Hermes-centered operating system for multi-project automation. Its control-plane repository is `$HOME/jarvis`; active application repositories live outside it under `$HOME/projects/<project>`.
 
 ## 2026-06-23 vNext rename target
 

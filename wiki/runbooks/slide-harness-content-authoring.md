@@ -37,10 +37,10 @@ Minimum inputs:
 
 Useful context sources:
 
-- `/home/hskim/jarvis/wiki/projects/slide-harness/status.md`
-- `/home/hskim/jarvis/wiki/concepts/slide-generation-harness.md`
+- `$HOME/jarvis/wiki/projects/slide-harness/status.md`
+- `$HOME/jarvis/wiki/concepts/slide-generation-harness.md`
 - Project-specific wiki notes, RFP notes, or research notes.
-- Existing `brief.json` and `examples/content-plan-template.json` in `/home/hskim/projects/slide-harness`.
+- Existing `brief.json` and `examples/content-plan-template.json` in `$HOME/projects/slide-harness`.
 
 ## Agent-first default
 
@@ -50,7 +50,7 @@ Detailed agent-first workflow: `wiki/runbooks/slide-harness-agent-first-generati
 
 ## Standard workflow
 
-From `/home/hskim/projects/slide-harness`:
+From `$HOME/projects/slide-harness`:
 
 ```bash
 python -m slide_harness.cli draft-brief \
@@ -68,10 +68,10 @@ python -m slide_harness.cli content-template \
 Then generate an authoring prompt bundle from JARVIS:
 
 ```bash
-python /home/hskim/jarvis/scripts/slide_harness_content_authoring_bundle.py \
+python $HOME/jarvis/scripts/slide_harness_content_authoring_bundle.py \
   --brief /tmp/slide-brief.json \
   --template /tmp/content-plan-template.json \
-  --context /home/hskim/jarvis/wiki/projects/slide-harness/status.md \
+  --context $HOME/jarvis/wiki/projects/slide-harness/status.md \
   --out /tmp/slide-content-authoring-prompt.md
 ```
 
@@ -92,10 +92,10 @@ python -m slide_harness.cli doctor --brief /tmp/slide-brief.json
 Open dashboard if needed:
 
 ```bash
-SLIDE_HARNESS_RUNS_ROOT=/home/hskim/projects/slide-harness/runs \
+SLIDE_HARNESS_RUNS_ROOT=$HOME/projects/slide-harness/runs \
   python -m uvicorn slide_harness.server.app:app --host 127.0.0.1 --port 8000
 
-cd /home/hskim/projects/slide-harness/web
+cd $HOME/projects/slide-harness/web
 NEXT_PUBLIC_API_BASE_URL=http://127.0.0.1:8000 npm run dev -- --hostname 127.0.0.1 --port 3000
 ```
 

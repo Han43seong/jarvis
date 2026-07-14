@@ -87,15 +87,15 @@ python3 scripts/check_just_chill_hermes_raw_artifact_boundary.py
 python3 scripts/check_just_chill_summary_memory_receipts.py
 python3 scripts/check_just_chill_ontology_contracts.py
 python3 scripts/check_executor_routing_policy.py
-python3 scripts/just_chill_bridge.py --pretty --cwd /home/hskim/jarvis "Execute the approved pending-approval plan with ultragoal"
+python3 scripts/just_chill_bridge.py --pretty --cwd $HOME/jarvis "Execute the approved pending-approval plan with ultragoal"
 python3 scripts/just_chill_memory_contracts.py --pretty --summary "User prefers visible routed GJC sessions first." "remember that GJC should use visible routed sessions first"
-python3 scripts/just_chill_live_bindings.py --probe --pretty --cwd /home/hskim/jarvis "fix TypeError in src/hooks/bridge.ts and run bun test"
-python3 scripts/just_chill_hermes_adapter.py --probe --pretty --cwd /home/hskim/jarvis --summary "Sensitive API key request; no persistence without explicit approval." "remember my API key sk-test-1234567890 for later"
+python3 scripts/just_chill_live_bindings.py --probe --pretty --cwd $HOME/jarvis "fix TypeError in src/hooks/bridge.ts and run bun test"
+python3 scripts/just_chill_hermes_adapter.py --probe --pretty --cwd $HOME/jarvis --summary "Sensitive API key request; no persistence without explicit approval." "remember my API key <example-api-key> for later"
 ```
 
 ## Live-binding status
 
-See `harnesses/just-chill-live-bindings.md` for the current host map. As of the Hermes live-boundary slice, `gjc`, `tmux`, `hermes`, coordinator MCP smoke, `gjc_delegate_*` discovery, repo-local visible-session helper contracts, local raw artifact staging, raw artifact API discovery, and summary provider add/remove receipt contracts pass; visible handoffs are `orchestration-plan-ready` when helper contracts are probed and `tmux`/`gjc` are available. RPC host `customTools` and Hermes raw artifact APIs remain unmapped, and the Hermes adapter reports those paths as contract-only/write-blocked while preserving Hermes storage authority.
+See `harnesses/just-chill-live-bindings.md` for the portable contract. Host-specific command availability, registrations, providers, and live mapping results are intentionally excluded from this public repository and must be verified locally.
 
 ## Remaining live-binding work
 

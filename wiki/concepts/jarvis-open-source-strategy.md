@@ -25,7 +25,7 @@ This note records the open-source direction for the future JARVIS system.
 
 ## Executive decision
 
-JARVIS has open-source potential, but the public project should not be the user's private `/home/hskim/jarvis` control-plane repository as-is.
+JARVIS has open-source potential, but the public project should not be the user's private `$HOME/jarvis` control-plane repository as-is.
 
 The public project should be a generalized agent-operations framework:
 
@@ -295,8 +295,8 @@ The projects can be complementary: Ouroboros patterns inform task contracts and 
 
 ## Extraction strategy from private JARVIS
 
-1. Keep `/home/hskim/jarvis` private as the dogfood control-plane instance.
-2. Create a separate public-candidate repository under `/home/hskim/projects/<public-name>`.
+1. Keep `$HOME/jarvis` private as the dogfood control-plane instance.
+2. Create a separate public-candidate repository under `$HOME/projects/<public-name>`.
 3. Extract only generic schemas, protocols, and CLI code.
 4. Replace user-specific examples with synthetic examples.
 5. Keep Hermes integration behind an adapter boundary.
@@ -308,7 +308,7 @@ The projects can be complementary: Ouroboros patterns inform task contracts and 
 
 Before public release, verify:
 
-- no `hskim` or private local paths in public files;
+- no personal usernames or private local paths in public files;
 - no `.env`, tokens, keys, auth files, session transcripts, or private run logs;
 - no private project names that should remain internal;
 - license selected;
@@ -340,7 +340,7 @@ JARVIS public-core MVP plan
   - CLI command surface
   - adapter protocol
   - private-data scrub checklist
-  - dogfood plan from /home/hskim/jarvis
+  - dogfood plan from $HOME/jarvis
 ```
 
 ## See also

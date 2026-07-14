@@ -129,8 +129,8 @@ def build_hermes_main_harness(
         "caller": "hermes",
     }, "consent-visible")
 
-    selected_memory_request = "remember my API key sk-test-1234567890" if sensitive_memory else memory_request
-    selected_summary = "API key sk-test-1234567890" if sensitive_memory else summary
+    selected_memory_request = "remember my API key <example-api-key>" if sensitive_memory else memory_request
+    selected_summary = "API key <example-api-key>" if sensitive_memory else summary
     remember = mcp_tool_call(TOOL_REMEMBER, {"request": selected_memory_request, "summary": selected_summary, "caller": "hermes"}, "remember")
     handled = mcp_tool_call(TOOL_HANDLE, {"request": selected_memory_request, "summary": selected_summary, "caller": "hermes"}, "handle")
     candidate, retrieval, reference = recall_fixture(summary)

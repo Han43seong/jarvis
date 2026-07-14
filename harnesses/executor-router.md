@@ -51,7 +51,7 @@ Use this harness whenever the user asks JARVIS to perform work without explicitl
 - If the task is research, market analysis, comparison, candidate scouting, report drafting, long inspection, or multi-source review and is likely to exceed about 1 minute, use `hermes-background` by default so the main Hermes session remains responsive.
 - Do not treat `delegate_task` as durable background execution. It is synchronous and is cancelled when the parent is interrupted. Use `terminal(background=true, notify_on_complete=true)`, `/background`, one-shot `cron`, or `kanban` for work that should survive user follow-up messages.
 - If the user says "끝까지", "자동으로", "구현해", "완성해", and the task is coding-related, prefer `omx-ralph`.
-- If the task is only under `/home/hskim/jarvis`, prefer `hermes-direct` unless it is long and multi-step.
+- If the task is only under `$HOME/jarvis`, prefer `hermes-direct` unless it is long and multi-step.
 - If the task modifies an existing project repo and touches many files, prefer `omx-ralph`.
 - If the task is test/lint cleanup across a repo, prefer `omx-ralph`; consider `codex-goal` if the user asks for Codex specifically.
 - If the user explicitly chooses an executor, use it unless unsafe.

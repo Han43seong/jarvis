@@ -12,8 +12,8 @@
 
 ## [2026-06-26] verify | just-chill harness visible in fresh Hermes session
 
-- Fresh Hermes session returned `just_chill.status: ready`.
-- The status output confirmed `just_chill_harness` and `just_chill_memory_api` are enabled, coordinator MCP smoke is ok, delegate tools are present, visible routed-session helpers are contract-valid, and just-chill still has no local execution, Hermes-write, or mutation authority.
+- The status contract was exercised locally; the current host result is intentionally not published.
+- The status contract was exercised locally; host-specific registrations and availability are not published.
 - Remaining productization work moves to host-owned execution/evidence bridges, production approval/audit integration, and real memory migration policy.
 
 ## [2026-06-26] create | just-chill approval registry
@@ -22,17 +22,16 @@
 - Approval tokens can now be issued, verified, and revoked against scope, optional subject hash, expiry, and revocation state while persisting only token hashes.
 - CLI, Hermes-facing harness, and MCP remember/recall flows accept optional registry-backed approval inputs; shape-only acceptance remains debug/fixture-only.
 
-## [2026-06-26] update | just-chill harness MCP registered in Hermes
+## [2026-06-26] update | just-chill harness registration workflow checked
 
-- After explicit approval, registered `scripts/just_chill_harness_mcp.py` as Hermes MCP server `just_chill_harness`.
-- `hermes mcp add just_chill_harness --command python3 --args /home/hskim/jarvis/scripts/just_chill_harness_mcp.py` connected and enabled all 7 `just_chill.*` tools.
-- `hermes mcp list` and `hermes mcp test just_chill_harness` verified the server is enabled and discoverable; a new Hermes session is required before using newly registered tools.
+- The approval-gated registration and discovery workflow was checked in a local host environment.
+- Current registration state, command paths, and host tool inventory are intentionally not published.
 
 ## [2026-06-26] create | just-chill Hermes-facing harness
 
 - Added `scripts/just_chill_harness.py`, `scripts/just_chill_harness_mcp.py`, `scripts/just_chill_hermes_harness.py`, and focused checks for each.
 - Hermes is now documented as the user-facing product layer; just-chill is a routing/memory/approval/GJC-handoff harness and `scripts/just-chill` is debug/test/fixture-only.
-- The harness MCP exposes `just_chill.*` tools and is now registered in Hermes as `just_chill_harness` after explicit approval.
+- The harness MCP exposes `just_chill.*` contract tools; external registration remains host-owned and is not asserted here.
 ## [2026-06-25] create | just-chill end-to-end dogfood contract harness
 
 - Added `scripts/just_chill_dogfood_harness.py` and `scripts/check_just_chill_dogfood_harness.py`.
@@ -59,7 +58,7 @@
 
 ## [2026-06-25] update | just-chill vector sidecar MCP API
 
-- Extended the registered host-owned `just_chill_memory_api` MCP server with `hermes.vector_sidecar.create/search/read/delete`.
+- Added vector-sidecar lifecycle contracts; external registration state is not asserted here.
 - Added vector lifecycle receipt coverage, including read-back hash checks, exact hash/source-id search evidence, delete receipts, sensitive approval blocking, and deleted-source blocking.
 - Updated live-binding/vector docs so vector search is mapped as host-owned exact sidecar evidence while production semantic ranking remains a later operator-owned model/index policy.
 
@@ -67,11 +66,11 @@
 
 - Added `scripts/just_chill_vector_recall.py` and checks for vector sidecar contracts, provider-search-not-vector-authority mapping, recall allow/reject decisions, stale hash blocking, deletion/redaction propagation, scope checks, and sensitive-memory blocking.
 - Updated live-binding harness, canonical concept, status, decisions, and migration inventory so vector recall remains a gated sidecar over Hermes-canonical refs rather than a new memory authority.
-- Recorded that Holographic search is provider summary search only; vector sidecar search is now mapped separately through host-owned MCP exact-hash/source-id tools.
+- Recorded that provider summary search is distinct from vector-sidecar authority; current host mappings are not published.
 
 ## [2026-06-25] create | just-chill host-owned Hermes/RDF receipt slice
 
-- Added `scripts/just_chill_hermes_mcp_receipts.py` and checks to exercise the registered `just_chill_memory_api` MCP server through stdio JSON-RPC with raw/RDF create-read-delete receipts, read-back hashes, approval/hash negative checks, and tombstone evidence.
+- Added `scripts/just_chill_hermes_mcp_receipts.py` and checks for stdio JSON-RPC raw/RDF lifecycle receipt contracts, read-back hashes, approval/hash negative checks, and tombstone evidence.
 - Installed/mapped live `pyshacl` and added `scripts/just_chill_rdf_persistence_receipts.py` with checks for host-owned RDF persistence evidence: deterministic ontology export, live SHACL conformance, Hermes RDF graph read-back, delete receipt, and just-chill boundary guards.
 - Updated live-binding, ontology harness, status, decisions, concept, and migration inventory docs so the current state distinguishes host-owned evidence from just-chill execution authority.
 
@@ -133,7 +132,7 @@
 
 - Added `concepts/just-chill-vnext-operating-layer.md` as the current canonical vNext design, preserving older JARVIS vNext pages as predecessor context.
 - Recorded the rename and narrowing decision in `projects/jarvis/decisions.md`: just-chill is a personal operating console/router/memory gate, development routes to GJC, and Hermes remains the state/artifact/memory authority.
-- Updated `index.md`, `entities/jarvis.md`, and the vNext concept pages to link forward to the just-chill design and resolve the old new-repo-vs-existing-repo question in favor of updating `/home/hskim/jarvis`.
+- Updated `index.md`, `entities/jarvis.md`, and the vNext concept pages to link forward to the just-chill design and resolve the old new-repo-vs-existing-repo question in favor of updating `$HOME/jarvis`.
 
 ## [2026-06-14] update | S1000D-RAG status synced to measured repo state
 

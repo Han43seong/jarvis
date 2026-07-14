@@ -32,7 +32,7 @@ relations:
 
 This page is now predecessor context for [[concepts/just-chill-vnext-operating-layer|just-chill vNext Operating Layer]]. The Director boundary remains valid, but the current product direction is narrower: just-chill routes development work to GJC instead of compiling its own development contracts, and it focuses on intake, risk/routing, result summaries, non-development knowledge/communication work, and Hermes-backed memory gates.
 
-The old open question about a new `/home/hskim/projects/jarvis-vnext` repo is resolved: update the existing `/home/hskim/jarvis` project and preserve Git/wiki lineage.
+The old open question about a new `$HOME/projects/jarvis-vnext` repo is resolved: update the existing `$HOME/jarvis` project and preserve Git/wiki lineage.
 
 ## Conversation context
 
@@ -348,7 +348,7 @@ Examples:
 ```yaml
 guardrails:
   allowed_paths:
-    - /home/hskim/projects/<project>/**
+    - $HOME/projects/<project>/**
   denied_paths:
     - "**/.env"
     - "**/auth.json"
@@ -476,7 +476,7 @@ The document is deliberately not a line-by-line build manual. If an AI coding ag
 
 ## Next discussion prompts
 
-The 2026-06-23 just-chill decision resolves two former prompts: implementation should update `/home/hskim/jarvis`, and GJC is the preferred development worker family for the target design.
+The 2026-06-23 just-chill decision resolves two former prompts: implementation should update `$HOME/jarvis`, and GJC is the preferred development worker family for the target design.
 
 The GJC/Hermes integration question is also narrowed by the Gajae Code Hermes MCP Bridge reference: <https://gajae-code.com/docs/hermes-mcp-bridge.html>. The first just-chill pass should prefer visible routed sessions for observability, then graduate to coordinator MCP, `gjc_delegate_*`, or RPC host tools when durable machine-control requirements justify them.
 

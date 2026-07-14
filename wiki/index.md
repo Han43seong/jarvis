@@ -31,7 +31,7 @@
 - [[concepts/ouroboros-adoption-review|Ouroboros Adoption Review for JARVIS vNext]] — decision to use Q00/ouroboros as a reference and selective design source for task contracts, ledgers, evaluation gates, runtime adapters, and harness manifests without replacing JARVIS as Director.
 - [[concepts/llm-wiki-pattern|LLM Wiki Pattern]] — persistent interlinked markdown wiki that compiles knowledge rather than re-deriving it per query.
 - [[concepts/ontology-informed-wiki|Ontology-Informed Wiki]] — lightweight ontology approach using frontmatter types, relations, tags, and wikilinks.
-- [[concepts/project-repository-model|Project Repository Model]] — active application repos live under `/home/hskim/projects/<project>`, outside the JARVIS repo.
+- [[concepts/project-repository-model|Project Repository Model]] — active application repos live under `$HOME/projects/<project>`, outside the JARVIS repo.
 - [[concepts/slide-generation-harness|Slide Generation Harness]] — presentation-generation harness pattern for slide/PPTX workflows, QA loops, and design/asset verification.
 - [[concepts/skill-lifecycle|Skill Lifecycle]] — candidate, active, deprecated, archived, and promoted states for Hermes skill growth control.
 

@@ -18,24 +18,13 @@ developer/debug fixture
   -> same deterministic contracts, still without GJC execution or Hermes writes
 ```
 
-## Current local surface map
+## Runtime verification
 
-Observed in this repo slice:
+Host-specific tool versions, provider names, registration state, storage roots, and private topology are intentionally not published. The repository documents contracts and fail-closed behavior; each operator must rerun the read-only probes below in their own environment.
 
-| Surface | Status | Evidence / command |
-|---|---|---|
-| `gjc` CLI | available | `gjc --version` returned `gjc/0.7.0`. |
-| `tmux` | available | `tmux -V` returned `tmux 3.4`. |
-| Host visible-session helpers | orchestration-plan-ready when probed | `scripts/create-gjc-session`, `scripts/prompt-gjc-session`, and `scripts/tail-gjc-session` expose `--contract --json` plus `--tmux-plan`, record metadata under `JUST_CHILL_VISIBLE_SESSION_DIR` or `/tmp/just-chill-visible-sessions`, emit dry-run tmux/GJC argv plans, and keep `scrollbackIsCompletion: false`. |
-| Coordinator MCP | smoke-ok, read-only by default | `gjc mcp-serve coordinator --check --json` returned server `gjc-coordinator-mcp` and the required coordinator/delegate tools. Execution remains blocked until mutation classes and per-call `allow_mutation: true` are enabled. |
-| Hermes setup package | render/smoke OK | `gjc setup hermes --root /home/hskim/jarvis --smoke --json` returned `ok: true` and wrote no files. |
-| `gjc_delegate_*` tools | present via coordinator MCP | `gjc_delegate_plan`, `gjc_delegate_execute`, and `gjc_delegate_team` are present in the coordinator smoke tool list. They are not treated as executable until coordinator mutation consent is configured. |
-| RPC host tools | contract-only | No live RPC `customTools` registry is mapped in this repo slice. |
-| Hermes memory provider | `holographic` provider-tool mapped for summary/fact memory | `hermes memory status` reports provider `holographic`. `scripts/just_chill_live_bindings.py` maps Holographic `fact_store(action=add/search/probe/list/remove)` as a host-owned summary-memory provider tool. `scripts/just_chill_summary_memory_receipts.py` records local add/remove receipts for host-executed provider operations. |
-| Local raw artifact staging | available as Hermes-compatible staging, not canonical Hermes storage | `scripts/just_chill_raw_artifact_store.py` writes ignored repo-local receipts under `tmp/just-chill-artifacts` by default, validates content hashes, requires approval for sensitive staging/read/deletion, and records deletion receipts. |
-| Hermes raw/RDF/vector MCP API | mapped through `just_chill_memory_api`; host-owned | `scripts/just_chill_hermes_memory_mcp.py` exposes `hermes.raw_artifact.create/read/delete`, `hermes.rdf_graph.create/read/delete`, `hermes.vector_sidecar.create/search/read/delete`, and `hermes.memory_api.status`; `hermes mcp add just_chill_memory_api ...` connected and enabled all tools. just-chill discovers the tools but does not call them directly. |
-| Hermes MCP config | configured | `hermes mcp list` shows `just_chill_memory_api` and `just_chill_harness` enabled. Memory API store root: `/home/hskim/.local/share/jarvis/just-chill-hermes-memory-api`. |
-| Hermes-facing just-chill harness MCP | configured after explicit approval | `scripts/just_chill_harness_mcp.py` exposes `just_chill.route`, `just_chill.remember.plan`, `just_chill.recall.gate`, `just_chill.gjc_handoff.plan`, `just_chill.consent.evaluate`, `just_chill.handle`, and `just_chill.status` as a stdio MCP server. `hermes mcp add just_chill_harness --command python3 --args /home/hskim/jarvis/scripts/just_chill_harness_mcp.py` connected and enabled all 7 tools after operator approval; `hermes mcp test just_chill_harness` connected and discovered 7 tools. |
+- `scripts/just_chill_live_bindings.py --probe` reports available host surfaces without granting execution authority.
+- Missing helpers, mutation consent, durable evidence, or approval must keep the corresponding path blocked.
+- Runtime reports are local evidence and must not be committed with private paths, provider identifiers, or registration details.
 
 ## Implemented files
 
@@ -46,7 +35,7 @@ Observed in this repo slice:
 | `scripts/just_chill_raw_artifact_store.py` | Host-owned local staging store for raw artifact contracts before canonical Hermes promotion; writes content, contract, write receipt, and deletion receipt under an ignored local store, blocks sensitive reads without approval, and does not claim Hermes storage authority. |
 | `scripts/just_chill_summary_memory_receipts.py` | Host-owned receipt bridge for provider-backed summary memories; emits `fact_store(add/remove)` plans, records add/remove receipts from supplied provider result evidence, requires approval for sensitive writes/removals, and keeps Hermes as canonical memory authority. |
 | `scripts/just_chill_hermes_raw_artifact_boundary.py` | Read-only raw artifact API discovery and host-owned promotion planning; detects Hermes raw artifact create/read/delete APIs or MCP tools when present, otherwise keeps local staging -> Hermes promotion fail-closed. |
-| `scripts/just_chill_hermes_memory_mcp.py` | Host-owned stdio MCP server registered in Hermes as `just_chill_memory_api`; exposes raw artifact, RDF graph, and vector sidecar lifecycle tools with hash, approval, deletion, and read-back/retrieval evidence guards. |
+| `scripts/just_chill_hermes_memory_mcp.py` | Host-owned stdio MCP server contract for raw artifact, RDF graph, and vector sidecar lifecycle tools with hash, approval, deletion, and read-back/retrieval evidence guards. |
 | `scripts/just_chill_hermes_mcp_receipts.py` | Host-owned stdio JSON-RPC lifecycle runner that exercises `just_chill_memory_api` raw artifact, RDF graph, and vector sidecar create/read/search/delete paths, captures read-back hashes, negative approval/hash checks, and delete receipts without granting just-chill execution authority. |
 | `scripts/just_chill_rdf_persistence_receipts.py` | Host-owned RDF/SHACL persistence receipt bridge that combines deterministic ontology exports, live `pyshacl` evidence, and Hermes RDF graph MCP create/read/delete receipts while keeping just-chill out of SHACL/Hermes execution. |
 | `scripts/just_chill_vector_recall.py` | Vector sidecar and recall-gate builder; maps live vector/search boundaries, creates sidecar candidates from Hermes-canonical source refs, and decides recall admission without embedding/searching locally. |
@@ -96,8 +85,8 @@ Observed in this repo slice:
 - Readiness checks may model explicit per-call consent with `--allow-mutation`; mutation classes alone must still fail closed.
 - Coordinator/delegation mutation consent is evaluated by `scripts/just_chill_gjc_consent_policy.py`: visible routed sessions remain the default; coordinator/delegate paths are host-ready only with clean coordinator smoke, required mutation classes (`sessions`, `questions`, `reports`), explicit per-call `allow_mutation`, delegate tool availability when applicable, durable evidence policy, and no scrollback completion.
 - RPC host-tools remain `contract-only` until a live host `customTools` registry is mapped.
-- Hermes summary/fact memory can be planned through an active mapped provider tool such as Holographic `fact_store(action=add/remove)`, but just-chill still emits a host-owned `writePlan` / receipt plan and does not call the tool directly.
-- Hermes raw artifact writes are now mapped through the host-owned `just_chill_memory_api` MCP server, but just-chill still does not call them directly; status/MCP/setup probes and provider presence are read-only evidence and never prove raw artifact storage authority by themselves.
+- Summary/fact memory can be planned through a compatible provider tool, but just-chill emits only a host-owned `writePlan` / receipt plan and does not call the tool directly.
+- Raw artifact lifecycle operations require a host-owned MCP mapping, but just-chill does not call it directly; status/MCP/setup probes and provider presence are read-only evidence and never prove storage authority by themselves.
 - Raw artifact API discovery probes Hermes help, memory help, MCP list, tools list, and GJC Hermes setup smoke output; only MCP/tools listings are accepted as authoritative API candidates, and create/read/delete must all be mapped before a Hermes raw artifact promotion plan can become ready.
 - Local raw artifact staging is allowed only as an ignored host-owned bridge under `tmp/just-chill-artifacts` or an explicit store root; it preserves Hermes as canonical authority and must not be treated as live Hermes storage.
 - Staged raw artifacts require hash-matching content, durable write receipts, sensitive approval tokens for staging/read when applicable, and deletion receipts for destructive cleanup.
@@ -110,7 +99,7 @@ Observed in this repo slice:
 - Vector sidecars are non-canonical indexes over Hermes-owned raw/RDF/summary records. The host-owned `just_chill_memory_api` maps `hermes.vector_sidecar.create/search/read/delete`; just-chill may validate sidecar contracts and recall gates, but it must not embed text, write/search a vector store itself, or return a memory candidate without canonical Hermes refs, fresh hashes, access checks, and durable host retrieval evidence.
 - Hermes is the user-facing layer. just-chill is a harness/tool dependency for Hermes: it emits routing, memory, recall, GJC handoff, and consent contracts, but it does not become the chat UI or task executor.
 - The `scripts/just-chill` CLI is retained for local debug, fixture generation, and CI checks only. Product UX should call `scripts/just_chill_harness.py` directly or use the registered `just_chill_harness` Hermes MCP server.
-- The `just_chill_harness_mcp.py` server is registered in Hermes as `just_chill_harness` after explicit operator approval. Registration changed external Hermes config, so future remove/re-register actions remain approval-gated host operations.
+- Registering `just_chill_harness_mcp.py` in a host changes external configuration, so registration and removal remain approval-gated host operations. Current registration state is not published.
 
 
 ## Hermes-facing harness and debug CLI contract
@@ -118,8 +107,8 @@ Observed in this repo slice:
 Hermes is the intended user-facing entrypoint. `scripts/just_chill_harness.py` and `scripts/just_chill_harness_mcp.py` are the product integration surfaces Hermes should call. `scripts/just-chill` is retained as a local debug/test/fixture CLI, not as the main user UX. Debug examples:
 
 ```sh
-scripts/just-chill route --include-bridge --cwd /home/hskim/jarvis "fix src/hooks/bridge.ts"
-scripts/just-chill handoff-gjc --cwd /home/hskim/jarvis "fix src/hooks/bridge.ts"
+scripts/just-chill route --include-bridge --cwd $HOME/jarvis "fix src/hooks/bridge.ts"
+scripts/just-chill handoff-gjc --cwd $HOME/jarvis "fix src/hooks/bridge.ts"
 scripts/just-chill remember --summary "Development routes to GJC." "remember that development routes to GJC"
 scripts/just-chill recall "How should development be routed?"
 ```
@@ -169,17 +158,17 @@ python3 scripts/check_just_chill_dogfood_harness.py
 python3 scripts/check_just_chill_harness.py
 python3 scripts/check_just_chill_harness_mcp.py
 python3 scripts/check_just_chill_hermes_harness.py
-python3 scripts/just_chill_harness.py --operation handle --arguments '{"request":"fix src/hooks/bridge.ts","cwd":"/home/hskim/jarvis"}' --pretty
+python3 scripts/just_chill_harness.py --operation handle --arguments "{\"request\":\"fix src/hooks/bridge.ts\",\"cwd\":\"$HOME/jarvis\"}" --pretty
 python3 scripts/just_chill_harness_mcp.py --check --pretty
-python3 scripts/just_chill_hermes_harness.py --cwd /home/hskim/jarvis --pretty
-python3 scripts/just_chill_live_bindings.py --probe --pretty --cwd /home/hskim/jarvis "fix TypeError in src/hooks/bridge.ts and run bun test"
-python3 scripts/just_chill_hermes_adapter.py --probe --pretty --cwd /home/hskim/jarvis --summary "Sensitive API key request; no persistence without explicit approval." "remember my API key sk-test-1234567890 for later"
-python3 scripts/just_chill_summary_memory_receipts.py --probe --pretty --cwd /home/hskim/jarvis --plan-add --summary "Visible routed GJC sessions are preferred." "remember that visible GJC sessions are preferred"
-python3 scripts/just_chill_hermes_raw_artifact_boundary.py --probe --pretty --cwd /home/hskim/jarvis
+python3 scripts/just_chill_hermes_harness.py --cwd $HOME/jarvis --pretty
+python3 scripts/just_chill_live_bindings.py --probe --pretty --cwd $HOME/jarvis "fix TypeError in src/hooks/bridge.ts and run bun test"
+python3 scripts/just_chill_hermes_adapter.py --probe --pretty --cwd $HOME/jarvis --summary "Sensitive API key request; no persistence without explicit approval." "remember my API key <example-api-key> for later"
+python3 scripts/just_chill_summary_memory_receipts.py --probe --pretty --cwd $HOME/jarvis --plan-add --summary "Visible routed GJC sessions are preferred." "remember that visible GJC sessions are preferred"
+python3 scripts/just_chill_hermes_raw_artifact_boundary.py --probe --pretty --cwd $HOME/jarvis
 python3 scripts/just_chill_ontology_contracts.py --live-boundary --plan-persistence --pretty "remember that just-chill routes dev work to GJC"
 python3 scripts/just_chill_hermes_mcp_receipts.py --require-registration --pretty
 python3 scripts/just_chill_rdf_persistence_receipts.py --pretty
-python3 scripts/just_chill_vector_recall.py --boundary --probe --pretty --cwd /home/hskim/jarvis
+python3 scripts/just_chill_vector_recall.py --boundary --probe --pretty --cwd $HOME/jarvis
 python3 scripts/just_chill_vector_recall.py --candidate --pretty
 python3 scripts/just_chill_vector_recall.py --recall --pretty
 ```
@@ -194,13 +183,13 @@ Expected high-level results:
 - GJC execution bridge checks pass and prove `gjcHandoffPlan` can be converted into host-owned visible-session task/session artifacts, while actual GJC start/prompt injection stays outside just-chill and completion requires durable non-scrollback evidence.
 - Dogfood harness checks pass and prove the integrated contract chain can route a development request, build memory/raw/RDF/SHACL/vector contracts, admit recall only with fresh host evidence, and produce a GJC handoff/consent plan without hidden execution.
 - Hermes-facing harness checks pass and prove route/remember/recall/handoff/consent/status/handle operations emit stable JSON for Hermes callers with all local execution, Hermes writes, SHACL runs, vector searches, coordinator calls, and delegate calls disabled.
-- Harness MCP checks pass and prove the stdio server exposes concrete `just_chill.*` tools, preserves JSON-RPC ids on errors, and is registered in Hermes as `just_chill_harness` only after explicit host approval.
+- Harness MCP checks prove the stdio server exposes concrete `just_chill.*` tools and preserves JSON-RPC ids on errors; they do not assert current external registration.
 - Hermes-main harness checks pass and prove Hermes is the user-facing layer, just-chill is the policy harness, CLI remains debug-only, and development/memory/recall/sensitive/malformed-MCP paths fail closed or route correctly.
 - Visible-session handoff is ready when repo-local helper contracts are probed cleanly and `tmux`/`gjc` are available; without probing or tools, readiness stays unverified or metadata-only and fail-closed.
 - Coordinator MCP and `gjc_delegate_*` are available in the smoke tool list but execution is still gated by mutation consent.
-- Hermes adapter output includes `liveBoundaryReport` / `rawLiveBoundary` / `summaryLiveBoundary`, preserves `storageAuthority: Hermes`, maps raw artifact writes through host-owned `hermes.raw_artifact.create/read/delete`, exposes local raw artifact staging only as optional migration evidence, exposes `rawArtifactApiDiscovery`, maps active Holographic summary memory to a host-owned `fact_store(action=add)` write plan with `allowedHere: false`, and exposes a summary provider receipt plan that remains host-executed.
+- Adapter output includes live-boundary reports, preserves host storage authority, exposes local staging only as optional migration evidence, and emits host-executed raw/summary lifecycle plans without asserting current provider or API availability.
 - Ontology live-boundary output reports RDF parser availability, live SHACL engine availability, and Hermes RDF graph create/read/delete API mapping; with `pyshacl` installed/mapped, host-owned RDF persistence receipt runs can produce conforming SHACL evidence plus Hermes RDF read-back/delete receipts.
-- Vector live-boundary output may report Holographic `fact_store(search/probe/list)` as provider summary search, but that is not vector sidecar authority. The host-owned `just_chill_memory_api` now maps exact-hash/source-id vector sidecar create/search/read/delete tools; recall gates still require canonical Hermes refs, fresh hashes, deletion/redaction checks, access policy, and durable host retrieval evidence.
+- A compatible provider may expose summary search, but that is not vector-sidecar authority. Any host-owned vector-sidecar mapping must still require canonical refs, fresh hashes, deletion/redaction checks, access policy, and durable host retrieval evidence.
 
 ## Remaining work
 

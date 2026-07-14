@@ -1,9 +1,11 @@
 # S1000D-RAG Status
 
+> **Historical snapshot:** 이 문서는 just-chill 운영 기록이다. 현재 프로젝트 설명과 검증 수치는 [S1000D-RAG 저장소](https://github.com/Han43seong/S1000D-RAG) 및 [공식 검증 리포트](https://github.com/Han43seong/S1000D-RAG/blob/main/docs/rag_quality_evidence_report.md)를 기준으로 한다.
+
 ## Registry
 
 - Status: reference-complete
-- Local path: `/home/hskim/projects/S1000D-RAG`
+- Local path: `$HOME/projects/S1000D-RAG`
 - Remote: `https://github.com/Han43seong/S1000D-RAG.git`
 - Default executor: `omx-ralph`
 
@@ -34,8 +36,8 @@ Transition plan: `internal-business-chatbot-transition-plan.md`.
   - BGE reranker v2 m3
 - Added `scripts/verify_local_models.py` and `docs/local_model_stack.md` to verify the local files without loading weights.
 - Added `scripts/local_model_env.py` to emit env vars for local runtime smoke/eval.
-- Completed runtime smoke/eval and documented results in `/home/hskim/projects/S1000D-RAG/docs/runtime_smoke_eval_report.md`.
-- Completed Graph-first retrieval QA and autonomous 500-question validation loop: final `500/500` passed, with 10 mid-loop fixes/rechecks resolved.
+- Completed runtime smoke/eval and documented results in `$HOME/projects/S1000D-RAG/docs/runtime_smoke_eval_report.md`.
+- Completed automated regression loop: 100 base scripted questions × 5 cycles = 500 total checks, final `500/500` passed, with 3 fixes recorded during the run. This was not a human answer-quality evaluation.
 - Added ontology MVP exports:
   - `src/rag/ontology.py`
   - `scripts/build_ontology_exports.py`
@@ -70,6 +72,6 @@ Transition plan: `internal-business-chatbot-transition-plan.md`.
 
 ## Operating notes
 
-- Application source stays in `/home/hskim/projects/S1000D-RAG`, not in the JARVIS control-plane repo.
+- Application source stays in `$HOME/projects/S1000D-RAG`, not in the JARVIS control-plane repo.
 - Do not edit secrets or local model files.
 - For implementation work, route medium/large changes through `omx-ralph` unless the user asks otherwise.

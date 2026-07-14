@@ -1,10 +1,10 @@
 # JARVIS project registry
 #
 # Active WSL-native repositories should normally live under:
-#   /home/hskim/projects/<project>
+#   ~/projects/<project>
 #
 # The JARVIS repo should not contain project source trees. If a local root-level
-# /home/hskim/jarvis/projects folder or symlink exists, it is ignored.
+# ~/jarvis/projects folder or symlink exists, it is ignored.
 # Register project paths here instead, and create one git/GitHub repo per project.
 #
 # Existing Windows-side projects can be registered with /mnt/c paths when needed,
@@ -14,9 +14,9 @@ projects:
   jarvis:
     name: jarvis
     type: control-plane
-    path: /home/hskim/jarvis
-    repo: /home/hskim/jarvis
-    wiki: /home/hskim/jarvis/wiki/projects/jarvis
+    path: ~/jarvis
+    repo: ~/jarvis
+    wiki: ~/jarvis/wiki/projects/jarvis
     default_executor: hermes-direct
     status: active
     notes: Hermes/JARVIS central control-plane workspace.
@@ -24,8 +24,8 @@ projects:
   jarvis-executor-smoke:
     name: jarvis-executor-smoke
     type: test-harness
-    path: /home/hskim/projects/jarvis-executor-smoke
-    repo: /home/hskim/projects/jarvis-executor-smoke
+    path: ~/projects/jarvis-executor-smoke
+    repo: ~/projects/jarvis-executor-smoke
     wiki: null
     default_executor: codex-exec
     status: active
@@ -34,9 +34,9 @@ projects:
   slide-harness:
     name: slide-harness
     type: presentation-harness-legacy
-    path: /home/hskim/projects/slide-harness
-    repo: /home/hskim/projects/slide-harness
-    wiki: /home/hskim/jarvis/wiki/projects/slide-harness
+    path: ~/projects/slide-harness
+    repo: ~/projects/slide-harness
+    wiki: ~/jarvis/wiki/projects/slide-harness
     default_executor: hermes-direct
     status: legacy-reference
     notes: Completed/legacy HTML-first slide generation harness and dashboard experiment; preserved as reference while hermes-slide-director is the active slide-production direction.
@@ -44,10 +44,10 @@ projects:
   hermes-slide-director:
     name: hermes-slide-director
     type: presentation-agent-harness-closed
-    path: /home/hskim/projects/hermes-slide-director
-    repo: /home/hskim/projects/hermes-slide-director
+    path: ~/projects/hermes-slide-director
+    repo: ~/projects/hermes-slide-director
     remote: https://github.com/Han43seong/hermes-slide-director.git
-    wiki: /home/hskim/jarvis/wiki/projects/hermes-slide-director
+    wiki: ~/jarvis/wiki/projects/hermes-slide-director
     default_executor: hermes-direct
     status: closed-archived
     notes: Definitively closed after Phase 42; retained only as historical reference and learning record. Do not route new slide-production work here.
@@ -55,10 +55,10 @@ projects:
   SlideForge:
     name: SlideForge
     type: presentation-asset-pipeline
-    path: /home/hskim/projects/SlideForge
-    repo: /home/hskim/projects/SlideForge
+    path: ~/projects/SlideForge
+    repo: ~/projects/SlideForge
     remote: https://github.com/Han43seong/SlideForge.git
-    wiki: /home/hskim/jarvis/wiki/projects/SlideForge
+    wiki: ~/jarvis/wiki/projects/SlideForge
     default_executor: omx-ralph
     status: active
     notes: Active clean-start slide design pipeline using JARVIS design planning, ComfyUI asset forge, codex-guizang-html primary composition, and codex-presentation-pptx delivery.
@@ -66,21 +66,21 @@ projects:
   S1000D-RAG:
     name: S1000D-RAG
     type: rag-application
-    path: /home/hskim/projects/S1000D-RAG
-    repo: /home/hskim/projects/S1000D-RAG
+    path: ~/projects/S1000D-RAG
+    repo: ~/projects/S1000D-RAG
     remote: https://github.com/Han43seong/S1000D-RAG.git
-    wiki: /home/hskim/jarvis/wiki/projects/S1000D-RAG
+    wiki: ~/jarvis/wiki/projects/S1000D-RAG
     default_executor: omx-ralph
     status: reference-complete
     notes: S1000D RDF/AnswerPlan Graph RAG reference implementation; closed for new MRO-specific feature work after pivot to internal business-document chatbot.
 
-  InternalDocRAG:
-    name: InternalDocRAG
-    type: rag-application
-    path: /home/hskim/projects/InternalDocRAG
-    repo: /home/hskim/projects/InternalDocRAG
-    remote: https://github.com/Han43seong/InternalDocRAG.git
-    wiki: /home/hskim/jarvis/wiki/projects/InternalDocRAG
+  example-private-project:
+    name: example-private-project
+    type: private-application
+    path: ~/projects/example-private-project
+    repo: ~/projects/example-private-project
+    remote: null
+    wiki: null
     default_executor: omx-ralph
-    status: active
-    notes: Closed-network internal business-document chatbot for enterprise document search, source-grounded summaries, comparison, and drafting support.
+    status: example-only
+    notes: Placeholder showing how to register a private project without publishing its metadata.

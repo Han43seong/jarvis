@@ -4,13 +4,13 @@
 
 - Status: closed-archived as of 2026-05-20.
 - Phase 42 definitively closed this repo as a learning harness after the production-tool decision.
-- Successor active repo: `/home/hskim/projects/SlideForge` / `https://github.com/Han43seong/SlideForge.git`.
+- Successor active repo: `$HOME/projects/SlideForge` / `https://github.com/Han43seong/SlideForge.git`.
 - Production tools fixed for the successor direction: `codex-guizang-html` as primary HTML/presentation composer and `codex-presentation-pptx` as PPTX delivery route.
 - ComfyUI is planned as graphical asset forge, not the slide composer.
 - Historical context below is retained for reference.
 
-- Project created as a clean-start repository at `/home/hskim/projects/hermes-slide-director`.
-- GitHub private repo created and pushed at `https://github.com/Han43seong/hermes-slide-director`; local `origin` tracks `origin/main`.
+- Project created as a clean-start repository at `$HOME/projects/hermes-slide-director`.
+- Private remote and local tracking details are intentionally excluded from this public archive.
 - Purpose: Hermes-orchestrated Claude Design loop harness for high-fidelity slide decks.
 - The project intentionally centers on the Hermes conversation-first flow before implementing any dashboard.
 - Existing `slide-harness` remains as prior experiment/reference; this project is the new direction.
@@ -207,7 +207,7 @@ Hermes then:
   - Product model: conversation -> operator intake -> proposed criteria -> user approval -> prepare-generation -> Producer/Reviewer generation loop.
   - Reviewer: independent background Codex read-only session `proc_3050402e2460` returned no blocking findings or required changes; read-only pytest limitation was covered by Hermes full test run.
   - Verification: Phase 14 tests -> `10 passed`; full suite -> `91 passed`; doctor OK; Hermes smoke under `/tmp/hermes-phase14-hermes-verify.W7Z0LB/run` created intake and proposed criteria artifacts.
-  - Commit pushed: `656fd4b feat: add conversation-first slide job intake`; GitHub repo remains `https://github.com/Han43seong/hermes-slide-director`.
+  - Commit recorded: `656fd4b feat: add conversation-first slide job intake`; private remote details omitted.
 - `2026-05-14`: Built Phase 15 Hermes-authored Claude Design producer prompt/contract generation.
   - Command added: `prepare-design-producer`.
   - Purpose: convert Phase 14 operator intake plus approved criteria into durable, structured, offline/local Producer artifacts for a future Claude Design/OMC/HTML deck Producer.
@@ -216,7 +216,7 @@ Hermes then:
   - Behavior: requires approved criteria by default; supports explicit allow-proposed/dry-run-style behavior; no real Claude, OMC, provider, or network call.
   - Reviewer: independent background Codex read-only session `proc_ed26aed5e6fc` returned `PASS` with no required changes; read-only pytest limitation was covered by Hermes full test run.
   - Verification: Phase 15 tests -> `7 passed`; full suite -> `98 passed`; doctor OK; Hermes smoke under `/tmp/hermes-phase15-hermes-verify.XwmUPu/run` created all three generation artifacts and verified required structured sections.
-  - Commit pushed: `4921e32 feat: add design producer prompt preparation`; GitHub repo remains `https://github.com/Han43seong/hermes-slide-director`.
+  - Commit recorded: `4921e32 feat: add design producer prompt preparation`; private remote details omitted.
 - `2026-05-14`: Built Phase 16 local/dry-run Producer handoff adapter.
   - Command added: `prepare-producer-handoff`.
   - Purpose: package the Phase 15 Claude Design prompt/contract/brief into a local handoff package before any real Claude/OMC/provider generation. This is the safe bridge between the Hermes-authored prompt and a future real Producer launch.
@@ -227,7 +227,7 @@ Hermes then:
   - Reviewer: independent reviewer `proc_73754be86170` returned `PASS` with no required changes.
   - Verification: Phase 16 tests -> `7 passed`; full suite -> `105 passed`; doctor OK; Hermes smoke under `/tmp/hermes-phase16-hermes-verify.Ge4ImX/run` created all three handoff artifacts and verified the safety booleans/path.
   - Note: Hermes smoke initially checked the wrong key name `expected_output_dir`; actual JSON key is `expected_output_directory`, and verification was rerun successfully before commit.
-  - Commit pushed: `f09b437 feat: add dry-run producer handoff preparation`; GitHub repo remains `https://github.com/Han43seong/hermes-slide-director`.
+  - Commit recorded: `f09b437 feat: add dry-run producer handoff preparation`; private remote details omitted.
 - `2026-05-15`: Built Phase 17 Producer path quality bake-off preparation.
   - Commit: `3b49eb7 feat: add producer quality bakeoff harness`.
   - Command added: `prepare-bakeoff`.
@@ -260,7 +260,7 @@ Hermes then:
   - Commit: `4e1ea75 feat: add Phase 21A PPTX smoke planning`.
   - Command added: `prepare-codex-presentation-pptx-smoke`.
   - Purpose: inspect a local `appautomaton/presentation` source tree for `deck-design-ppt` metadata and produce a Phase 21B smoke plan without installing, cloning, running Codex/OMX/Claude/provider/browser, generating PPTX, or mutating global config.
-  - Real local source smoke: read-only inspection against `/home/hskim/jarvis/research_codex_omx/ext/appautomaton__presentation` found `pptxgenjs`, `playwright-core`, `sharp`, 21 pattern JS files, and 21 slot markdown files.
+  - Real local source smoke: read-only inspection against `$HOME/jarvis/research_codex_omx/ext/appautomaton__presentation` found `pptxgenjs`, `playwright-core`, `sharp`, 21 pattern JS files, and 21 slot markdown files.
   - Reviewer loop: first review returned `REQUEST_CHANGES` because `--run-dir` could be equal to or nested inside `--source-dir`; Hermes added resolved-path validation and tests to preserve source-tree read-only guarantees. Re-review verdict: `PASS`.
   - Verification: `tests/test_phase21.py` -> `7 passed`; full suite -> `148 passed in 0.51s`; `git diff --check` clean; CLI smoke emitted `source inspected: true`, `candidate execution: not_run`, and `external call made: false`.
   - Pushed to `origin/main` after user approval.
@@ -332,7 +332,7 @@ Hermes then:
     - HTML smoke deck: `/tmp/hermes-slide-director-phase25-guizang.tTLNIZ/outputs/codex-guizang-html-smoke/deck.html`.
     - Render report: `/tmp/hermes-slide-director-phase25-guizang.tTLNIZ/guizang-html-browser-render-report.json`.
     - Visual review: `/tmp/hermes-slide-director-phase25-guizang.tTLNIZ/guizang-html-visual-review.json`.
-    - Screenshots: `/home/hskim/.hermes/cache/screenshots/browser_screenshot_e745dfc8f080450cb8dbc9c5e5136c88.png`, `/home/hskim/.hermes/cache/screenshots/browser_screenshot_4b7e96b849bd4059847c6c275351bde7.png`.
+    - Screenshots: two local verification captures; paths and identifiers omitted.
   - Artifacts:
     - `candidates/codex-guizang-html/phase26-guizang-html-render-gate.json`.
     - `candidates/codex-guizang-html/phase26-guizang-html-render-gate.md`.
@@ -346,7 +346,7 @@ Hermes then:
 
 - `2026-05-18`: Built Phase 27 `codex-editable-html-slides` source/static validator smoke recorder.
   - Commit: `0359257 feat: record Phase 27 editable HTML static smoke`.
-  - Candidate source: `/home/hskim/jarvis/research_codex_omx/ext/archlizheng__frontend-slides-editable`, remote `https://github.com/archlizheng/frontend-slides-editable`, commit `f530ae3`.
+  - Candidate source: `$HOME/jarvis/research_codex_omx/ext/archlizheng__frontend-slides-editable`, remote `https://github.com/archlizheng/frontend-slides-editable`, commit `f530ae3`.
   - Manual evidence: `/tmp/hermes-slide-director-phase27-editable-static-report.json`.
   - Discovery/static smoke used existing local source only; no npm/pip/sudo/global install, no clone/network access for smoke, no browser/render/visual gate, no validator execution inside recorder, and no deck generation.
   - Validator checks already performed outside recorder on existing examples:
@@ -365,7 +365,7 @@ Hermes then:
 
 - `2026-05-18`: Built Phase 28 `codex-editable-html-slides` browser interaction/visual gate recorder.
   - Commit: `3e07e19 feat: record Phase 28 editable HTML browser gate`.
-  - Browser evidence source: existing local HTML `/home/hskim/jarvis/research_codex_omx/ext/archlizheng__frontend-slides-editable/examples/generated/presets/swiss-modern.html`, opened with Hermes built-in browser automation only; no additional browser/package install.
+  - Browser evidence source: existing local HTML `$HOME/jarvis/research_codex_omx/ext/archlizheng__frontend-slides-editable/examples/generated/presets/swiss-modern.html`, opened with Hermes built-in browser automation only; no additional browser/package install.
   - Manual evidence files:
     - `/tmp/hermes-slide-director-phase28-editable-browser-report.json`.
     - `/tmp/hermes-slide-director-phase28-editable-visual-review.json`.
@@ -459,7 +459,7 @@ Hermes then:
 - `2026-05-18`: Ran and recorded Phase 33 `codex-editable-html-slides` real Codex/OMX new-deck generation smoke.
   - Commit: `4aa5ea0 feat: record Phase 33 editable HTML real generation smoke`.
   - Temp workspace: `/tmp/hermes-slide-director-phase33-editable-realgen.nL3eoq`.
-  - Source reference: existing editable HTML candidate source `/home/hskim/jarvis/research_codex_omx/ext/archlizheng__frontend-slides-editable`.
+  - Source reference: existing editable HTML candidate source `$HOME/jarvis/research_codex_omx/ext/archlizheng__frontend-slides-editable`.
   - Locked content plan: small Korean editable-deck smoke plan under the temp workspace.
   - Producer: `omx exec` constrained to the temp workspace; no install, sudo, global install, or repo writes.
   - Generated temp artifacts: `output/deck.html` and `output/producer-report.json` only.

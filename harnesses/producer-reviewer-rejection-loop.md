@@ -127,7 +127,7 @@ Required before producer starts:
 - verification commands listed
 - max iterations selected
 - executor lane selected: synchronous for short work, durable background for long work or when main-channel responsiveness matters
-- prompt/log/work directory selected under ignored runtime paths, usually `/home/hskim/jarvis/tmp/executor-prompts/` and `/home/hskim/jarvis/tmp/executor-runs/`
+- prompt/log/work directory selected under ignored runtime paths, usually `$HOME/jarvis/tmp/executor-prompts/` and `$HOME/jarvis/tmp/executor-runs/`
 - prompt handling checked: no secrets in prompts, and long/sensitive prompts are passed by stdin/file where supported or by a short argv prompt pointing to an ignored prompt file
 - background launch plan includes an immediate poll for update/auth/interactive prompts
 

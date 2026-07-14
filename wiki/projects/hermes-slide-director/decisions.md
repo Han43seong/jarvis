@@ -2,7 +2,7 @@
 
 ## 2026-05-14 - Create clean-start project instead of continuing slide-harness
 
-- Decision: create `/home/hskim/projects/hermes-slide-director` as a new repository.
+- Decision: create `$HOME/projects/hermes-slide-director` as a new repository.
 - Rationale: the prior `slide-harness` work drifted toward a structured JSON/requirements dashboard. The clarified goal is a Claude Design-style slide production loop with QA/rejection/revision, driven by user-provided research material and design references.
 - Consequences: keep `slide-harness` as reference, but do not force its architecture into the new project. Start from contracts, loop architecture, and CLI proof.
 - Verification/source: user clarified the scenario in conversation; repository and JARVIS registry were created/updated in this session.

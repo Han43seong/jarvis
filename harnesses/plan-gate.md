@@ -30,7 +30,7 @@ User approval is required before execution if the plan includes:
 - secrets/auth/config changes.
 - broad refactor or migration.
 - paid API/cloud usage.
-- work outside `/home/hskim/jarvis` or the selected project repo.
+- work outside `$HOME/jarvis` or the selected project repo.
 
 ## Lightweight mode
 

@@ -106,18 +106,18 @@ require("memory summary", memory["summaryMemoryContract"]["recordKind"], "summar
 assert_boundary("remember", memory)
 cases.append("remember-plan-ready")
 
-sensitive = remember_plan("remember my API key sk-test-1234567890 for later")
+sensitive = remember_plan("remember my API key <example-api-key> for later")
 require("sensitive blocked", sensitive["status"], "memory-candidate-blocked")
 require_in("sensitive approval", "sensitive memory requires explicit approval before host-owned persistence", sensitive["blockedReasons"])
 require("sensitive redacted", sensitive["rawArtifactContract"]["artifact"]["contentPreview"], "[redacted-sensitive]")
 assert_boundary("sensitive", sensitive)
 cases.append("sensitive-memory-blocked")
 with TemporaryDirectory() as tmp:
-    sensitive_request = "remember my API key sk-test-1234567890 for later"
+    sensitive_request = "remember my API key <example-api-key> for later"
     issued = issue_approval(
         scope="memory.write",
         subject=sensitive_request,
-        actor="hskim",
+        actor="example-user",
         reason="harness registry acceptance test",
         registry=str(Path(tmp) / "approvals.jsonl"),
     )
@@ -275,12 +275,12 @@ require_truthy("handle memory plan", handled_memory["memoryPlan"])
 require("handle memory no handoff", handled_memory["gjcHandoffPlan"], None)
 cases.append("handle-memory")
 with TemporaryDirectory() as tmp:
-    sensitive_request = "remember my API key sk-test-1234567890 for later"
+    sensitive_request = "remember my API key <example-api-key> for later"
     registry_path = str(Path(tmp) / "approvals.jsonl")
     issued = issue_approval(
         scope="memory.write",
         subject=sensitive_request,
-        actor="hskim",
+        actor="example-user",
         reason="handle registry acceptance test",
         registry=registry_path,
     )
@@ -294,7 +294,7 @@ with TemporaryDirectory() as tmp:
     assert_boundary("handle-registry-memory", handled_registry_memory)
     cases.append("handle-sensitive-memory-registry-approved")
 
-handled_memory_blocked = handle("remember my API key sk-test-1234567890")
+handled_memory_blocked = handle("remember my API key <example-api-key>")
 require("handle blocked memory status", handled_memory_blocked["status"], "handled-contract-blocked")
 require_truthy("handle blocked memory plan", handled_memory_blocked["memoryPlan"])
 require_in("handle blocked memory reason", "sensitive memory requires explicit approval before host-owned persistence", handled_memory_blocked["blockedReasons"])

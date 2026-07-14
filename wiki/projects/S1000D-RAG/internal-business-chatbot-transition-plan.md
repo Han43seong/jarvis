@@ -3,7 +3,7 @@
 ## Context
 
 - Date: 2026-06-04
-- Current repository: `/home/hskim/projects/S1000D-RAG`
+- Current repository: `$HOME/projects/S1000D-RAG`
 - Previous direction: S1000D/manual/MRO expert chatbot with ontology-guided RAG.
 - New direction: closed-network internal general-employee chatbot for searching past business documents and company information.
 

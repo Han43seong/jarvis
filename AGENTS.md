@@ -14,9 +14,9 @@ Operate Hermes as the user's JARVIS:
 
 ## Workspace boundaries
 
-- Control plane: `/home/hskim/jarvis`
-- WSL-native project repos: `/home/hskim/projects/<project>`
-- Windows files: `/mnt/c/Users/hskim/...`
+- Control plane: `$HOME/jarvis`
+- WSL-native project repos: `$HOME/projects/<project>`
+- Windows files: `/mnt/c/Users/<user>/...`
 
 Do not mix application source into this control-plane repo unless it is a JARVIS helper script or document.
 
@@ -66,8 +66,8 @@ Use `harnesses/producer-reviewer-rejection-loop.md` as the protocol. Do not spen
 
 Automatic/low-friction actions are allowed for:
 
-- Creating and editing files under `/home/hskim/jarvis`.
-- Creating `/home/hskim/projects` and registering projects.
+- Creating and editing files under `$HOME/jarvis`.
+- Creating `$HOME/projects` and registering projects.
 - Reading files, searching, inspecting git state, running tests/builds/lints.
 - Running `codex exec` or `omx exec` with an approved prompt in a target repo.
 - Creating markdown, YAML, JSON, scripts, plans, and wiki notes.
@@ -77,7 +77,7 @@ User approval is required for:
 
 - `sudo`.
 - `rm -rf` or broad deletes.
-- Any permanent delete of directories or user-created files, even under `/home/hskim/jarvis` or `/home/hskim/projects`.
+- Any permanent delete of directories or user-created files, even under `$HOME/jarvis` or `$HOME/projects`.
 - `git reset --hard`, `git clean -f`, force push, branch force delete.
 - `git push` or deployment.
 - Editing `.env`, auth files, OAuth tokens, SSH keys, private keys, credential files, or `auth.json`.

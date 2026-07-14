@@ -77,8 +77,8 @@ with TemporaryDirectory() as store_root:
     )
     cases.append("hash-mismatch-blocked")
 
-sensitive_packet = classify_request("remember my API key sk-test-1234567890 for later")
-sensitive_content = "api key sk-test-1234567890"
+sensitive_packet = classify_request("remember my API key <example-api-key> for later")
+sensitive_content = "api key <example-api-key>"
 sensitive_raw = build_raw_artifact_record(sensitive_packet, content=sensitive_content)
 with TemporaryDirectory() as store_root:
     sensitive_plan = build_local_store_plan(sensitive_raw, content=sensitive_content, store_root=store_root)

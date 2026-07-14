@@ -14,7 +14,7 @@ confidence: high
 
 ## Summary
 
-`slide-harness` is a completed/legacy HTML-first presentation/deck generation harness under `/home/hskim/projects/slide-harness` and published as a private GitHub repository at `https://github.com/Han43seong/slide-harness`.
+`slide-harness` is a completed/legacy HTML-first presentation/deck generation harness. Its private remote and local checkout details are intentionally excluded from this public archive.
 
 It is no longer the active slide-production direction. The active path is now `hermes-slide-director`, which keeps Hermes/JARVIS conversation-first as the primary operator interface and uses Producer/Reviewer gates for high-fidelity deck generation. `slide-harness` is preserved as a reference implementation for CLI/dashboard ideas, Guided Brief UX, run artifacts, requirement gates, and local QA patterns.
 
@@ -107,7 +107,7 @@ Implemented:
 
 ## Verification
 
-Latest verified commands from `/home/hskim/projects/slide-harness`:
+Latest verified commands from `$HOME/projects/slide-harness`:
 
 ```bash
 python -m pytest -q
@@ -159,7 +159,7 @@ cc63eda feat: improve dashboard artifact previews
 ## Legacy Operating Model
 
 - `slide-harness` is kept as a reference/legacy project, not the default target for new slide-production work.
-- New slide-generation architecture, candidate bakeoffs, and real generation loops should route to `/home/hskim/projects/hermes-slide-director` unless the user explicitly asks to maintain or inspect this legacy repo.
+- New slide-generation architecture, candidate bakeoffs, and real generation loops should route to `$HOME/projects/hermes-slide-director` unless the user explicitly asks to maintain or inspect this legacy repo.
 - If maintenance is needed here, keep it narrow: bug fixes, read-only reference checks, or targeted documentation updates. Avoid broad new feature work unless the user reactivates the project.
 - The latest verified project repo state is clean and synchronized with `origin/main`, with latest commit `018df35 docs: mark slide harness complete`.
 

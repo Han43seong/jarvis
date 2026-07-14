@@ -379,7 +379,7 @@ hard_fail:
 ## 산출물 구조 제안
 
 ```text
-/home/hskim/projects/slide-harness/runs/<job-id>/
+$HOME/projects/slide-harness/runs/<job-id>/
   input/
     brief.yaml
     references/
@@ -493,7 +493,7 @@ MVP에서 제외:
 
 다음 항목은 확정이 필요하다.
 
-1. 이 하네스를 JARVIS control-plane helper로 둘지, 독립 프로젝트 `/home/hskim/projects/slide-harness`로 만들지.
+1. 이 하네스를 JARVIS control-plane helper로 둘지, 독립 프로젝트 `$HOME/projects/slide-harness`로 만들지.
 2. 초기 생성 엔진을 pptxgenjs로 할지, python-pptx로 할지.
 3. visual QA를 Hermes vision/subagent 기반으로 할지, 로컬 규칙 기반 screenshot 검사부터 시작할지.
 4. 사용자가 요구사항을 승인하는 방식: markdown 체크박스, YAML approved flag, CLI interactive prompt 중 선택.
@@ -517,7 +517,7 @@ PPTX는 다음 경우에 renderer 또는 export adapter로 지원한다.
 
 ## 권장 결정
 
-- 프로젝트 위치: `/home/hskim/projects/slide-harness` 독립 repo
+- 프로젝트 위치: `$HOME/projects/slide-harness` 독립 repo
 - JARVIS에는 wiki와 라우팅/하네스 실행 문서만 유지
 - MVP 기본 포맷: HTML deck → PDF export
 - 내부 모델: slide_plan.yaml 또는 deck.json 같은 중립 slide spec

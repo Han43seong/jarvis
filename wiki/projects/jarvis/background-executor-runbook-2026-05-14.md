@@ -8,9 +8,9 @@ Use this runbook when JARVIS launches Codex/OMX/Claude-family Producer or Review
 
 - Use durable background execution when main-channel responsiveness matters: `terminal(background=true, notify_on_complete=true)`, `/background`, tmux, cron, kanban, or an equivalent process runner.
 - Use synchronous `delegate_task` only for short slices where interruption/cancellation is acceptable.
-- Store generated prompts under `/home/hskim/jarvis/tmp/executor-prompts/`.
-- Store logs, pids, and run metadata under `/home/hskim/jarvis/tmp/executor-runs/`.
-- Treat `/home/hskim/jarvis/.omx/` as ignored local runtime state if OMX creates it from the control-plane root.
+- Store generated prompts under `$HOME/jarvis/tmp/executor-prompts/`.
+- Store logs, pids, and run metadata under `$HOME/jarvis/tmp/executor-runs/`.
+- Treat `$HOME/jarvis/.omx/` as ignored local runtime state if OMX creates it from the control-plane root.
 - Prefer launching from ignored runtime work directories so `git status` stays focused on intentional source/doc changes.
 
 ## Prompt Handling
@@ -20,19 +20,19 @@ Use this runbook when JARVIS launches Codex/OMX/Claude-family Producer or Review
 - For Codex, prefer:
 
 ```bash
-codex exec -C <target_repo> - < /home/hskim/jarvis/tmp/executor-prompts/<task>.md
+codex exec -C <target_repo> - < $HOME/jarvis/tmp/executor-prompts/<task>.md
 ```
 
 - If an executor only accepts argv prompts, keep argv short and point it to an ignored prompt file:
 
 ```text
-Read and execute the approved task prompt at /home/hskim/jarvis/tmp/executor-prompts/<task>.md. Follow the JARVIS execution contract. Do not push, delete unrelated files, or edit secrets.
+Read and execute the approved task prompt at $HOME/jarvis/tmp/executor-prompts/<task>.md. Follow the JARVIS execution contract. Do not push, delete unrelated files, or edit secrets.
 ```
 
 ## Launch Checklist
 
 1. Confirm target repo, allowed paths, forbidden actions, acceptance criteria, and verification commands.
-2. Write the prompt under `/home/hskim/jarvis/tmp/executor-prompts/`.
+2. Write the prompt under `$HOME/jarvis/tmp/executor-prompts/`.
 3. Start the executor in a background process with completion notification.
 4. Poll immediately for update prompts, auth prompts, sandbox prompts, or other interactive blockers.
 5. Decline optional tool updates unless the user has approved the update.

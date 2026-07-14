@@ -23,7 +23,7 @@ During `hermes-slide-director` Phase 13, JARVIS switched from synchronous `deleg
 
 Current in-flight work at time of note:
 
-- App repo: `/home/hskim/projects/hermes-slide-director`
+- App repo: `$HOME/projects/hermes-slide-director`
 - Phase 13 Producer: background OMX session `proc_9aa1f245e781`, completed exit 0
 - Phase 13 Reviewer: background Codex read-only session `proc_6a5f8ece29e5`, running when this note was created
 - Main channel remained responsive after switching to background processes
@@ -42,7 +42,7 @@ Current in-flight work at time of note:
 
 ### 1. Control-plane repo got runtime artifacts
 
-`/home/hskim/jarvis` showed untracked runtime files:
+`$HOME/jarvis` showed untracked runtime files:
 
 ```text
 ?? .omx/
@@ -51,16 +51,16 @@ Current in-flight work at time of note:
 
 Cause:
 
-- `omx exec -C /home/hskim/projects/hermes-slide-director ...` was launched with shell working directory `/home/hskim/jarvis`.
+- `omx exec -C $HOME/projects/hermes-slide-director ...` was launched with shell working directory `$HOME/jarvis`.
 - OMX correctly used the app repo as target, but its own `.omx/` runtime state was written under the shell cwd.
-- The first Producer prompt was written to `/home/hskim/jarvis/executor-prompts/`, which is not ignored.
+- The first Producer prompt was written to `$HOME/jarvis/executor-prompts/`, which is not ignored.
 
 Recommended fix:
 
 - Do not run executor processes from the tracked JARVIS repo root.
 - Standardize an ignored runtime workdir, for example:
-  - `/home/hskim/jarvis/tmp/executor-runs/`
-  - or `/home/hskim/jarvis/runs/executor-runs/`
+  - `$HOME/jarvis/tmp/executor-runs/`
+  - or `$HOME/jarvis/runs/executor-runs/`
 - Store prompts/logs under ignored runtime paths, not root-level tracked paths.
 - Add ignore rules if appropriate:
   - `/.omx/`
@@ -72,7 +72,7 @@ Recommended fix:
 The first OMX Producer was launched as:
 
 ```bash
-omx exec --sandbox workspace-write -C /home/hskim/projects/hermes-slide-director "$(cat /home/hskim/jarvis/executor-prompts/hermes-slide-director-phase13-final-package-omx.md)"
+omx exec --sandbox workspace-write -C $HOME/projects/hermes-slide-director "$(cat $HOME/jarvis/executor-prompts/hermes-slide-director-phase13-final-package-omx.md)"
 ```
 
 This expanded the full prompt into argv, making it visible in `ps` and process logs.
@@ -130,9 +130,9 @@ But some harness text still lists `delegate_task` as a Producer option without s
 
 Files to audit/update:
 
-- `/home/hskim/jarvis/harnesses/producer-reviewer-rejection-loop.md`
-- `/home/hskim/jarvis/harnesses/execute-codex-omx.md`
-- possibly `/home/hskim/jarvis/harnesses/executor-router.md`
+- `$HOME/jarvis/harnesses/producer-reviewer-rejection-loop.md`
+- `$HOME/jarvis/harnesses/execute-codex-omx.md`
+- possibly `$HOME/jarvis/harnesses/executor-router.md`
 
 Recommended wording:
 
@@ -160,12 +160,12 @@ Task name:
 
 Scope:
 
-- JARVIS control-plane repo only: `/home/hskim/jarvis`
+- JARVIS control-plane repo only: `$HOME/jarvis`
 - No app repo changes unless needed for status links
 
 Acceptance criteria:
 
-1. Runtime executor state does not dirty `/home/hskim/jarvis` root.
+1. Runtime executor state does not dirty `$HOME/jarvis` root.
 2. Executor prompt/log paths are standardized under ignored runtime directories.
 3. `.gitignore` covers only intended runtime artifacts without hiding tracked wiki/project files.
 4. Harness docs clearly distinguish:
@@ -181,12 +181,13 @@ Acceptance criteria:
 ## Suggested verification commands
 
 ```bash
-git -C /home/hskim/jarvis status -sb
-git -C /home/hskim/jarvis diff --check
+git -C $HOME/jarvis status -sb
+git -C $HOME/jarvis diff --check
 python3 - <<'PY'
 from pathlib import Path
 import yaml
-for p in [Path('/home/hskim/jarvis/config/routing.yaml'), Path('/home/hskim/jarvis/config/projects.yaml')]:
+root = Path.home() / "jarvis"
+for p in [root / "config/routing.yaml", root / "config/projects.yaml"]:
     yaml.safe_load(p.read_text())
     print('YAML OK:', p)
 PY
@@ -194,8 +195,8 @@ PY
 
 ## Current known cleanup candidates
 
-- Move or ignore `/home/hskim/jarvis/executor-prompts/`.
-- Decide whether to ignore or remove local `/home/hskim/jarvis/.omx/` after Phase 13 is fully integrated.
-- Prefer future executor prompt files under `/home/hskim/jarvis/tmp/executor-prompts/` or `/home/hskim/jarvis/runs/executor-runs/`.
+- Move or ignore `$HOME/jarvis/executor-prompts/`.
+- Decide whether to ignore or remove local `$HOME/jarvis/.omx/` after Phase 13 is fully integrated.
+- Prefer future executor prompt files under `$HOME/jarvis/tmp/executor-prompts/` or `$HOME/jarvis/runs/executor-runs/`.
 - Investigate OMX stdin/prompt-file support.
 - Strengthen harness docs around main-channel responsiveness.

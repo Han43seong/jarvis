@@ -1,6 +1,6 @@
 # S1000D-RAG Multimodal Modernization Plan
 
-> Created for JARVIS planning. Target repo: `/home/hskim/projects/S1000D-RAG`.
+> Created for JARVIS planning. Target repo: `$HOME/projects/S1000D-RAG`.
 
 ## Goal
 

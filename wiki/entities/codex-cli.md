@@ -23,7 +23,7 @@ Codex CLI is an implementation executor available to [[entities/jarvis|JARVIS]],
 
 ## JARVIS Usage
 
-Codex should run inside a selected target repository under `/home/hskim/projects/<project>`, not in the JARVIS control-plane repo unless the task explicitly targets JARVIS docs/config.
+Codex should run inside a selected target repository under `$HOME/projects/<project>`, not in the JARVIS control-plane repo unless the task explicitly targets JARVIS docs/config.
 
 ## Guardrails
 

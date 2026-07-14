@@ -112,7 +112,7 @@ require("stub raw api discovery", raw_stub["rawArtifactApiDiscovery"]["mapper"],
 require("stub raw api discovery blocked", raw_stub["rawArtifactApiDiscovery"]["status"], "raw-artifact-api-unmapped")
 cases.append("adapter-embeds-boundary")
 
-sensitive_packet = classify_request("remember my API key sk-test-1234567890 for later")
+sensitive_packet = classify_request("remember my API key <example-api-key> for later")
 sensitive_raw = build_raw_artifact_record(sensitive_packet)
 sensitive_report = build_hermes_live_boundary_report(sensitive_raw, surfaces=fake_surfaces(write_ready=True))
 require("sensitive approval absent", sensitive_report["approval"]["approvalTokenPresent"], False)

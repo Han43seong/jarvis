@@ -19,7 +19,7 @@ relations:
 
 # Project Repository Model
 
-Application source repositories live outside the JARVIS control-plane repo under `/home/hskim/projects/<project>`. Each project can have its own git and GitHub repository.
+Application source repositories live outside the JARVIS control-plane repo under `$HOME/projects/<project>`. Each project can have its own git and GitHub repository.
 
 ## Rationale
 

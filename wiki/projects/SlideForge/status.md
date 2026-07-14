@@ -2,7 +2,7 @@
 
 - status: active
 - updated: 2026-05-21
-- repo: `/home/hskim/projects/SlideForge`
+- repo: `$HOME/projects/SlideForge`
 - remote: `https://github.com/Han43seong/SlideForge.git`
 - visibility: private
 
@@ -137,7 +137,7 @@ PYTHONPATH=src python -m pytest -q -rs
 # browser optional installed in current WSL Python; no Playwright skip
 
 ComfyUI local smoke:
-# /home/hskim/projects/ComfyUI, ComfyUI 0.22.0, PyTorch 2.11.0+cu129, RTX 4080 SUPER
+# Local ComfyUI environment; host-specific versions and hardware omitted
 # SD1.5 workflow submitted through http://127.0.0.1:8188; 2 generated PNG assets recorded in runs/jarvis-e2e-comfy-asset-001/generated-assets/
 
 SlideForge ComfyUI asset-integrated e2e run:

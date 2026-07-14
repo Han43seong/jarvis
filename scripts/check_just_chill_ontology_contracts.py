@@ -205,9 +205,9 @@ missing_provenance["aboxCandidate"].pop("provenance", None)
 require_in("missing provenance validation", "candidate requires provenance", validate_ontology_contract(missing_provenance))
 cases.append("source-provenance-validation")
 
-sensitive_packet = classify_request("remember my API key sk-test-1234567890")
+sensitive_packet = classify_request("remember my API key <example-api-key>")
 sensitive_raw = build_raw_artifact_record(sensitive_packet)
-sensitive_summary = build_summary_memory_record(sensitive_raw, "API key sk-test-1234567890 must not be persisted.")
+sensitive_summary = build_summary_memory_record(sensitive_raw, "API key <example-api-key> must not be persisted.")
 sensitive_contract = build_ontology_contract(
     sensitive_raw,
     sensitive_summary,

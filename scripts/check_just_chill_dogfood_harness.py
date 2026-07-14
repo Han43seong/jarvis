@@ -135,8 +135,8 @@ cases.append("redacted-recall-fails-e2e")
 
 sensitive = build_dogfood_harness(
     cwd=str(ROOT),
-    memory_request="remember my API key sk-test-1234567890 for later",
-    summary="API key sk-test-1234567890",
+    memory_request="remember my API key <example-api-key> for later",
+    summary="API key <example-api-key>",
 )
 require("sensitive dogfood blocked", sensitive["status"], "blocked")
 require("sensitive memory blocked", sensitive["memoryFlow"]["status"], "memory-candidate-blocked")

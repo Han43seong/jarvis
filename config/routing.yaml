@@ -40,9 +40,9 @@ executors:
       - one_shot_cron
       - kanban_for_durable_backlog
     runtime_paths:
-      prompt_dir: /home/hskim/jarvis/tmp/executor-prompts
-      run_dir: /home/hskim/jarvis/tmp/executor-runs
-      omx_state: /home/hskim/jarvis/.omx
+      prompt_dir: tmp/executor-prompts
+      run_dir: tmp/executor-runs
+      omx_state: .omx
     avoid_when:
       - quick_direct_check
       - destructive_or_high_risk_action
@@ -78,8 +78,8 @@ executors:
       - approved_prompt
       - single_repo
     runtime_paths:
-      prompt_dir: /home/hskim/jarvis/tmp/executor-prompts
-      run_dir: /home/hskim/jarvis/tmp/executor-runs
+      prompt_dir: tmp/executor-prompts
+      run_dir: tmp/executor-runs
 
   omx_ralph:
     description: Default medium/large implementation executor. Use ralph-style complete-and-verify prompts.
@@ -97,8 +97,8 @@ executors:
       - complete_the_feature
       - large_refactor
     runtime_paths:
-      prompt_dir: /home/hskim/jarvis/tmp/executor-prompts
-      run_dir: /home/hskim/jarvis/tmp/executor-runs
+      prompt_dir: tmp/executor-prompts
+      run_dir: tmp/executor-runs
 
   omx_team:
     description: Parallel OMX execution for independent subcomponents.
@@ -169,7 +169,7 @@ routing_defaults:
 
 review_loop:
   default: selective
-  protocol: /home/hskim/jarvis/harnesses/producer-reviewer-rejection-loop.md
+  protocol: harnesses/producer-reviewer-rejection-loop.md
   director: hermes_jarvis_main_session
   use_for:
     - medium_large_implementation

@@ -20,10 +20,10 @@ This page catalogs JARVIS-related Hermes skills. It links to skill sources and l
 
 | Skill | Status | Source | Purpose |
 |---|---|---|---|
-| `jarvis-core` | active | `/home/hskim/.hermes/skills/software-development/jarvis-core/SKILL.md` | JARVIS session start, workspace boundaries, safety gates, repo hygiene. |
-| `jarvis-executor-router` | active | `/home/hskim/.hermes/skills/software-development/jarvis-executor-router/SKILL.md` | Classify work and choose Hermes/Codex/OMX/cron/kanban/ask-user executor modes. |
-| `jarvis-codex-omx-executor` | active | `/home/hskim/.hermes/skills/autonomous-ai-agents/jarvis-codex-omx-executor/SKILL.md` | Bounded delegation to Codex/OMX and Hermes post-verification. |
-| `jarvis-wiki-manager` | active | `/home/hskim/.hermes/skills/note-taking/jarvis-wiki-manager/SKILL.md` | Maintain JARVIS wiki, registry, project status, decisions, and skill catalog. |
+| `jarvis-core` | active | `$HOME/.hermes/skills/software-development/jarvis-core/SKILL.md` | JARVIS session start, workspace boundaries, safety gates, repo hygiene. |
+| `jarvis-executor-router` | active | `$HOME/.hermes/skills/software-development/jarvis-executor-router/SKILL.md` | Classify work and choose Hermes/Codex/OMX/cron/kanban/ask-user executor modes. |
+| `jarvis-codex-omx-executor` | active | `$HOME/.hermes/skills/autonomous-ai-agents/jarvis-codex-omx-executor/SKILL.md` | Bounded delegation to Codex/OMX and Hermes post-verification. |
+| `jarvis-wiki-manager` | active | `$HOME/.hermes/skills/note-taking/jarvis-wiki-manager/SKILL.md` | Maintain JARVIS wiki, registry, project status, decisions, and skill catalog. |
 
 ## Candidate Incubator
 

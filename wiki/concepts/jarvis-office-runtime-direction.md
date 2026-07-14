@@ -227,8 +227,8 @@ Current JARVIS already has the operating model in docs and skills:
 
 - [[concepts/jarvis-control-plane|JARVIS Control Plane]]
 - [[concepts/executor-routing|Executor Routing]]
-- `/home/hskim/jarvis/harnesses/producer-reviewer-rejection-loop.md`
-- `/home/hskim/jarvis/config/routing.yaml`
+- `$HOME/jarvis/harnesses/producer-reviewer-rejection-loop.md`
+- `$HOME/jarvis/config/routing.yaml`
 
 The future work is not to invent a new philosophy. It is to turn the existing Director/Producer/Reviewer operating model into safer, more durable, more inspectable runtime support while keeping JARVIS as the final interpreter and orchestrator.
 

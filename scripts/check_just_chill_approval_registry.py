@@ -40,8 +40,8 @@ cases: list[str] = []
 
 with TemporaryDirectory() as tmp:
     registry = str(Path(tmp) / "approvals.jsonl")
-    subject = "remember my API key sk-test-1234567890 for later"
-    issued = issue_approval(scope="memory.write", subject=subject, actor="hskim", reason="test sensitive memory write", registry=registry)
+    subject = "remember my API key <example-api-key> for later"
+    issued = issue_approval(scope="memory.write", subject=subject, actor="example-user", reason="test sensitive memory write", registry=registry)
     token = issued["approvalToken"]
     require("issue status", issued["status"], "approval-issued")
     require_truthy("issued token", token.startswith("approval://jcar-v1-"))
@@ -76,14 +76,14 @@ with TemporaryDirectory() as tmp:
     require_in("unregistered blocker", "approval token is not registered", unregistered["blockedReasons"])
     cases.append("remember-unregistered-blocked")
 
-    revoked = revoke_approval(token=token, actor="hskim", reason="test cleanup", registry=registry)
+    revoked = revoke_approval(token=token, actor="example-user", reason="test cleanup", registry=registry)
     require("revoke status", revoked["status"], "approval-revoked")
     revoked_verify = verify_approval(token=token, scope="memory.write", subject=subject, registry=registry)
     require("revoked denied", revoked_verify["approved"], False)
     require_in("revoked blocker", "approval token is revoked", revoked_verify["blockedReasons"])
     cases.append("revoke-blocks-token")
 
-    expired = issue_approval(scope="memory.write", subject=subject, actor="hskim", reason="expired test", ttl_seconds=1, registry=registry)
+    expired = issue_approval(scope="memory.write", subject=subject, actor="example-user", reason="expired test", ttl_seconds=1, registry=registry)
     expired_check = verify_approval(token=expired["approvalToken"], scope="memory.write", subject=subject, registry=registry)
     require("fresh ttl approved", expired_check["approved"], True)
     cases.append("ttl-token-fresh")
@@ -96,7 +96,7 @@ with TemporaryDirectory() as tmp:
 with TemporaryDirectory() as tmp:
     registry = str(Path(tmp) / "approvals.jsonl")
     query = "Recall sensitive design preference"
-    issued = issue_approval(scope="memory.recall", subject=query, actor="hskim", reason="test recall", registry=registry)
+    issued = issue_approval(scope="memory.recall", subject=query, actor="example-user", reason="test recall", registry=registry)
     recall_default = recall_command(query, approval_token=issued["approvalToken"], approval_registry=registry)
     require("recall registry accepted", recall_default["approvalTokenAccepted"], True)
     require("recall still needs evidence", recall_default["status"], "host-retrieval-required")
@@ -110,7 +110,7 @@ with TemporaryDirectory() as tmp:
         "issue",
         "--scope", "memory.write",
         "--subject", "cli subject",
-        "--actor", "hskim",
+        "--actor", "example-user",
         "--reason", "cli test",
     ])
     require("CLI issue", cli_issue["status"], "approval-issued")

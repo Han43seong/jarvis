@@ -69,7 +69,7 @@ def fake_runner_help_false_positive(argv, cwd, timeout):
 
 
 
-unmapped_report = build_raw_artifact_api_report(cwd="/home/hskim/jarvis", probe=True, runner=fake_runner_unmapped)
+unmapped_report = build_raw_artifact_api_report(cwd="/home/example/jarvis", probe=True, runner=fake_runner_unmapped)
 require("unmapped status", unmapped_report["status"], "raw-artifact-api-unmapped")
 require("unmapped gate", unmapped_report["writeGate"]["enabled"], False)
 require_in("unmapped create blocker", "Hermes raw artifact create/write API is not mapped", unmapped_report["writeGate"]["blockedReasons"])
@@ -77,7 +77,7 @@ require("unmapped validation", validate_raw_artifact_api_report(unmapped_report)
 cases.append("unmapped-fail-closed")
 
 help_false_positive_report = build_raw_artifact_api_report(
-    cwd="/home/hskim/jarvis",
+    cwd="/home/example/jarvis",
     probe=True,
     runner=fake_runner_help_false_positive,
 )
@@ -85,7 +85,7 @@ require("help false-positive status", help_false_positive_report["status"], "raw
 require("help false-positive candidates ignored", help_false_positive_report["candidateApis"], [])
 cases.append("help-text-candidates-ignored")
 
-mapped_report = build_raw_artifact_api_report(cwd="/home/hskim/jarvis", probe=True, runner=fake_runner_mapped)
+mapped_report = build_raw_artifact_api_report(cwd="/home/example/jarvis", probe=True, runner=fake_runner_mapped)
 require("mapped status", mapped_report["status"], "raw-artifact-api-mapped")
 require("mapped gate", mapped_report["writeGate"]["enabled"], True)
 require("mapped create api", mapped_report["rawArtifactApis"]["create"]["api"], "mcp:hermes.raw_artifact.create")
@@ -167,8 +167,8 @@ require_in("non-raw promotion reason", "record must be a raw-artifact-contract",
 require("non-raw promotion validation", validate_raw_artifact_hermes_promotion_plan(non_raw_promotion), [])
 cases.append("non-raw-promotion-fails-closed")
 
-sensitive_packet = classify_request("remember my API key sk-test-1234567890 for later")
-sensitive_content = "api key sk-test-1234567890"
+sensitive_packet = classify_request("remember my API key <example-api-key> for later")
+sensitive_content = "api key <example-api-key>"
 sensitive_raw = build_raw_artifact_record(sensitive_packet, content=sensitive_content)
 with TemporaryDirectory() as store_root:
     sensitive_receipt = stage_raw_artifact(
